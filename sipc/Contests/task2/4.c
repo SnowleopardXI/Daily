@@ -1,31 +1,19 @@
-#include <stdio.h>
-#include <stdlib.h>
-int main(){
-    int line;  
-    int column;  
-    int i;  
-    int j;  
-    scanf("%d", &line);
-    column = line;  
-    for(i=1; i<=line; i++){  
-        if(i<(line+1)/2+1){ 
-            for(j=1; j<=column; j++){  
-                if( (column+1)/2-(i-1)<=j && j<=(column+1)/2+(i-1) ){
-                    printf("*");
-                }else{
-                    printf(" ");
-                }
-            }
-        }else{  
-            for(j=1; j<=column; j++){  
-                if( (column+1)/2-(line-i)<=j && j<=(column+1)/2+(line-i) ){
-                    printf("*");
-                }else{
-                    printf(" ");
-                }
-            }
-        }
-        printf("\n");
-    }
-    return 0;
+#include<stdio.h>
+int main()
+{ 
+  int n,i,j;
+  scanf("%d",&n);
+  for(i=0; i<n; i++)
+  { 
+    for(j=i+1-n; j<2*i+1; j++)
+      printf((j>=0&&j<=2*i)?"*":" ");
+    printf("\n");
+  }
+  for(i=n-2; i>=0; i--)
+  {
+    for(j=i+1-n; j<2*i+1; j++)
+      printf((j>=0&&j<=2*i)?"*":" ");
+    printf("\n");
+  }
+  return 0;
 }
