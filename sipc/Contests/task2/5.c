@@ -3,11 +3,11 @@
 
 int main()
 {
-    char mima[100]="cjbtql";
-    char input[100]={0};
+    char mima[50]="cjbtql";
+    char input[50]={0};
     start:
     gets(input);
-    if(strcmp(mima,input)==0)
+    if(mima==input)
         printf("The password is correct\n");
     else
         printf("Password error, please input again\n");
