@@ -1,14 +1,11 @@
-#include <stdio.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 int main()
 {
-    char inp[20]={0};
-    scanf("%s",&inp);
-    switch(97)
-    {
-    default:
-        printf("default");
-    case 'a':
-        printf("a !");
-        break;
-    }
+	int x,y;
+	y=1;
+	//for (y=1;y<10;)
+    	y=((x=3*y,x+1),x-1);
+	printf("x=%d,y=%d",x,y);
 }
