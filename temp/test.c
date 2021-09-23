@@ -10,14 +10,15 @@ void game() {
         printf("Input a number:\n");
         scanf("%d",&inp);
         if (inp<rand_num)
-            printf("Small");
+            printf("Small\n");
         else if(inp>rand_num)
-            printf("Larger");
+            printf("Larger\n");
         else if(inp=rand_num){
-            printf("Correct");
+            printf("Correct\n");
             break;
         }
     }
+}
 void menu(){
     printf("1.Start\n");
     printf("2.End\n");
@@ -39,5 +40,4 @@ int main(){
             continue;
         }
     return 0;
-    }    
 }
