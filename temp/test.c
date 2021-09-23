@@ -18,6 +18,26 @@ void game() {
             break;
         }
     }
-void menu()
-
+void menu(){
+    printf("1.Start\n");
+    printf("2.End\n");
+    }
+int main(){
+    int choice;
+    menu();
+    srand((unsigned int)time(NULL));
+    while(1) {
+        printf("Input:\n");
+        scanf("%d",&choice);
+        if(choice==1) {
+            game();
+            }
+        else if(choice==2) {
+            break;
+            }
+        else printf("Error\n");
+            continue;
+        }
+    return 0;
+    }    
 }
