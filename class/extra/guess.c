@@ -1,26 +1,43 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
-int main(){
-  time_t ti;
-  int num, guess;
-  /* 初始化随机数发生器 */
-  srand((unsigned)time(&ti));
-  num = rand() % 100;
-  printf("随机数已生成，开始游戏\n");
-  while (true){
-    printf("请猜一个数字：");
-    scanf("%d", &guess);
-    if (guess > num)
-      printf("猜大了\n");
-    else if (guess < num)
-      printf("猜小了\n");
-    else
+#include <stdlib.h>
+
+void game() {
+    int rand_num=rand()%100+1;
+    int inp;
+    while (1)
     {
-      printf("猜对了\n");
-      break;
+        printf("Input a number:\n");
+        scanf("%d",&inp);
+        if (inp<rand_num)
+            printf("Small\n");
+        else if(inp>rand_num)
+            printf("Larger\n");
+        else if(inp=rand_num){
+            printf("Correct\n");
+            break;
+        }
     }
-  }
-  system("pause");
-  return 0;
+}
+void menu(){
+    printf("1.Start\n");
+    printf("2.End\n");
+    }
+int main(){
+    int choice;
+    menu();
+    srand((unsigned int)time(NULL));
+    while(1) {
+        printf("Input:\n");
+        scanf("%d",&choice);
+        if(choice==1) {
+            game();
+            }
+        else if(choice==2) {
+            break;
+            }
+        else printf("Error\n");
+            continue;
+        }
+    return 0;
 }
