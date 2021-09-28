@@ -14,4 +14,5 @@ int main()
     printf("x-y=%d\n",minus);
     printf("x*y=%d\n",multiply);
     printf("x/y=%.2f\n",divide);
+    return 0;
 }
