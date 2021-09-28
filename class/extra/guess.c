@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-
+#define _CRT_SECURE_NO_WARNINGS
 void game() {
     int rand_num=rand()%100+1;
     int inp;
