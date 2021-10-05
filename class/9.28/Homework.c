@@ -10,9 +10,9 @@ int main()
     minus=x-y;
     multiply=x*y;
     divide=(double)x/y;
-    printf("x+y=%d\n",plus);
-    printf("x-y=%d\n",minus);
-    printf("x*y=%d\n",multiply);
-    printf("x/y=%.2f\n",divide);
+    printf("%d+%d=%d\n",x,y,plus);
+    printf("%d-%d=%d\n",x,y,minus);
+    printf("%d*%d=%d\n",x,y,multiply);
+    printf("%d/%d=%.2f\n",x,y,divide);
     return 0;
 }
