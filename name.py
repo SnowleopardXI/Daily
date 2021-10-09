@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
-
+﻿#coding=utf-8
 import random
-import time
 author='''Author: 3awallstudio--Steve Ephraim Adam
 Contact: yjzawall@gmail.com
 File: name.py
@@ -34,23 +32,30 @@ if m==1:
     if n>=1 and n<35:
         x=random.sample(listg,n)
         print(x)
+        input()
     else:
         err()
+        input()
 else:
     if m==2:
         print('请分别输入男女生人数，以回车分割：')
         print('本班男生25名，女生10名')
         m=int(input())
         f=int(input())
-        if m>1 and m<=25:
+        if m>=1 and m<25:
             print('抽取的男生为%d名，分别为：'%(m))
             x=random.sample(listm,m)
             print(x)
         else:
             err()
-        if f>1 and f<=10:
+        if f>=1 and f<10:
             print('抽取的女生为%d名，分别为：'%(f))
             x1=random.sample(listf,f)
             print(x1)
+            input()
         else:
             err()
+            input()
+    else:
+        err()
+        input()
