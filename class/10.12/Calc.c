@@ -12,8 +12,8 @@ int main()
     else 
     {
         if (formula=='/'&&num2==0)
-    printf("非法输入\n");
-    else
+            printf("非法输入\n");
+        else
     {
         if(formula=='/')
         {
@@ -53,4 +53,3 @@ int main()
 }
 }
 }
-    
