@@ -13,36 +13,26 @@ int main()
 	menu();
 	int n0;
     scanf("%d",&n0);
-    switch (n0)
-    {
-    case 1:
+    while (1) {
         program_express();
         program_sci();
-        break;
-    case 2:
+        }
+    while (2) {
         program_express();
         program_nor();
-        break;
-    default:
-        printf("Error input,please retry!\n");
-        menu();
-        break;
     }
     system("pause");
 }
 
-int program_express(void)
+void program_express(char formula,int n0,long double a,long double b)
 {
-	char formula;
-    short int n0;
-    long double a,b;
     printf("Please input the expression:\n");
     scanf("%lf%c%lf",&a,&formula,&b);
     printf("Please input how many nunmbers you want to print after the dot:\n");
     scanf("%d",n0);
 }
 
-int program_nor()
+void program_nor(char formula,int n0,long double a,long double b)
 {
 	char formula;
     short int n0;
@@ -85,11 +75,8 @@ int program_nor()
     }
 }
 
-int program_sci()
+void program_sci(char formula,int n0,long double a,long double b)
 {
-	char formula;
-    short int n0;
-    long double a,b,out1,out2;
     switch (formula)
     {
     case '/':
