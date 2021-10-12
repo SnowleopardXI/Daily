@@ -8,6 +8,7 @@ int main()
     c=floor(a/10);
     switch (c)
     {
+        printf("start");
     case 10:
     printf("S\n");
     break;
