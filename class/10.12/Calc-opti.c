@@ -1,61 +1,38 @@
 #include <stdio.h>
 #include <math.h>
 
-char formula;
-short int n0;
-long double a,b,out1,out2;
-
 int menu()
 {
-    printf("1.Science mode\n");
-    printf("2.Normal mode\n");
+    printf("1.Normal mode\n");
+    printf("2.Science mode\n");
     printf("Please input a choice:\n");
 }
 
 int main()
 {
-	menu();
-	int n0;
-    scanf("%d",&n0);
-    while (1) {
-        program_express();
-        program_sci();
-        }
-    while (2) {
-        program_express();
-        program_nor();
-    }
-    system("pause");
-}
-
-void program_express()
-{
-    printf("Please input the expression:\n");
-    scanf("%lf%c%lf",&a,&formula,&b);
-    printf("Please input how many nunmbers you want to print after the dot:\n");
-    scanf("%d",n0);
-}
-
-void program_nor()
-{
-	char formula;
+    char formula;
     short int n0;
     long double a,b,out1,out2;
-    switch (formula)
-    {
-    case '/':
-        if(b==0)
-        printf("Error\n");
-        else
-        {
-            out1=a/b;
-            if (out1-((long long int)out1)==0)
-            {
-                printf("%lf%c%lf=%lf\n",a,formula,b,out1);
-            }
+	menu();
+    scanf("%d",&n0);
+    while (1) {
+        printf("Please input the expression:\n");
+        scanf("%lf%c%lf",&a,&formula,&b);
+        printf("Please input how many nunmbers you want to print after the dot:\n");
+        scanf("%d",n0);
+        switch (formula){
+        case '/':
+            if(b==0)
+            printf("Error\n");
             else
-                printf("%lf%c%lf=%.2lf\n",a,formula,b,out2);
-        }
+            {
+                out1=a/b;
+                if (out1-((long long int)out1)==0)
+                {
+            printf("%lf%c%lf=%lf\n",a,formula,b,out1);
+                }
+                else            printf("%lf%c%lf=%.2lf\n",a,formula,b,out2);
+            }
         break;
     case '+':
         out1=a+b;
@@ -77,6 +54,20 @@ void program_nor()
         printf("Error\n");
         break;
     }
+        }
+    while (2) {
+        program_express();
+        program_nor();
+    }
+    system("pause");
+}
+
+void program_nor()
+{
+	char formula;
+    short int n0;
+    long double a,b,out1,out2;
+    
 }
 
 void program_sci()
