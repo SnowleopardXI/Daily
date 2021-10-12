@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <math.h>
 
+char formula;
+short int n0;
+long double a,b,out1,out2;
+
 int menu()
 {
     printf("1.Science mode\n");
@@ -24,7 +28,7 @@ int main()
     system("pause");
 }
 
-void program_express(char formula,int n0,long double a,long double b)
+void program_express()
 {
     printf("Please input the expression:\n");
     scanf("%lf%c%lf",&a,&formula,&b);
@@ -32,7 +36,7 @@ void program_express(char formula,int n0,long double a,long double b)
     scanf("%d",n0);
 }
 
-void program_nor(char formula,int n0,long double a,long double b)
+void program_nor()
 {
 	char formula;
     short int n0;
@@ -75,7 +79,7 @@ void program_nor(char formula,int n0,long double a,long double b)
     }
 }
 
-void program_sci(char formula,int n0,long double a,long double b)
+void program_sci()
 {
     switch (formula)
     {
