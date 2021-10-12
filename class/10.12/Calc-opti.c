@@ -16,9 +16,11 @@ int main()
     switch (n0)
     {
     case 1:
+        program_express();
         program_sci();
         break;
     case 2:
+        program_express();
         program_nor();
         break;
     default:
@@ -45,7 +47,6 @@ int program_nor()
 	char formula;
     short int n0;
     long double a,b,out1,out2;
-    program_express();
     switch (formula)
     {
     case '/':
@@ -89,7 +90,6 @@ int program_sci()
 	char formula;
     short int n0;
     long double a,b,out1,out2;
-    program_express();
     switch (formula)
     {
     case '/':
