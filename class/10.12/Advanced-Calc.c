@@ -2,8 +2,19 @@
 #include <math.h>
 #include <string.h>
 
+int menu()
+{
+    printf("1.Calculator\n");
+    printf("2.Equation Solver\n");
+    printf("");
+}
 int main()
 {
+    short int menu0;
+    menu();
+    scanf("%d",&menu0);
+    do
+    {
     const double pi=3.1415926;
     const double phi=0.6180339887;
     const double e=2.718281828;
@@ -167,4 +178,11 @@ int main()
             }
     getchar();
     return 0;
+    
+    } while (menu0==1);
+    do
+    {
+        printf()
+    } while (/* condition */);
+    
 }
