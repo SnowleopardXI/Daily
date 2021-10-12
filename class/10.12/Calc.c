@@ -5,8 +5,14 @@ int main()
     float out2;
     char formula;
     scanf("%d%c%d",&num1,&formula,&num2);
-    if (formula=='/'&&num2==0)
-    printf("非法输入");
+    if (formula!='+'&&formula!='-'&&formula!='*'&&formula!='/')
+    {
+        printf("非法输入\n");
+    }
+    else 
+    {
+        if (formula=='/'&&num2==0)
+    printf("非法输入\n");
     else
     {
         if(formula=='/')
@@ -34,7 +40,7 @@ int main()
     if (formula=='/')
     {
         if((out2-((int)out2))==0){
-            printf("%d%c%d=%.2f",num1,formula,num2,(int)out2);
+            printf("%d%c%d=%d",num1,formula,num2,(int)out2);
         }
         else
         printf("%d%c%d=%.2f",num1,formula,num2,out2);
@@ -46,3 +52,5 @@ int main()
     return 0;
 }
 }
+}
+    
