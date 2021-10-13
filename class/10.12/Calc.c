@@ -6,9 +6,7 @@ int main()
     char formula;
     scanf("%d%c%d",&num1,&formula,&num2);
     if (formula!='+'&&formula!='-'&&formula!='*'&&formula!='/')
-    {
         printf("非法输入\n");
-    }
     else 
     {
         if (formula=='/'&&num2==0)

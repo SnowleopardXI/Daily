@@ -1,19 +1,21 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
+#include <stdlib.h>
 
 int menu()
 {
     printf("1.Calculator\n");
-    printf("2.Equation Solver\n");
+    printf("2.3*3 Matrix Solver\n");
     printf("");
 }
+
 int main()
 {
     short int menu0;
     menu();
     scanf("%d",&menu0);
-    do
+    while (menu==1)
     {
     const double pi=3.1415926;
     const double phi=0.6180339887;
@@ -179,10 +181,77 @@ int main()
     getchar();
     return 0;
     
-    } while (menu0==1);
-    do
+    }
+    while (menu0==2)
     {
-        printf()
-    } while (/* condition */);
-    
+        matrix3();
+        return 0;
+    }
+
+    while (menu0==3)
+    {
+        matrix4();
+    }  
 }
+
+int matrix3()
+{
+    int i,j,t,s=0,a[3][3];
+    for(i=0;i<3;i++)
+        for(j=0;j<3;j++)
+            scanf("%d",&a[i][j]);
+    for(i=0;i<3;i++)
+    {t=1;
+    for(j=0;j<3;j++)
+        t*=a[(i+j)%3][j];
+    s+=t;
+    t=1;
+    for(j=0;j<3;j++)
+        t*=a[(i+3-j)%3][j];
+    s-=t;
+    }
+    printf("%d\n",s);
+    return 0;
+}
+
+int matrix4()
+{
+    int A[]={2,1,3,-1,1,-5,1,1,2,3,2,2,0,-1,4,2};
+    printf("%d\n", det(A, 4));
+    return 0;
+}
+
+int* M(int *A, int n, int i, int j)
+{
+    int *B= (int*)malloc((n - 1)*sizeof(int));
+    int k = 0;
+    for (int k1 = 0; k1 < n; ++k1)
+    {
+        if (k1 != i)
+            for (int k2 = 0; k2 < n; ++k2)
+                if (k2 != j)
+                    B[k++] = A[k1*n + k2];
+    }
+    return B;
+}
+ 
+int det(int A[], int n)
+{
+    int sum = 0, N = n*n;
+    if (n == 1)
+        sum = A[0];
+    else
+    {
+        for (int i = 0; i < n; ++i)
+        {
+            int *tmp = M(A, n, i, 0);
+            int Aij = A[i*n]*det(tmp, n - 1);
+            if (i%2 != 0)
+                Aij = -Aij;
+            sum = sum + Aij;
+             
+        }
+    }
+    return sum;
+}
+ 
