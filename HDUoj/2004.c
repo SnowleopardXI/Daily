@@ -2,7 +2,7 @@
 int main()
 {
     int score;
-    while( scanf("%d\n", &score)!=EOF ) 
+    while(~scanf("%d\n", &score)) 
     {
         if (score<0||score>100)
             printf("Score is error!\n");

@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-int is_rui(int year)
+int is_run(int year)
 {
 	if(year % 4 == 0 && year % 100 != 0)
 		return 1;
@@ -24,7 +24,7 @@ int days(int year, int month)
 			return 31;
 			break;
 		case 2:
-			if(is_rui(year)) return 29;
+			if(is_run(year)) return 29;
 			else return 28;
 			break;
 		case 4:

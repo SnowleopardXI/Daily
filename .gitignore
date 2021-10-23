@@ -4,3 +4,4 @@
 *.obj
 *.exe
 *.exe.stackdump
+*.out

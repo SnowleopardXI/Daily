@@ -2,12 +2,13 @@
 int main()
 {
     float n;
-    int i,n2=1;
-    printf("璇疯緭鍏ヤ竴涓鏁存暟:");
+    int i;
+    long long n2=1;
+    printf("请输入一个正整数:");
     scanf("%f",&n);
     while ((n-(int)n!=0)||(n<=0))
     {
-        printf("杈撳叆鐨勪笉鏄鏁存暟锛岃閲嶈瘯!\n");
+        printf("输入的不是正整数，请重试!\n");
         scanf("%f",&n);
     }
     int n1=n;
@@ -15,6 +16,7 @@ int main()
     {
         n2*=i;
     }
-    printf("%d鐨勯樁涔樻槸%d",n1,n2);
+    printf("%d的阶乘是%lld",n1,n2);
     return 0;
 }
+
