@@ -10,11 +10,10 @@ int main()
         printf("输入的不是正整数，请重试!\n");
         scanf("%f",&n);
     }
-    int n1=n;
-    for (i=1; i<=n1; i++)
+    for (i=1; i<=(int)n; i++)
     {
         n2*=i;
     }
-    printf("%d的阶乘是%d",n1,n2);
+    printf("%d的阶乘是%d",(int)n,n2);
     return 0;
 }
