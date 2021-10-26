@@ -27,18 +27,12 @@ int main()
                     break;
                 }
             }
-            if (k > 0)
-            {
-                count++;
-                break;
-            }
         }
-        if (count > 0)
+        if (k != 0)
             printf("Sorry");
         else
             printf("OK");
         printf("\n");
     }
-}
-return 0;
+    return 0;
 }

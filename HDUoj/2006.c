@@ -8,8 +8,8 @@ int main()
         for(i = 0 ;i <a ;i++)
         {  
             scanf("%d",&n);
-        if(n%2!=0)
-        sum*=n;
+            if(n%2!=0)
+            sum*=n;
         }
     printf ("%d\n",sum);
     }

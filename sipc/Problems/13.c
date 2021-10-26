@@ -1,17 +1,14 @@
 #include <stdio.h>
 int main(){
-    int num;
-    int i=0;
-    int arr[10];
-    while(1){
-        scanf("%d",&num);
-        char c=getchar();
-        arr[i++]=num;
-        if(c=='\n'){
-            break;
-        }
-   }
-    average=(double)sum/n;
-    printf("%d",sum);
-    printf("%7.1f",average);
+    int i,n,sum=0,input=0;
+    float result;
+    scanf("%d",&n);
+    while (~scanf("%d ",&input))
+    {
+        sum+=input;
+        result=(float)input/n;
+        printf("%d\t%.1f",sum,result);
+    }
+    
+    return 0;
 }

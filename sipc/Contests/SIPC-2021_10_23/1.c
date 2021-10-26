@@ -1,12 +1,11 @@
 #include <stdio.h>
 
-const int mod = 1e9 + 7;
+const int Mod = 1e9 + 7;
 int n, a, b;
 int p[10000010], s[10000010];
 
-int add(int a, int b) 
-{
-	return a + b >= mod ? a + b - mod : a + b;
+int add(int a, int b) {
+	return a + b >= Mod ? a + b - Mod : a + b;
 }
 
 int main() {
@@ -15,8 +14,10 @@ int main() {
 	p[1] = a; p[2] = b;
 	s[1] = a; s[2] = add(a, b);
 	for(i = 3; i <= n; ++i)
+	{
 		p[i] = add(p[i - 1], p[i - 2]);
-        s[i] = add(s[i - 1], p[i]);
+		s[i] = add(s[i - 1], p[i]);
+	}
 	printf("%d\n", s[n]);
 	return 0;
 }
