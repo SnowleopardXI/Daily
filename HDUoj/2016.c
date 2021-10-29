@@ -1,24 +1,29 @@
-#include <stdio.h>
-int main()
+#include<stdio.h>
+void main()
 {
-    int n,a,i,min;
-    while (~scanf("%d",&n))
+    int n;
+    while(scanf("%d",&n)!=EOF&&n!=0)
     {
-        int array[n-1];
-        for (i = n-1; i >=0; i--)
+        int a[100];
+        int min=100000;
+        int flag=0;
+        for(int i=0;i<n;i++)
         {
-            scanf("%d",&a);
-            array[i]=a;
-        }
-        min=array[0];
-        for (i = 1; i <= n; i++)
-        {
-            if (array[i]<min)
+            scanf("%d",&a[i]);
+            if (a[i]<min)
             {
-                min=array[i];
+                min=a[i];
+                flag=i;
             }
         }
-        
+        if(flag!=0)
+        {
+            a[flag]=a[0];
+            a[0]=min;
+        }
+        printf("%d",a[0]);
+        for (int j=1;j<n;j++)
+            printf(" %d",a[j]);
+        printf("\n");
     }
-    printf("%d",min);
 }
