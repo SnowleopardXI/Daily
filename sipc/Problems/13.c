@@ -1,24 +1,18 @@
-
-#include<stdio.h>
-#include<stdlib.h>
- 
-void main(void)
+#include <stdio.h>
+int main(void)
 {
-	int num[100];
-	int index=0;
-	int temp=0;
-	int result=0;
-	while(1)
+	int a[10000] = {NULL}; 
+	int i = 0, n;
+	double sum = 0.0; 
+	double average = 0.0; 
+	scanf("%d", &n); 
+	for (i = 0; i < n; i++) 
 	{
-		scanf("%d",&temp);
-			num[index]=temp;
-			index++;
+		scanf("%d", &a[i]); 
+		sum += a[i]; 
 	}
-	temp=0;
-	for (temp = 0; temp < index; temp++)
-	{
-		result+=num[temp];
-	}
-	printf("%f",result/index);
-	system("pause");
+	printf("%d",(int)sum);
+	average = sum / (double)n;
+	printf(" %.1lf", average); 
+	return 0;
 }
