@@ -2,22 +2,24 @@
 #include <math.h>
 int isPrime(int n)
 {
-    int i;
-    for (i = 2; i <= (int)sqrt(n); i++)
+    int j;
+    for (j = 2; j <= (int)sqrt(n); j++)
     {
-        if (n % i == 0)
+        if (n % j == 0)
         return 0;
     }
     return 1;
 }
 int main()
 {
-    int i,x,y;
+    int i,x,y,sum=0,temp;
     scanf("%d %d",&x,&y);
     for (i = x; i <= y; i++)
     {
-        if (isPrime(i))
-        printf("%d ", i);
+        temp=(int)isPrime(i);
+        sum=+temp;
+        printf("%d",temp);
     }
+    printf("%d",sum);
     return 0;
 }
