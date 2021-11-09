@@ -21,4 +21,8 @@ int main()
     }
     printf("\n");
     return 0;
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes
