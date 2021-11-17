@@ -1,24 +1,21 @@
-#include <stdio.h>
-int is_prime(int x)
+#include "stdio.h"
+int main(int argc,char *argv[])
 {
-    int y;
-    for (y = 2; y < x; y++)
+    int M,N,sum,t,k;
+    printf("Enter M & N(int 1<M<N)...\n");
+    if (scanf("%d%d", &M, &N) == 2 && M > 1 && M < N)
     {
-        if (x%y==0)
-        return 0;
-        else
-        return 1;
+        for (M==2?(k=1,sum=2):sum=0,M+=!(M&1);M<=N;M+=2)
+        {
+            for (t=3;t*t<=M;t+=2)
+                if (!(M % t))
+                    break;
+            if (t*t > M)
+                sum+=M, k++;
+        }
+        printf("%d  %d\n",sum,k);
     }
-}
-int main()
-{
-    int n,i,count=0;
-    scanf("%d",&n);
-    for (i = 1; i <= n; i++)
-    {
-        is_prime(i);
-        count=+is_prime(i);
-    }
-    printf("%d",count);
+    else
+        printf("Input error, exit...\n");
     return 0;
 }

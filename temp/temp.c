@@ -1,39 +1,18 @@
 #include<stdio.h>
 int main()
 {
-	int n=10,r,i,m=0,j=1,k;
-	while(n<=100)
+	int i,a[10]={1,2,3,4,5,6,7,8,9,10},b;
+	scanf("%d",&b);
+	for(i=0;i<=9;i++)
 	{
-		k=n,m=0,r=0;
-		while (k!=0)//求反序数
-		{
-			r=r*10+k%10;
-			k/=10;
-		}
-		for(i=2;i<=n-1;i++)	//判断n是否为素数
-		{	
-			if(n%i==0) 
-			{	
-				m=1;
-				break;
-			}
-		}
-		for(i=2;i<=r-1;i++)//判断r是否为素数
-		{	
-			if(r%i==0) 
-			{	
-				m=1;
-				break;
-			}
-		}
-		if(m==0) 
-		{	
-			printf("%d ",n);
-			if(j%5==0) 
-			printf("\n");
-			j++;
-		}
-		n++;
+		if(a[i]>b)
+		break;
+	}
+	int c[11]={b,1,2,3,4,5,6,7,8,9,10};
+	printf("%d ",b);
+	for(i=0;i<=10;i++)
+	{
+		printf("%d ",c[i]);
 	}
 	return 0;
-} 
+}

@@ -1,27 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<string.h>
 struct book
 {
-    char name[62];
-    float price;
+	char name[31];
+	double price;	
 }
-s[10]={0};
+b[10];
 int main()
 {
-    int n,i,min,max;
-    scanf("%d",&n);
-    for (i = 0; i < n; i++)
+	int n,i,j,mini=0,maxi=0;
+	double min=1000000,max=-1;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
     {
-        scanf("%s\n%f",&s[i].name,&s[i].price);
-    }
-    min=s[i].price,max=s[i].price;
-    for (i = 0; i < n; i++)
-    {
-        if (s[i].price<min)
-            min=s[i].price;
-        if (s[i].price>max)
-            max=s[i].price;
-    }
-    printf("%d %s",min,s[i].name);
-    return 0;
+		scanf("\n");
+		gets(b[i].name);
+		scanf("%lf",&b[i].price);
+		if(b[i].price>max)
+        {
+			max=b[i].price;
+			maxi=i;
+		}
+		if(b[i].price<min)
+        {
+			min=b[i].price;
+			mini=i;
+		} 
+	}
+	printf("%.2lf, %s\n",b[maxi].price,b[maxi].name);
+	printf("%.2lf, %s\n",b[mini].price,b[mini].name);
+	return 0;
 }
