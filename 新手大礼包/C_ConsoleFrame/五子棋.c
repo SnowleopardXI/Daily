@@ -1,44 +1,174 @@
-#include<stdio.h>
-#include<time.h>
-#include<windows.h>
-#include<stdlib.h>
-#include<conio.h>
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <conio.h>
 #define Piece int
 #define Winner int
 #define null 0
 #define black 1
 #define white -1
-void Update();int _game_exit=1;int gameFramesCounter=0;int getGameFramesCount(){return gameFramesCounter;}void Awake();void OnEnable();void exitGame(){_game_exit=0;}void _checkInput();void Start();int gotoxy(int x,int y){COORD cd;cd.X=x;cd.Y=y;return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cd);}void paint(int x,int y,char n){gotoxy(x,y);printf("%c",n);}char key[12];int _key_number=0;void setKey(char n){if(_key_number<12){key[_key_number] = n;_key_number++;}}int _key_down=0;int _the_key[12]={1,2,4,8,16,32,64,128,256,512,1024,2048};void _checkInput(){if(kbhit()!=0){char n;while(!kbhit()==0){n=getch();int i;for(i=0;i<_key_number;i++){if(key[i]==n){_key_down |= _the_key[i];}}}}}int getKeyDown(char n){int i=0;int flag=0;for(;i<_key_number;i++){if(key[i] == n){flag = 1;break;}}return _key_down&_the_key[i] && flag;}int gameFrames=10;void setGameFrames(int n){gameFrames = n;}void clear(){system("cls");}void End(); int _height = 50;int _width = 100;void setHeight(int height){_height = height;}void setWidth(int width){_width = width;}void _updateHandW(){int i;char* cmd = (char*)malloc(sizeof(char)*35);int lenth = 0;const char* _cmd_1 = "mode con cols=";const char* _cmd_2 = " lines=";for(i=0; _cmd_1[i]; i++){cmd[lenth++] = _cmd_1[i];}char temp[10];for(i=0; temp[i]; i++){temp[i] = '\0';}itoa(_width, temp, 10);for(i=0; temp[i]; i++){cmd[lenth++] = temp[i];}for(i=0; _cmd_2[i]; i++){cmd[lenth++] = _cmd_2[i];}for(i=0; temp[i]; i++){temp[i] = '\0';}itoa(_height, temp, 10);for(i=0; temp[i]; i++){cmd[lenth++] = temp[i];}cmd[lenth++] = '\0';const char* _cmd = cmd;system(_cmd);}void start(){Awake();CONSOLE_CURSOR_INFO cursor_info = {1, 0};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);OnEnable();_updateHandW();Start();while(_game_exit){_key_down=0;_checkInput();Update();gameFramesCounter++;Sleep(920/gameFrames);}End();}
-/*===============ÉÏÃæÊÇ¿ò¼Ü£¬²»ÓÃ¹Ü£¬ÏÂÃæÊÇ¿ò¼ÜÄÚÒ»Ð©º¯ÊýµÄËµÃ÷===============*/
-//	void setGameFrames(int gameFrames);		ÉèÖÃÓÎÏ·Ö¡Êý,Î´ÉèÖÃÔòÄ¬ÈÏÎª10Ö¡¡£
-//	void setKey(char n);					ÉèÖÃ°´¼ü£¬µ÷ÓÃºó»á¼àÌý°´¼ü n¡£×î¶àÖ§³Ö12¸ö°´¼ü¡£
-//	int  getKeyDown(char n);				ÔÚÉèÖÃÁË°´¼üµÄÇé¿öÏÂ£¬Èç¹ûÍæ¼ÒÔÚ¸ÃÖ¡ÄÚ°´ÏÂ°´¼ü n£¬Ôò·µ»Ø1£¬·ñÔò·µ»Ø0£¬×î¶àÖ§³ÖÍ¬Ê±°´ÏÂ12¸ö°´¼ü¡£ 
-//	void paint(int x,int y,char n);			ÔÚ×ø±êÎª(x,y)µÄµØ·½»­ÏÂ·ûºÅ n¡£
-//	int  gotoxy(int x,int y);				ÒÆ¶¯¹â±êµ½(x,y)¡£ 
-//	void clear();							ÇåÆÁ£¨´óÁ¿Ê¹ÓÃ»áµ¼ÖÂÆÁÄ»ÉÁË¸£¬Ð¡·¶Î§ÐÞ¸Ä½¨ÒéÊ¹ÓÃpaint(x,y,' ');À´ÊÖ¶¯²Á³ý£¬ÒÔ±ÜÃâÆÁÄ»ÉÁË¸£©¡£
-//	void exitGame();						ÍË³öÓÎÏ·£» 
-//	int  getGameFramesCount();				·µ»Øµ±Ç°ËùÔÚµÄ×ÜÖ¡Êý£»
-//  void setHeight(int height);				ÉèÖÃ´°¿Ú¸ß¶È£»ÇëÔÚOnEnableº¯ÊýÖÐµ÷ÓÃ 
-//  void setWidth(int width); 				ÉèÖÃ´°¿Ú¿í¶È£»ÇëÔÚOnEnableº¯ÊýÖÐµ÷ÓÃ 
-/*============================================================================*/   
+void Update();
+int _game_exit = 1;
+int gameFramesCounter = 0;
+int getGameFramesCount() { return gameFramesCounter; }
+void Awake();
+void OnEnable();
+void exitGame() { _game_exit = 0; }
+void _checkInput();
+void Start();
+int gotoxy(int x, int y)
+{
+	COORD cd;
+	cd.X = x;
+	cd.Y = y;
+	return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cd);
+}
+void paint(int x, int y, char n)
+{
+	gotoxy(x, y);
+	printf("%c", n);
+}
+char key[12];
+int _key_number = 0;
+void setKey(char n)
+{
+	if (_key_number < 12)
+	{
+		key[_key_number] = n;
+		_key_number++;
+	}
+}
+int _key_down = 0;
+int _the_key[12] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+void _checkInput()
+{
+	if (kbhit() != 0)
+	{
+		char n;
+		while (!kbhit() == 0)
+		{
+			n = getch();
+			int i;
+			for (i = 0; i < _key_number; i++)
+			{
+				if (key[i] == n)
+				{
+					_key_down |= _the_key[i];
+				}
+			}
+		}
+	}
+}
+int getKeyDown(char n)
+{
+	int i = 0;
+	int flag = 0;
+	for (; i < _key_number; i++)
+	{
+		if (key[i] == n)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	return _key_down & _the_key[i] && flag;
+}
+int gameFrames = 10;
+void setGameFrames(int n) { gameFrames = n; }
+void clear() { system("cls"); }
+void End();
+int _height = 50;
+int _width = 100;
+void setHeight(int height) { _height = height; }
+void setWidth(int width) { _width = width; }
+void _updateHandW()
+{
+	int i;
+	char *cmd = (char *)malloc(sizeof(char) * 35);
+	int lenth = 0;
+	const char *_cmd_1 = "mode con cols=";
+	const char *_cmd_2 = " lines=";
+	for (i = 0; _cmd_1[i]; i++)
+	{
+		cmd[lenth++] = _cmd_1[i];
+	}
+	char temp[10];
+	for (i = 0; temp[i]; i++)
+	{
+		temp[i] = '\0';
+	}
+	itoa(_width, temp, 10);
+	for (i = 0; temp[i]; i++)
+	{
+		cmd[lenth++] = temp[i];
+	}
+	for (i = 0; _cmd_2[i]; i++)
+	{
+		cmd[lenth++] = _cmd_2[i];
+	}
+	for (i = 0; temp[i]; i++)
+	{
+		temp[i] = '\0';
+	}
+	itoa(_height, temp, 10);
+	for (i = 0; temp[i]; i++)
+	{
+		cmd[lenth++] = temp[i];
+	}
+	cmd[lenth++] = '\0';
+	const char *_cmd = cmd;
+	system(_cmd);
+}
+void start()
+{
+	Awake();
+	CONSOLE_CURSOR_INFO cursor_info = {1, 0};
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+	OnEnable();
+	_updateHandW();
+	Start();
+	while (_game_exit)
+	{
+		_key_down = 0;
+		_checkInput();
+		Update();
+		gameFramesCounter++;
+		Sleep(920 / gameFrames);
+	}
+	End();
+}
+/*===============ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½Ü£ï¿½ï¿½ï¿½ï¿½Ã¹Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½===============*/
+//	void setGameFrames(int gameFrames);		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·Ö¡ï¿½ï¿½,Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½Îª10Ö¡ï¿½ï¿½
+//	void setKey(char n);					ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	int  getKeyDown(char n);				ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½Ö¡ï¿½Ú°ï¿½ï¿½Â°ï¿½ï¿½ï¿½ nï¿½ï¿½ï¿½ò·µ»ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	void paint(int x,int y,char n);			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª(x,y)ï¿½ÄµØ·ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ nï¿½ï¿½
+//	int  gotoxy(int x,int y);				ï¿½Æ¶ï¿½ï¿½ï¿½êµ½(x,y)ï¿½ï¿½
+//	void clear();							ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã»áµ¼ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Ë¸ï¿½ï¿½Ð¡ï¿½ï¿½Î§ï¿½Þ¸Ä½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½paint(x,y,' ');ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½
+//	void exitGame();						ï¿½Ë³ï¿½ï¿½ï¿½Ï·ï¿½ï¿½
+//	int  getGameFramesCount();				ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½
+//  void setHeight(int height);				ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú¸ß¶È£ï¿½ï¿½ï¿½ï¿½ï¿½OnEnableï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½
+//  void setWidth(int width); 				ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú¿ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½ï¿½OnEnableï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½
+/*============================================================================*/
 
-typedef struct NODE{
-	struct NODE* last;
-	int x,y;
+typedef struct NODE
+{
+	struct NODE *last;
+	int x, y;
 } Node;
 
-/*==================±äÁ¿Çø£¬Çë½«ÐèÒªµÄÈ«¾Ö±äÁ¿·ÅÔÚ±äÁ¿Çø======================*/
-//È«¾Ö±äÁ¿
+/*==================ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë½«ï¿½ï¿½Òªï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½======================*/
+//È«ï¿½Ö±ï¿½ï¿½ï¿½
 int cursor_x = 0;
 int cursor_y = 0;
 Piece piece = black;
 Piece checkerboard[15][15];
-Node* p = NULL;
+Node *p = NULL;
 Winner winner = null;
-/*============================================================================*/ 
+/*============================================================================*/
 
 //
-void drawMap(); 
+void drawMap();
 void moveCursor();
 void currsorBlinks();
 void dropPiece();
@@ -47,23 +177,22 @@ void repentance();
 void checkWin(int x, int y);
 //
 
-
+/**
+ * Awake()ï¿½ï¿½ï¿½Ñºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
+ */
+void Awake()
+{
+}
 
 /**
- * Awake()»½ÐÑº¯Êý£¬¸Ãº¯Êý»áÔÚ³ÌÐò¼ÓÔØ³õÖ´ÐÐÒ»´Î£» 
+ * OnEnable()ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½è¶¨ 
  */
-void Awake(){
-	
-} 
-
-/**
- * OnEnable()¼ÓÔØº¯Êý£¬¸Ãº¯Êý»áÖ´ÐÐÓÎÏ·³õÊ¼»¯Éè¶¨ 
- */
-void OnEnable(){
+void OnEnable()
+{
 	setHeight(50);
-	setWidth(150);	
+	setWidth(150);
 	setKey('w');
-	setKey('a');	
+	setKey('a');
 	setKey('s');
 	setKey('d');
 	setKey(' ');
@@ -72,156 +201,188 @@ void OnEnable(){
 }
 
 /**
- * Start()¿ªÊ¼º¯Êý£¬¸Ãº¯Êý»áÔÚÓÎÏ·¿ªÊ¼Ê±Ö´ÐÐÒ»´Î£» 
- */ 
-void Start(){
-	drawMap(); 
+ * Start()ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Ê¼Ê±Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
+ */
+void Start()
+{
+	drawMap();
 }
 
 /**
- * Update()ÔËÐÐº¯Êý£¬¸Ãº¯Êý»áÃ¿Ò»Ö¡Ö´ÐÐÒ»´Î£» 
+ * Update()ï¿½ï¿½ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»Ö¡Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
  */
-void Update(){
+void Update()
+{
 	moveCursor();
 	currsorBlinks();
 	drawUI();
 }
 
 /**
- * End()½áÊøº¯Êý£¬¸Ãº¯ÊýÔÚÖ´ÐÐexitGame()ºóÖ´ÐÐÒ»´Î£» 
- */ 
-void End(){
-
+ * End()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½exitGame()ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
+ */
+void End()
+{
 }
 
-int main(){
+int main()
+{
 	start();
-	return 0; 
+	return 0;
 }
 
-void drawMap(){
+void drawMap()
+{
 	printf(" ________________________________________________________________________________________________________\n");
-	for(int i=0; i<15; i++){
+	for (int i = 0; i < 15; i++)
+	{
 		printf("|      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |\n");
 		printf("|      |      |      |      |      |      |      |      |      |      |      |      |      |      |      |\n");
 		printf("|______|______|______|______|______|______|______|______|______|______|______|______|______|______|______|\n");
 	}
 }
 
-void moveCursor(){
-	if(winner == null){
-		if(getKeyDown('a')){
-			cursor_x = (cursor_x == 0?0:cursor_x-1);
+void moveCursor()
+{
+	if (winner == null)
+	{
+		if (getKeyDown('a'))
+		{
+			cursor_x = (cursor_x == 0 ? 0 : cursor_x - 1);
 		}
-		if(getKeyDown('d')){
-			cursor_x = (cursor_x == 14?14:cursor_x+1);
+		if (getKeyDown('d'))
+		{
+			cursor_x = (cursor_x == 14 ? 14 : cursor_x + 1);
 		}
-		if(getKeyDown('w')){
-			cursor_y = (cursor_y == 0?0:cursor_y-1);
+		if (getKeyDown('w'))
+		{
+			cursor_y = (cursor_y == 0 ? 0 : cursor_y - 1);
 		}
-		if(getKeyDown('s')){
-			cursor_y = (cursor_y == 14?14:cursor_y+1);
+		if (getKeyDown('s'))
+		{
+			cursor_y = (cursor_y == 14 ? 14 : cursor_y + 1);
 		}
-		if(getKeyDown('r')){
+		if (getKeyDown('r'))
+		{
 			repentance();
 		}
-		if(getKeyDown(' ')){
+		if (getKeyDown(' '))
+		{
 			dropPiece();
 		}
-		if(getKeyDown('q')){
+		if (getKeyDown('q'))
+		{
 			exitGame();
 		}
-	}else{
-		if(getKeyDown('r')){
-			gotoxy(0,0);
-			drawMap(); 
+	}
+	else
+	{
+		if (getKeyDown('r'))
+		{
+			gotoxy(0, 0);
+			drawMap();
 			cursor_x = 0;
 			cursor_y = 0;
 			piece = black;
-			for(int i=0; i<15; i++){
-				for(int j=0; j<15; j++){
+			for (int i = 0; i < 15; i++)
+			{
+				for (int j = 0; j < 15; j++)
+				{
 					checkerboard[i][j] = 0;
 				}
 			}
 			p = NULL;
 			winner = null;
 		}
-		if(getKeyDown('q')){
+		if (getKeyDown('q'))
+		{
 			exitGame();
 		}
 	}
 }
 
-void currsorBlinks(){
+void currsorBlinks()
+{
 	static int cursor_x_temp = 0;
 	static int cursor_y_temp = 0;
 	static int count = 0;
-	if(cursor_x_temp == cursor_x && cursor_y_temp == cursor_y){
-		if(count > 4){
-			gotoxy(cursor_x_temp*7+1, cursor_y_temp*3);
+	if (cursor_x_temp == cursor_x && cursor_y_temp == cursor_y)
+	{
+		if (count > 4)
+		{
+			gotoxy(cursor_x_temp * 7 + 1, cursor_y_temp * 3);
 			printf("______");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+1);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 1);
 			printf("|      |");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+2);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 2);
 			printf("|");
-			gotoxy(cursor_x_temp*7+7, cursor_y_temp*3+2);
+			gotoxy(cursor_x_temp * 7 + 7, cursor_y_temp * 3 + 2);
 			printf("|");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+3);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 3);
 			printf("|______|");
-		}else{
-			gotoxy(cursor_x_temp*7+1, cursor_y_temp*3);
+		}
+		else
+		{
+			gotoxy(cursor_x_temp * 7 + 1, cursor_y_temp * 3);
 			printf("      ");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+1);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 1);
 			printf("        ");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+2);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 2);
 			printf(" ");
-			gotoxy(cursor_x_temp*7+7, cursor_y_temp*3+2);
+			gotoxy(cursor_x_temp * 7 + 7, cursor_y_temp * 3 + 2);
 			printf(" ");
-			gotoxy(cursor_x_temp*7, cursor_y_temp*3+3);
+			gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 3);
 			printf("        ");
 		}
-	}else{
+	}
+	else
+	{
 		count = 0;
-		gotoxy(cursor_x_temp*7+1, cursor_y_temp*3);
+		gotoxy(cursor_x_temp * 7 + 1, cursor_y_temp * 3);
 		printf("______");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+1);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 1);
 		printf("|      |");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+2);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 2);
 		printf("|");
-		gotoxy(cursor_x_temp*7+7, cursor_y_temp*3+2);
+		gotoxy(cursor_x_temp * 7 + 7, cursor_y_temp * 3 + 2);
 		printf("|");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+3);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 3);
 		printf("|______|");
 		cursor_x_temp = cursor_x;
 		cursor_y_temp = cursor_y;
-		gotoxy(cursor_x_temp*7+1, cursor_y_temp*3);
+		gotoxy(cursor_x_temp * 7 + 1, cursor_y_temp * 3);
 		printf("      ");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+1);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 1);
 		printf("        ");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+2);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 2);
 		printf(" ");
-		gotoxy(cursor_x_temp*7+7, cursor_y_temp*3+2);
+		gotoxy(cursor_x_temp * 7 + 7, cursor_y_temp * 3 + 2);
 		printf(" ");
-		gotoxy(cursor_x_temp*7, cursor_y_temp*3+3);
+		gotoxy(cursor_x_temp * 7, cursor_y_temp * 3 + 3);
 		printf("        ");
 	}
-	count = (count+1)%10;
+	count = (count + 1) % 10;
 }
 
-void dropPiece(){
-	if(checkerboard[cursor_x][cursor_y] == 0){
-		gotoxy(cursor_x*7+3, cursor_y*3+2);
-		if(piece == black){
-			printf("¡ñ");
+void dropPiece()
+{
+	if (checkerboard[cursor_x][cursor_y] == 0)
+	{
+		gotoxy(cursor_x * 7 + 3, cursor_y * 3 + 2);
+		if (piece == black)
+		{
+			printf("ï¿½ï¿½");
 			checkerboard[cursor_x][cursor_y] = black;
 			piece = white;
-		}else{
-			printf("¡ð");
+		}
+		else
+		{
+			printf("ï¿½ï¿½");
 			checkerboard[cursor_x][cursor_y] = white;
 			piece = black;
 		}
 		checkWin(cursor_x, cursor_y);
-		Node* temp = (Node*)malloc(sizeof(Node));
+		Node *temp = (Node *)malloc(sizeof(Node));
 		temp->x = cursor_x;
 		temp->y = cursor_y;
 		temp->last = p;
@@ -229,113 +390,154 @@ void dropPiece(){
 	}
 }
 
-void drawUI(){
+void drawUI()
+{
 	gotoxy(120, 25);
 	printf("                       ");
 	gotoxy(120, 25);
-	printf("µ±Ç°Ñ¡ÖÐÎ»ÖÃÎª(%d,%d)", cursor_x, cursor_y);
-	if(winner != null){
+	printf("ï¿½ï¿½Ç°Ñ¡ï¿½ï¿½Î»ï¿½ï¿½Îª(%d,%d)", cursor_x, cursor_y);
+	if (winner != null)
+	{
 		gotoxy(40, 20);
-		printf("ÓÎÏ·½áÊø,");
-		winner == black?printf("ºÚÆå»ñÊ¤"):printf("°×Æå»ñÊ¤");
-		printf("°´rÖØÐÂ¿ªÊ¼");
+		printf("ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½,");
+		winner == black ? printf("ï¿½ï¿½ï¿½ï¿½ï¿½Ê¤") : printf("ï¿½ï¿½ï¿½ï¿½ï¿½Ê¤");
+		printf("ï¿½ï¿½rï¿½ï¿½ï¿½Â¿ï¿½Ê¼");
 	}
 	gotoxy(120, 20);
-	printf("µ±Ç°²Ù¿ØÍæ¼Ò£º");
-	piece == black?printf("¡ñ"):printf("¡ð");
-	
-	gotoxy(120,10);
-	printf("w s a d¼ü²Ù¿Ø¹â±ê"); 
-	gotoxy(120,12);
-	printf("¿Õ¸ñ¼üÈ·¶¨");  
-	gotoxy(120,14);
-	printf("q¼üÍË³öÓÎÏ·£¬r¼ü»ØÍË");
+	printf("ï¿½ï¿½Ç°ï¿½Ù¿ï¿½ï¿½ï¿½Ò£ï¿½");
+	piece == black ? printf("ï¿½ï¿½") : printf("ï¿½ï¿½");
+
+	gotoxy(120, 10);
+	printf("w s a dï¿½ï¿½ï¿½Ù¿Ø¹ï¿½ï¿½");
+	gotoxy(120, 12);
+	printf("ï¿½Õ¸ï¿½ï¿½È·ï¿½ï¿½");
+	gotoxy(120, 14);
+	printf("qï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½Ï·ï¿½ï¿½rï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
 }
 
-void repentance(){
-	if(p == NULL)return;
+void repentance()
+{
+	if (p == NULL)
+		return;
 	checkerboard[p->x][p->y] = 0;
-	gotoxy((p->x)*7+3, (p->y)*3+2);
+	gotoxy((p->x) * 7 + 3, (p->y) * 3 + 2);
 	printf("  ");
 	p = p->last;
 	piece = -piece;
 }
 
-void checkWin(int x, int y){
+void checkWin(int x, int y)
+{
 	Piece piece = checkerboard[x][y];
 	int count = 0;
-	for(int i=0; i<5&&x+i<=14; i++){
-		if(checkerboard[x+i][y] == piece){
+	for (int i = 0; i < 5 && x + i <= 14; i++)
+	{
+		if (checkerboard[x + i][y] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	for(int i=0; i<5&&x-i>=0; i++){
-		if(checkerboard[x-i][y] == piece){
+	for (int i = 0; i < 5 && x - i >= 0; i++)
+	{
+		if (checkerboard[x - i][y] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	if(count > 5){
+	if (count > 5)
+	{
 		winner = piece;
 		return;
 	}
 	count = 0;
-	for(int i=0; i<5&&y+i<=14; i++){
-		if(checkerboard[x][y+i] == piece){
+	for (int i = 0; i < 5 && y + i <= 14; i++)
+	{
+		if (checkerboard[x][y + i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	for(int i=0; i<5&&y-i>=0; i++){
-		if(checkerboard[x][y-i] == piece){
+	for (int i = 0; i < 5 && y - i >= 0; i++)
+	{
+		if (checkerboard[x][y - i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	if(count > 5){
+	if (count > 5)
+	{
 		winner = piece;
 		return;
 	}
 	count = 0;
-	for(int i=0; i<5 && y+i<=14 && x-i>=0; i++){
-		if(checkerboard[x-i][y+i] == piece){
+	for (int i = 0; i < 5 && y + i <= 14 && x - i >= 0; i++)
+	{
+		if (checkerboard[x - i][y + i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	for(int i=0; i<5 && y-i>=0 && x+i<=14; i++){
-		if(checkerboard[x+i][y-i] == piece){
+	for (int i = 0; i < 5 && y - i >= 0 && x + i <= 14; i++)
+	{
+		if (checkerboard[x + i][y - i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	if(count > 5){
+	if (count > 5)
+	{
 		winner = piece;
 		return;
 	}
 	count = 0;
-	for(int i=0; i<5 && x+i<=14 && y-i>=0; i++){
-		if(checkerboard[x+i][y-i] == piece){
+	for (int i = 0; i < 5 && x + i <= 14 && y - i >= 0; i++)
+	{
+		if (checkerboard[x + i][y - i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	for(int i=0; i<5 && x-i>=0 && y+i<=14; i++){
-		if(checkerboard[x-i][y+i] == piece){
+	for (int i = 0; i < 5 && x - i >= 0 && y + i <= 14; i++)
+	{
+		if (checkerboard[x - i][y + i] == piece)
+		{
 			count++;
-		}else{
+		}
+		else
+		{
 			break;
 		}
 	}
-	if(count > 5){
+	if (count > 5)
+	{
 		winner = piece;
 		return;
 	}

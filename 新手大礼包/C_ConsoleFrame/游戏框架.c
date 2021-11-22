@@ -1,64 +1,193 @@
-#include<stdio.h>
-#include<time.h>
-#include<windows.h>
-#include<stdlib.h>
-#include<conio.h>
-void Update();int _game_exit=1;int gameFramesCounter=0;int getGameFramesCount(){return gameFramesCounter;}void Awake();void OnEnable();void exitGame(){_game_exit=0;}void _checkInput();void Start();int gotoxy(int x,int y){COORD cd;cd.X=x;cd.Y=y;return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cd);}void paint(int x,int y,char n){gotoxy(x,y);printf("%c",n);}char key[12];int _key_number=0;void setKey(char n){if(_key_number<12){key[_key_number] = n;_key_number++;}}int _key_down=0;int _the_key[12]={1,2,4,8,16,32,64,128,256,512,1024,2048};void _checkInput(){if(kbhit()!=0){char n;while(!kbhit()==0){n=getch();int i;for(i=0;i<_key_number;i++){if(key[i]==n){_key_down |= _the_key[i];}}}}}int getKeyDown(char n){int i=0;int flag=0;for(;i<_key_number;i++){if(key[i] == n){flag = 1;break;}}return _key_down&_the_key[i] && flag;}int gameFrames=10;void setGameFrames(int n){gameFrames = n;}void clear(){system("cls");}void End(); int _height = 50;int _width = 100;void setHeight(int height){_height = height;}void setWidth(int width){_width = width;}void _updateHandW(){int i;char* cmd = (char*)malloc(sizeof(char)*35);int lenth = 0;const char* _cmd_1 = "mode con cols=";const char* _cmd_2 = " lines=";for(i=0; _cmd_1[i]; i++){cmd[lenth++] = _cmd_1[i];}char temp[10];for(i=0; temp[i]; i++){temp[i] = '\0';}itoa(_width, temp, 10);for(i=0; temp[i]; i++){cmd[lenth++] = temp[i];}for(i=0; _cmd_2[i]; i++){cmd[lenth++] = _cmd_2[i];}for(i=0; temp[i]; i++){temp[i] = '\0';}itoa(_height, temp, 10);for(i=0; temp[i]; i++){cmd[lenth++] = temp[i];}cmd[lenth++] = '\0';const char* _cmd = cmd;system(_cmd);}void start(){Awake();CONSOLE_CURSOR_INFO cursor_info = {1, 0};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);OnEnable();_updateHandW();Start();while(_game_exit){_key_down=0;_checkInput();Update();gameFramesCounter++;Sleep(920/gameFrames);}End();}
-/*===============ÉÏÃæÊÇ¿ò¼Ü£¬²»ÓÃ¹Ü£¬ÏÂÃæÊÇ¿ò¼ÜÄÚÒ»Ð©º¯ÊýµÄËµÃ÷===============*/
-//	void setGameFrames(int gameFrames);		ÉèÖÃÓÎÏ·Ö¡Êý,Î´ÉèÖÃÔòÄ¬ÈÏÎª10Ö¡¡£
-//	void setKey(char n);					ÉèÖÃ°´¼ü£¬µ÷ÓÃºó»á¼àÌý°´¼ü n¡£×î¶àÖ§³Ö12¸ö°´¼ü¡£
-//	int  getKeyDown(char n);				ÔÚÉèÖÃÁË°´¼üµÄÇé¿öÏÂ£¬Èç¹ûÍæ¼ÒÔÚ¸ÃÖ¡ÄÚ°´ÏÂ°´¼ü n£¬Ôò·µ»Ø1£¬·ñÔò·µ»Ø0£¬×î¶àÖ§³ÖÍ¬Ê±°´ÏÂ12¸ö°´¼ü¡£ 
-//	void paint(int x,int y,char n);			ÔÚ×ø±êÎª(x,y)µÄµØ·½»­ÏÂ·ûºÅ n¡£
-//	int  gotoxy(int x,int y);				ÒÆ¶¯¹â±êµ½(x,y)¡£ 
-//	void clear();							ÇåÆÁ£¨´óÁ¿Ê¹ÓÃ»áµ¼ÖÂÆÁÄ»ÉÁË¸£¬Ð¡·¶Î§ÐÞ¸Ä½¨ÒéÊ¹ÓÃpaint(x,y,' ');À´ÊÖ¶¯²Á³ý£¬ÒÔ±ÜÃâÆÁÄ»ÉÁË¸£©¡£
-//	void exitGame();						ÍË³öÓÎÏ·£» 
-//	int  getGameFramesCount();				·µ»Øµ±Ç°ËùÔÚµÄ×ÜÖ¡Êý£»
-//  void setHeight(int height);				ÉèÖÃ´°¿Ú¸ß¶È£»ÇëÔÚOnEnableº¯ÊýÖÐµ÷ÓÃ 
-//  void setWidth(int width); 				ÉèÖÃ´°¿Ú¿í¶È£»ÇëÔÚOnEnableº¯ÊýÖÐµ÷ÓÃ 
-/*============================================================================*/  
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <conio.h>
+void Update();
+int _game_exit = 1;
+int gameFramesCounter = 0;
+int getGameFramesCount() { return gameFramesCounter; }
+void Awake();
+void OnEnable();
+void exitGame() { _game_exit = 0; }
+void _checkInput();
+void Start();
+int gotoxy(int x, int y)
+{
+	COORD cd;
+	cd.X = x;
+	cd.Y = y;
+	return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cd);
+}
+void paint(int x, int y, char n)
+{
+	gotoxy(x, y);
+	printf("%c", n);
+}
+char key[12];
+int _key_number = 0;
+void setKey(char n)
+{
+	if (_key_number < 12)
+	{
+		key[_key_number] = n;
+		_key_number++;
+	}
+}
+int _key_down = 0;
+int _the_key[12] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+void _checkInput()
+{
+	if (kbhit() != 0)
+	{
+		char n;
+		while (!kbhit() == 0)
+		{
+			n = getch();
+			int i;
+			for (i = 0; i < _key_number; i++)
+			{
+				if (key[i] == n)
+				{
+					_key_down |= _the_key[i];
+				}
+			}
+		}
+	}
+}
+int getKeyDown(char n)
+{
+	int i = 0;
+	int flag = 0;
+	for (; i < _key_number; i++)
+	{
+		if (key[i] == n)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	return _key_down & _the_key[i] && flag;
+}
+int gameFrames = 10;
+void setGameFrames(int n) { gameFrames = n; }
+void clear() { system("cls"); }
+void End();
+int _height = 50;
+int _width = 100;
+void setHeight(int height) { _height = height; }
+void setWidth(int width) { _width = width; }
+void _updateHandW()
+{
+	int i;
+	char *cmd = (char *)malloc(sizeof(char) * 35);
+	int lenth = 0;
+	const char *_cmd_1 = "mode con cols=";
+	const char *_cmd_2 = " lines=";
+	for (i = 0; _cmd_1[i]; i++)
+	{
+		cmd[lenth++] = _cmd_1[i];
+	}
+	char temp[10];
+	for (i = 0; temp[i]; i++)
+	{
+		temp[i] = '\0';
+	}
+	itoa(_width, temp, 10);
+	for (i = 0; temp[i]; i++)
+	{
+		cmd[lenth++] = temp[i];
+	}
+	for (i = 0; _cmd_2[i]; i++)
+	{
+		cmd[lenth++] = _cmd_2[i];
+	}
+	for (i = 0; temp[i]; i++)
+	{
+		temp[i] = '\0';
+	}
+	itoa(_height, temp, 10);
+	for (i = 0; temp[i]; i++)
+	{
+		cmd[lenth++] = temp[i];
+	}
+	cmd[lenth++] = '\0';
+	const char *_cmd = cmd;
+	system(_cmd);
+}
+void start()
+{
+	Awake();
+	CONSOLE_CURSOR_INFO cursor_info = {1, 0};
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+	OnEnable();
+	_updateHandW();
+	Start();
+	while (_game_exit)
+	{
+		_key_down = 0;
+		_checkInput();
+		Update();
+		gameFramesCounter++;
+		Sleep(920 / gameFrames);
+	}
+	End();
+}
+/*===============ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½Ü£ï¿½ï¿½ï¿½ï¿½Ã¹Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½===============*/
+//	void setGameFrames(int gameFrames);		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·Ö¡ï¿½ï¿½,Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½Îª10Ö¡ï¿½ï¿½
+//	void setKey(char n);					ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ nï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	int  getKeyDown(char n);				ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½Ö¡ï¿½Ú°ï¿½ï¿½Â°ï¿½ï¿½ï¿½ nï¿½ï¿½ï¿½ò·µ»ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½0ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½Í¬Ê±ï¿½ï¿½ï¿½ï¿½12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//	void paint(int x,int y,char n);			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª(x,y)ï¿½ÄµØ·ï¿½ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ nï¿½ï¿½
+//	int  gotoxy(int x,int y);				ï¿½Æ¶ï¿½ï¿½ï¿½êµ½(x,y)ï¿½ï¿½
+//	void clear();							ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã»áµ¼ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Ë¸ï¿½ï¿½Ð¡ï¿½ï¿½Î§ï¿½Þ¸Ä½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½paint(x,y,' ');ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½ï¿½
+//	void exitGame();						ï¿½Ë³ï¿½ï¿½ï¿½Ï·ï¿½ï¿½
+//	int  getGameFramesCount();				ï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½
+//  void setHeight(int height);				ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú¸ß¶È£ï¿½ï¿½ï¿½ï¿½ï¿½OnEnableï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½
+//  void setWidth(int width); 				ï¿½ï¿½ï¿½Ã´ï¿½ï¿½Ú¿ï¿½ï¿½È£ï¿½ï¿½ï¿½ï¿½ï¿½OnEnableï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½
+/*============================================================================*/
 
+/*==================ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë½«ï¿½ï¿½Òªï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½======================*/
+//È«ï¿½Ö±ï¿½ï¿½ï¿½
 
-/*==================±äÁ¿Çø£¬Çë½«ÐèÒªµÄÈ«¾Ö±äÁ¿·ÅÔÚ±äÁ¿Çø======================*/
-//È«¾Ö±äÁ¿ 
-
-/*============================================================================*/ 
+/*============================================================================*/
 
 /**
- * Awake()»½ÐÑº¯Êý£¬¸Ãº¯Êý»áÔÚ³ÌÐò¼ÓÔØ³õÖ´ÐÐÒ»´Î£» 
+ * Awake()ï¿½ï¿½ï¿½Ñºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½Ø³ï¿½Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
  */
-void Awake(){
-	
-} 
+void Awake()
+{
+}
 
 /**
- * OnEnable()¼ÓÔØº¯Êý£¬¸Ãº¯Êý»áÖ´ÐÐÓÎÏ·³õÊ¼»¯Éè¶¨ 
+ * OnEnable()ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½è¶¨ 
  */
-void OnEnable(){
-	
+void OnEnable()
+{
 }
 
 /**
- * Start()¿ªÊ¼º¯Êý£¬¸Ãº¯Êý»áÔÚÓÎÏ·¿ªÊ¼Ê±Ö´ÐÐÒ»´Î£» 
- */ 
-void Start(){
-	
-}
-
-/**
- * Update()ÔËÐÐº¯Êý£¬¸Ãº¯Êý»áÃ¿Ò»Ö¡Ö´ÐÐÒ»´Î£» 
+ * Start()ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Ê¼Ê±Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
  */
-void Update(){
-	
+void Start()
+{
 }
 
 /**
- * End()½áÊøº¯Êý£¬¸Ãº¯ÊýÔÚÖ´ÐÐexitGame()ºóÖ´ÐÐÒ»´Î£» 
- */ 
-void End(){
-
+ * Update()ï¿½ï¿½ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»Ö¡Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
+ */
+void Update()
+{
 }
 
-int main(){
+/**
+ * End()ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½exitGame()ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½Î£ï¿½ 
+ */
+void End()
+{
+}
+
+int main()
+{
 	start();
-	return 0; 
+	return 0;
 }

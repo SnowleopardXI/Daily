@@ -1,18 +1,28 @@
-#include<stdio.h>
+#include <stdio.h>
+#define MAXN 10
+int search(int list[], int n, int x)
+{
+	int index = -1;
+	for (int i = 0; i < n; i++)
+		if (list[i] == x)
+		{
+			index = i;
+			break;
+		}
+	return index; 
+}
 int main()
 {
-	int i,a[10]={1,2,3,4,5,6,7,8,9,10},b;
-	scanf("%d",&b);
-	for(i=0;i<=9;i++)
-	{
-		if(a[i]>b)
-		break;
-	}
-	int c[11]={b,1,2,3,4,5,6,7,8,9,10};
-	printf("%d ",b);
-	for(i=0;i<=10;i++)
-	{
-		printf("%d ",c[i]);
-	}
+	int i, index, n, x;
+	int a[MAXN];
+	scanf("%d", &n);
+	for (i = 0; i < n; i++)
+		scanf("%d", &a[i]);
+	scanf("%d", &x);
+	index = search(a, n, x);
+	if (index != -1)
+		printf("index = %d\n", index);
+	else
+		printf("Not found\n");
 	return 0;
 }

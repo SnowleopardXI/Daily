@@ -1,33 +1,31 @@
 #include<stdio.h>
-int main(void)
+#include<string.h>
+int main()
 {
-	char a[82];
-	char b[82];
-	int flag,j,i,count;
-	for(i=0;(a[i]=getchar())!='\n';i++)
-    {
-		b[i]=a[i];
-	}
-	a[i]=0;
-	count=0;
-	for(i=0;a[i]!='\0';i++)
-    {
-		flag=0;
-		if(a[i]>='A'&&a[i]<='Z')
-        {
-			for(j=0;j<i;j++)
-            {
-				if(b[j]==a[i])
-				flag=1;
-			}
-			if(flag == 0)
-            {
-				printf("%c",a[i]);
-				count++;
+	int i,c,a=0,j,b=0;
+	char str[80];
+	gets(str);
+	for(i=0;i<strlen(str);i++)
+	{
+		if(i>=1)
+		{
+			for(j=i-1;j>=0;j--)
+			{
+				b=0;
+				if(str[i]==str[j])
+				{
+					b++;
+					break;
+				}
 			}
 		}
+		if(str[i]>='A'&&str[i]<='Z'&&b==0)
+		{
+			printf("%c",str[i]);
+			a++;
+		}		
 	}
-	if(count==0)
-	printf("Not Found");
+	if(a==0)
+		printf("Not Found");
 	return 0;
 }

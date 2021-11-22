@@ -1,40 +1,23 @@
 #include<stdio.h>
-int main()
+int main(void)
 {
-	int N,X,i,t,k,j;
-	scanf("%d",&N);
-	int a[N];
-	for(i=0;i<N;i++)
+	int n,x,a[10],i,t;
+	scanf("%d", &n);
+	for (i=0; i<n; i++)
 	{
-		scanf("%d",&a[i]);
+		scanf("%d", &a[i]);
 	}
-	scanf("%d",&X);
-	N+=1;
-	a[N-1]=X;
-    for (i = 0; i < N; i++)
-    {
-        if (a[i]==X)
-        {
-            for (j = 0; j < N; j++)
-            {
-                printf("%d ",a[j]);
-            }
-            return 0;
-        }
-    }
-	for(i=0;i<N;i++)
+	scanf("%d", &x);
+	for (i=0; i<n; i++)
 	{
-		for(j=0;j<N-i-1;j++)
-	    if(a[j]>a[j+1])
-        {
-		    t=a[j];
-	    	a[j]=a[j+1];
-	    	a[j+1]=t;
-	    } 
+		if (x < a[i])
+		{
+			t = a[i];
+			a[i] = x;
+			x = t;
+		}
+		printf("%d ", a[i]);
 	}
-	for(i=0;i<N;i++)
-    {
-        printf("%d ",a[i]);
-    }
+	printf("%d ",x);
 	return 0;
 }

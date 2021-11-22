@@ -1,28 +1,36 @@
-#include <stdio.h>
-struct people
+#include<stdio.h>
+struct Person
 {
 	char name[10];
-	int birth;
-	char number[20];	
-}p[10],t;
-int main(){
-	int n,i,j;
-	scanf("%d",&n);
-	for(i=0;i<n;i++)
-    {
-		scanf("%s %d %s",p[i].name,&p[i].birth,p[i].number);        
-    }
-	for(i=0;i<n-1;i++)
-    {
-		for(j=0;j<n-i-1;j++)
-        {
-			if(p[j].birth>p[j+1].birth)
-				t=p[j];p[j]=p[j+1];p[j+1]=t;
-        }	
-    }
-	for(i=0;i<n;i++)
-    {
-        printf("%s %d %s\n",p[i].name,p[i].birth,p[i].number);
-    }
+	int birthday;   
+	char number[17];
+}Person;
+int main(void)
+{
+	struct Person person[11],temp;  
+	int n;
+	scanf("%d", &n);
+	getchar();   
+	for (int i = 1; i <= n; i++)
+	{
+		scanf("%s %d %s", &person[i].name, &person[i].birthday, &person[i].number);
+		getchar();   
+	}
+	for (int i = 1; i < n; i++)   
+	{
+		for (int j = i + 1; j <=n; j++)   
+		{
+			if (person[j].birthday < person[i].birthday)
+			{
+				temp = person[j];
+				person[j] = person[i];
+				person[i] = temp;
+			}
+		}
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		printf("%s %d %s\n", person[i].name, person[i].birthday, person[i].number);
+	}
 	return 0;
 }

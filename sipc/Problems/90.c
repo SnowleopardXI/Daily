@@ -1,21 +1,29 @@
-#include "stdio.h"
-int main(int argc,char *argv[])
+#include<stdio.h>
+#include<math.h>
+int judgment_prime(int n);
+int main()
 {
-    int M,N,sum,t,k;
-    printf("Enter M & N(int 1<M<N)...\n");
-    if (scanf("%d%d", &M, &N) == 2 && M > 1 && M < N)
+    int m=1,n;
+    scanf("%d",&n);
+    int i,k=0;
+    for(i=m+1;i<=n;i++)
     {
-        for (M==2?(k=1,sum=2):sum=0,M+=!(M&1);M<=N;M+=2)
-        {
-            for (t=3;t*t<=M;t+=2)
-                if (!(M % t))
-                    break;
-            if (t*t > M)
-                sum+=M, k++;
-        }
-        printf("%d  %d\n",sum,k);
+        if(judgment_prime(i)==1)
+        k++;
     }
-    else
-        printf("Input error, exit...\n");
-    return 0;
+    printf("%d",k);
+}
+
+int judgment_prime(int n)
+{
+    int i,k=1;
+    for(i=2;i<=sqrt(n);i++)
+    {
+        if(n%i==0)
+        {
+            k=0;
+            break;
+        }
+    }
+    return k;
 }

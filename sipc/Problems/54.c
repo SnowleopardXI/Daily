@@ -1,24 +1,30 @@
-#include <stdio.h>
+#include<stdio.h>
 int main()
 {
-    int n,i;
-    scanf("%f",&n);
-    float average=0,score[100],max,min;
-    for (i = 0; i < n; i++)
-    {
-        scanf("%f",score[i]);
-    }
-    min=score[0];
-    max=score[0];
-    for (i = 0; i < n; i++)
-    {
-        if (score[i]<min)
-            min=score[i];
-        if(score[i]>max)
-            max=score[i];
-        average+=score[i];
-    }
-    average/=n;
-    printf("%.2f %.2f %.2f",max,min,average);
-    return 0;   
+	int n,i;
+	double max,min,sum=0;
+	scanf("%d",&n);
+	int a[n];
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+	}
+	for(i=0;i<n;i++)
+	{
+		sum+=a[i];
+	}
+	max=a[0];
+	for(i=0;i<n;i++)
+	{
+		if(max<a[i])
+			max=a[i];
+	}
+	min=a[0];
+	for(i=0;i<n;i++)
+	{
+		if(min>a[i])
+			min=a[i];
+	}
+	printf("average = %.2f\nmax = %.2f\nmin = %.2f",sum/n,max,min);
+    return 0;
 }

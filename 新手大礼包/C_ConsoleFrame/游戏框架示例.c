@@ -1,175 +1,290 @@
-#include<stdio.h>
-#include<time.h>
-#include<windows.h>
-#include<stdlib.h>
-#include<conio.h>
-void Update();int _game_exit=1;int gameFramesCounter=0;int getGameFramesCount(){return gameFramesCounter;} void exitGame(){_game_exit=0;}void _checkInput();void Start();int gotoxy(int x,int y){COORD cd;cd.X=x;cd.Y=y;return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),cd);}void paint(int x,int y,char n){gotoxy(x,y);printf("%c",n);}char key[12];int _key_number=0;void setKey(char n){if(_key_number<12){key[_key_number] = n;_key_number++;}}int _key_down=0;int _the_key[12]={1,2,4,8,16,32,64,128,256,512,1024,2048};void _checkInput(){if(kbhit()!=0){char n;while(!kbhit()==0){n=getch();int i;for(i=0;i<_key_number;i++){if(key[i]==n){_key_down |= _the_key[i];}}}}}int getKeyDown(char n){int i=0;int flag=0;for(;i<_key_number;i++){if(key[i] == n){flag = 1;break;}}return _key_down&_the_key[i] && flag;}int gameFrames=10;void setGameFrames(int n){gameFrames = n;}void clear(){system("cls");}void End(); void start(){CONSOLE_CURSOR_INFO cursor_info = {1, 0};SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);Start();while(_game_exit){_key_down=0;_checkInput();Update();gameFramesCounter++;Sleep(920/gameFrames);}End();}
+#include <stdio.h>
+#include <time.h>
+#include <windows.h>
+#include <stdlib.h>
+#include <conio.h>
+void Update();
+int _game_exit = 1;
+int gameFramesCounter = 0;
+int getGameFramesCount() { return gameFramesCounter; }
+void exitGame() { _game_exit = 0; }
+void _checkInput();
+void Start();
+int gotoxy(int x, int y)
+{
+	COORD cd;
+	cd.X = x;
+	cd.Y = y;
+	return SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cd);
+}
+void paint(int x, int y, char n)
+{
+	gotoxy(x, y);
+	printf("%c", n);
+}
+char key[12];
+int _key_number = 0;
+void setKey(char n)
+{
+	if (_key_number < 12)
+	{
+		key[_key_number] = n;
+		_key_number++;
+	}
+}
+int _key_down = 0;
+int _the_key[12] = {1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+void _checkInput()
+{
+	if (kbhit() != 0)
+	{
+		char n;
+		while (!kbhit() == 0)
+		{
+			n = getch();
+			int i;
+			for (i = 0; i < _key_number; i++)
+			{
+				if (key[i] == n)
+				{
+					_key_down |= _the_key[i];
+				}
+			}
+		}
+	}
+}
+int getKeyDown(char n)
+{
+	int i = 0;
+	int flag = 0;
+	for (; i < _key_number; i++)
+	{
+		if (key[i] == n)
+		{
+			flag = 1;
+			break;
+		}
+	}
+	return _key_down & _the_key[i] && flag;
+}
+int gameFrames = 10;
+void setGameFrames(int n) { gameFrames = n; }
+void clear() { system("cls"); }
+void End();
+void start()
+{
+	CONSOLE_CURSOR_INFO cursor_info = {1, 0};
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
+	Start();
+	while (_game_exit)
+	{
+		_key_down = 0;
+		_checkInput();
+		Update();
+		gameFramesCounter++;
+		Sleep(920 / gameFrames);
+	}
+	End();
+}
 
-typedef struct{
+typedef struct
+{
 	int x;
 	int y;
-} Point;//¶¨ÒåÒ»¸öµãµÄ½á¹¹Ìå 
+} Point; //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ä½á¹¹ï¿½ï¿½
 
-int width=80 , height=25;//ÓÎÏ·¸ß¿í 
-Point snake[2001] = { {12,20} , {12,21} , {12,22} , {12,23} , {12,23}};//ÉßµÄÉíÌå 
-int length = 4;//ÉßµÄ³¤¶È
-Point direction = {0,-1};//ÉßÕýÇ°½øµÄ·½Ïò 
-Point tempDirection;//ÉßÏÂ´ÎÇ°½ø·½Ïò 
-int score = 0;//µÃ·Ö 
-Point food;//Ê³Îï  
+int width = 80, height = 25;											//ï¿½ï¿½Ï·ï¿½ß¿ï¿½
+Point snake[2001] = {{12, 20}, {12, 21}, {12, 22}, {12, 23}, {12, 23}}; //ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½
+int length = 4;															//ï¿½ßµÄ³ï¿½ï¿½ï¿½
+Point direction = {0, -1};												//ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½
+Point tempDirection;													//ï¿½ï¿½ï¿½Â´ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+int score = 0;															//ï¿½Ã·ï¿½
+Point food;																//Ê³ï¿½ï¿½
 
-void drawTheBorder();//»­³ö±ß¿ò 
-void drawSnake();//»­³öÉß 
-void letSnakeGo(int Frames);//ÈÃÉßÃ¿¸ôÒ»¶¨Ö¡ÊýÔË¶¯Ò»´Î 
-void control();//²Ù¿Ø 
-void generateFood();//Éú³ÉÊ³Îï 
-void eatFood();//³ÔÊ³Îï
-void checkCollision();//Åö×²¼ì²é 
-void drawEndMenu();//»­³ö½áÊø½çÃæ 
+void drawTheBorder();		 //ï¿½ï¿½ï¿½ï¿½ï¿½ß¿ï¿½
+void drawSnake();			 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void letSnakeGo(int Frames); //ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ò»ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½Ë¶ï¿½Ò»ï¿½ï¿½
+void control();				 //ï¿½Ù¿ï¿½
+void generateFood();		 //ï¿½ï¿½ï¿½ï¿½Ê³ï¿½ï¿½
+void eatFood();				 //ï¿½ï¿½Ê³ï¿½ï¿½
+void checkCollision();		 //ï¿½ï¿½×²ï¿½ï¿½ï¿½
+void drawEndMenu();			 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
- 
-//ÔÚ¸Ãº¯ÊýÄÚÍê³ÉÓÎÏ·ÊýÖµÒÔ¼°Ç°ÆÚ¹¤×÷µÄÏà¹ØÉè¶¨ 
-void Start(){
-	setKey('w');//ÉèÖÃ°´¼ü¼àÌý 
+//ï¿½Ú¸Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Öµï¿½Ô¼ï¿½Ç°ï¿½Ú¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨
+void Start()
+{
+	setKey('w'); //ï¿½ï¿½ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	setKey('s');
 	setKey('a');
-	setKey('d'); 
-	drawTheBorder();//»­³öUI 
-	setGameFrames(40);//ÉèÖÃÓÎÏ·Ö¡Êý 
-	generateFood();//»­³öµÚÒ»¸öÊ³Îï 
+	setKey('d');
+	drawTheBorder();   //ï¿½ï¿½ï¿½ï¿½UI
+	setGameFrames(40); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·Ö¡ï¿½ï¿½
+	generateFood();	   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ê³ï¿½ï¿½
 }
 
-//¸Ãº¯ÊýÊÇÃ¿Ò»Ö¡½øÐÐµÄÊÂÇé
-void Update(){ 
-	drawSnake();//»­³öµ±Ç°ÉßµÄÉíÌå 
-	eatFood();//ÅÐ¶ÏÉßÊÇ·ñ³ÔÁËÊ³Îï 
-	control();//¿ØÖÆÉßµÄ·½Ïò 
-	letSnakeGo(3);//ÈÃÉß×Ô¶¯Ç°½ø  
+//ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½Ã¿Ò»Ö¡ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
+void Update()
+{
+	drawSnake();   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½
+	eatFood();	   //ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ê³ï¿½ï¿½
+	control();	   //ï¿½ï¿½ï¿½ï¿½ï¿½ßµÄ·ï¿½ï¿½ï¿½
+	letSnakeGo(3); //ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ç°ï¿½ï¿½
 }
 
-//×îºó½áÊøÓÎÏ·Ê±µÄº¯Êý
-void End(){ 
-	drawEndMenu();//½áÊø²Ëµ¥ 
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·Ê±ï¿½Äºï¿½ï¿½ï¿½
+void End()
+{
+	drawEndMenu(); //ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
 }
 
-
-
-int main(){
+int main()
+{
 	start();
-	return 0; 
+	return 0;
 }
-/*===========================ÏÂÃæÊÇº¯Êý¶¨Òå============================*/ 
-void drawTheBorder(){
+/*===========================ï¿½ï¿½ï¿½ï¿½ï¿½Çºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½============================*/
+void drawTheBorder()
+{
 	int i;
-	for(i=0; i<width; i++){//»­³öµØÍ¼±ß¿ò 
-		paint(i,0,'#');
-		paint(i,height-1,'#');
+	for (i = 0; i < width; i++)
+	{ //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½ß¿ï¿½
+		paint(i, 0, '#');
+		paint(i, height - 1, '#');
 	}
-	for(i=0; i<height; i++){
-		paint(width-1,i,'#');
-		paint(0,i,'#');
+	for (i = 0; i < height; i++)
+	{
+		paint(width - 1, i, '#');
+		paint(0, i, '#');
 	}
-	gotoxy(100,12);
-	printf("ÄãµÄµÃ·Ö:");//»­³öµÃ·Ö 
-	gotoxy(103,14);
-	printf("%d",score); 
+	gotoxy(100, 12);
+	printf("ï¿½ï¿½ÄµÃ·ï¿½:"); //ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½
+	gotoxy(103, 14);
+	printf("%d", score);
 }
 
-void drawSnake(){
+void drawSnake()
+{
 	int i;
-	for(i=0; i<length; i++){//¸ù¾ÝÉßÊý×é»­³öÉßÉí 
-		paint(snake[i].x,snake[i].y,'@');
+	for (i = 0; i < length; i++)
+	{ //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é»­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		paint(snake[i].x, snake[i].y, '@');
 	}
-	paint(snake[length].x,snake[length].y,' ');//²Á³ýÉÏÒ»Ö¡»­ÃæÖÐÉß²ÐÁôµÄ²¿·Ö 
-	paint(0,0,'#');
+	paint(snake[length].x, snake[length].y, ' '); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß²ï¿½ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½
+	paint(0, 0, '#');
 }
 
-void letSnakeGo(int Frames){
-	if(getGameFramesCount()%Frames==0){//Ã¿¸ôÒ»¶¨Ö¡ÊýÒÆ¶¯Ò»´ÎÉß 
-		if(direction.x){
-			if(tempDirection.y){
+void letSnakeGo(int Frames)
+{
+	if (getGameFramesCount() % Frames == 0)
+	{ //Ã¿ï¿½ï¿½Ò»ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½Æ¶ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
+		if (direction.x)
+		{
+			if (tempDirection.y)
+			{
 				direction = tempDirection;
 				direction.x = 0;
 			}
-		}else{
-			if(tempDirection.x){
+		}
+		else
+		{
+			if (tempDirection.x)
+			{
 				direction = tempDirection;
 				direction.y = 0;
 			}
 		}
 		int i;
-		for(i=length; i>0; i--){
-			snake[i] = snake[i-1];
+		for (i = length; i > 0; i--)
+		{
+			snake[i] = snake[i - 1];
 		}
-		snake[0].x = (snake[0].x + direction.x + width - 3)%(width - 2)+1;//µ±Éßµ½±ß½çÊ±´©Ô½µ½¶ÔÃæ 
-		snake[0].y = (snake[0].y + direction.y + height - 3)%(height - 2)+1;
-		
-		checkCollision();
-	} 
-} 
+		snake[0].x = (snake[0].x + direction.x + width - 3) % (width - 2) + 1; //ï¿½ï¿½ï¿½ßµï¿½ï¿½ß½ï¿½Ê±ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		snake[0].y = (snake[0].y + direction.y + height - 3) % (height - 2) + 1;
 
-void control(){//½«ÒÆ¶¯·½Ïò´¢´æÔÚ tempÖÐ 
-	Point temp = {0,0};
-	if(getKeyDown('w')){
-		temp.y -= 1;
-	}
-	if(getKeyDown('s')){
-		temp.y += 1;
-	}
-	if(getKeyDown('a')){
-		temp.x -= 1;
-	}
-	if(getKeyDown('d')){
-		temp.x += 1;
-	}
-	
-	if(tempDirection.x){
-		if(temp.y){
-			tempDirection.x = 0;
-			tempDirection.y = temp.y;
-		}
-	}else{
-		if(temp.x){
-			tempDirection.y = 0;
-			tempDirection.x = temp.x;
-		}	
+		checkCollision();
 	}
 }
 
-void generateFood(){// Éú³ÉÊ³Îï 
+void control()
+{ //ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ò´¢´ï¿½ï¿½ï¿½ tempï¿½ï¿½
+	Point temp = {0, 0};
+	if (getKeyDown('w'))
+	{
+		temp.y -= 1;
+	}
+	if (getKeyDown('s'))
+	{
+		temp.y += 1;
+	}
+	if (getKeyDown('a'))
+	{
+		temp.x -= 1;
+	}
+	if (getKeyDown('d'))
+	{
+		temp.x += 1;
+	}
+
+	if (tempDirection.x)
+	{
+		if (temp.y)
+		{
+			tempDirection.x = 0;
+			tempDirection.y = temp.y;
+		}
+	}
+	else
+	{
+		if (temp.x)
+		{
+			tempDirection.y = 0;
+			tempDirection.x = temp.x;
+		}
+	}
+}
+
+void generateFood()
+{ // ï¿½ï¿½ï¿½ï¿½Ê³ï¿½ï¿½
 	srand((int)time(0));
 	food.x = rand() % (width - 2) + 1;
 	food.y = rand() % (height - 2) + 1;
 	paint(food.x, food.y, '0');
-} 
+}
 
-void eatFood(){//³ÔÊ³Îï 
+void eatFood()
+{ //ï¿½ï¿½Ê³ï¿½ï¿½
 	int i;
-	for(i=0; i<length; i++){
-		if(snake[i].x==food.x&&snake[i].y==food.y){
+	for (i = 0; i < length; i++)
+	{
+		if (snake[i].x == food.x && snake[i].y == food.y)
+		{
 			score++;
 			length++;
-			setGameFrames(40+score*2);
+			setGameFrames(40 + score * 2);
 			generateFood();
-			gotoxy(103,14);
-			printf("%d",score);
+			gotoxy(103, 14);
+			printf("%d", score);
 		}
 	}
 }
 
-void checkCollision(){//¼ì²éÅö×² 
+void checkCollision()
+{ //ï¿½ï¿½ï¿½ï¿½ï¿½×²
 	int i;
-	for(i=1; i<length; i++){
-		if(snake[i].x ==snake[0].x&&snake[i].y ==snake[0].y){
+	for (i = 1; i < length; i++)
+	{
+		if (snake[i].x == snake[0].x && snake[i].y == snake[0].y)
+		{
 			exitGame();
-		} 
-	} 
-} 
+		}
+	}
+}
 
-void drawEndMenu(){//½áÊø²Ëµ¥ 
-	gotoxy(30,11);
+void drawEndMenu()
+{ //ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
+	gotoxy(30, 11);
 	printf("gameover");
-	gotoxy(25,13);
-	printf("ÄãµÄ×îÖÕµÃ·ÖÎª£º%d",score);
-	gotoxy(0,26);	
-} 
+	gotoxy(25, 13);
+	printf("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÕµÃ·ï¿½Îªï¿½ï¿½%d", score);
+	gotoxy(0, 26);
+}
