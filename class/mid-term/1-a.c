@@ -9,7 +9,6 @@ int main()
         if (str[i]>='0'&&str[i]<='9')
             sum=sum*10+str[i]-'0';
         i++;
-        
     }
     printf("%d",sum);
     return 0;

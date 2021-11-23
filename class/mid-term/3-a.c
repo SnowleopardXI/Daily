@@ -15,7 +15,7 @@ int main()
                 ten=data/10;
                 data=data-ten*10;
                 if (hun == ten || hun == data || ten == data)
-                    printf("%5d",i);
+                    printf("%d\t",i);
             }
             j++;
         }

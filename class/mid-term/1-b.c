@@ -6,7 +6,7 @@ int main()
     {
         if (sum%3==2&&sum%5==3&&sum%7==2)
         {
-            printf("%d\n",sum);
+            printf("%d\t",sum);
             count++;
         }
         sum++;
