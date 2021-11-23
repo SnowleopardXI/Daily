@@ -1,8 +1,9 @@
-#include <stdio.h>/*三位数*/
+#include <stdio.h>/*三、四位数*/
 int main()
 {
-    int i,j,hun,ten,data;
-    for (i = 100; i <= 999; i++)
+    int i,j,hun,ten,data,N;
+    scanf("%d",&N);
+    for (i = 100; i <= N; i++)
     {
         j = 10;
         while (j*j <= i)

@@ -1,10 +1,5 @@
 #include <stdio.h>
-double calc_pow(double x, int n)
-{
-    if(n==0){return 1;}
-    else if (n==1){return x;}
-    else return x*calc_pow(x,n-1);
-}
+#include <math.h>
 int jc(int x)
 {
     int sum=x;
@@ -16,9 +11,9 @@ int main()
     int i=1;
     double sumx,sumi,x,result=1;
     scanf("%lf",&x);
-    while (calc_pow(x,i)/jc(i)>0.0001)
+    while (pow(x,i)/jc(i)>0.0001)
     {
-        result+=(calc_pow(x,i)/jc(i));
+        result+=(pow(x,i)/jc(i));
         i++;
     }
     printf("%lf",result);
