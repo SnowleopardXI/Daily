@@ -2,7 +2,7 @@
 int main()
 {
     int i,sum=0;
-    char str[81];
+    char str[80];
     gets(str);
     while (str[i])
     {
