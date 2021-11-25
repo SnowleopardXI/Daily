@@ -1,14 +1,16 @@
-#include <stdio.h>
+#include<stdio.h>
+#include<math.h>
 int main()
 {
-	int i=0;
-	while(++i)
+	int q,i=2;
+	for(q=3;q<300;q++)
 	{
-		if (i==10)
+		for(i=2;i<q;i++)
+		{
+		if(q%i==0)
 		break;
-		if (i%3!=1)
-		continue;
-		printf("%d ",i);
+		printf("%d\t",q);
+		}
 	}
 	return 0;
 }
