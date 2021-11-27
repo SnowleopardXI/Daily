@@ -19,7 +19,7 @@ int main()
     {
         if(isPrime(i)||isPrime(i+2))
         continue;
-        printf("%d/%d\t",i,i+2);
+        printf("%d/%d\n",i,i+2);
     }
     return 0;
 }
