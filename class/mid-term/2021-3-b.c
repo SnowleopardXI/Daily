@@ -18,4 +18,4 @@ int main()
     }
     printf("%s",passwd);
     return 0;
-}　　
+}
