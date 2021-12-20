@@ -1,16 +1,30 @@
 #include <stdio.h>
+int isPerfectNum(int n)
+{
+    int i, s = 0, flag = 0;
+    for (i = 1; i < n; i++)
+    {
+        if (n % i == 0)
+            s += i;
+    }
+    if (n == s)
+    {
+        flag = 1;
+    }
+    return flag;
+}
 int main()
 {
-    int i;
-    float sum=0,temp,tempa,a=2,b=1;
-    for (i = 0; i < 20; i++)
+    int m, n, i, sum = 0;
+    printf("输入正整数m.n:");
+    scanf("%d%d", &m, &n);
+    for (i = m; i <= n; i++)
     {
-        temp=a/b;
-        sum+=temp;
-        tempa=a;
-        a+=b;
-        b=tempa;
+        if (isPerfectNum(i))
+        {
+            sum += i;
+            printf("sum=%d ", sum);
+        }
     }
-    printf("%lf",sum);
     return 0;
 }
