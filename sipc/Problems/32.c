@@ -1,41 +1,55 @@
 #include <stdio.h>
-int max(int a,int b)
-{
-    if (a<b)
-    return b;
-    else return a;
-}
 int main()
 {
-    int x,y,i,j,k,maxi;
-    scanf("%d",&x);
-    int array1[x];
-    for (i = 0; i < x; i++)
+    int str1[20], str2[20], str3[40];
+    int len1,len2,len3,i,j,temp=0,num=0;
+    scanf("%d",&len1);
+    for (i = 0; i < len1; i++)
     {
-        scanf("%d",&array1[i]);
+        scanf("%d", &str1[i]);
     }
-    scanf("%d",&y);
-    int array2[y];
-    for (i = 0; i < y; i++)
+    scanf("%d", &len2); 
+    for (i = 0; i < len2; i++)
     {
-        scanf("%d",&array2[i]);
+        scanf("%d", &str2[i]);
     }
-    maxi=max(x,y);
-    int result[maxi];
-    for (i = 0,k=0; i < x; i++)
+    for (i = 0; i < len1; i++)
     {
-        for (j = 0; j<y ; j++)
+        for (j = 0; j < len2; j++)
         {
-            if (array1[i]==array2[j])
-            {
-                result[k]=array1[i];
-                k++;
+            if (str1[i] == str2[j])
                 break;
-            }
         }
-        for ( i = 0; i <= k; i++)
+        if (j == len2)
         {
-            printf("%d ",result[k]);
+            str3[temp] = str1[i];
+            temp++;
+        }
+    }
+    for (i = 0; i < len2; i++)
+    {
+        for (j = 0; j < len1; j++)
+            if (str2[i] == str1[j])
+                break;
+        if (j == len1)
+        {
+            str3[temp] = str2[i];
+            temp++;
+        }
+    }
+    for (i = 0; i < temp; i++)
+    {
+        for (j = 0; j < i; j++) 
+        {
+            if (str3[i] == str3[j])
+                break;
+        }
+        if (i == j)
+        {
+            if (num != 0)
+                printf(" ");
+            printf("%d", str3[i]);
+            num++;
         }
     }
     return 0;

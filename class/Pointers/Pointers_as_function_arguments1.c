@@ -1,7 +1,7 @@
 #include <stdio.h>
 void add(int *p)
 {
-    *p=(*p)+1;
+    *p+=1;
 }
 int main()
 {
