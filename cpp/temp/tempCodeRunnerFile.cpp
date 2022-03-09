@@ -1,51 +1,54 @@
 #include <iostream>
 using namespace std;
-class Rectangle
-{
-private:
-    int w;
-    int h;
 
+class coutner
+{
 public:
-    int Area(); 
-    void init(int _w, int _h);
-    int Compare(Rectangle &r);
+    coutner(int number);  //构造函数
+    void increment();     //给value原值加1
+    void decrement();     //给value原值减1
+    void setvalue(int a); //设计计数器值
+    int getvalue();       //取得计数器值
+    void print();         //显示计数
+private:
+    int value; //数据成员
 };
+
 int main()
 {
-    Rectangle r1, r2;
-    r1.init(3, 4);
-    r2.init(4, 6);
-    if (r1.Compare(r2))
-    {
-        cout << "r1>r2" << endl;
-    }
-    else
-    {
-        cout << "r1<=r2" << endl;
-    }
+    coutner A(12); //定义counter类的几个对象并调用有关成员函数
+    A.decrement(); //
+    A.print();     //两行 输出
+    A.increment();
+    A.print();
+    A.setvalue(23);
+    cout << A.getvalue() << endl;
+
     return 0;
 }
-int Rectangle::Area()
+
+//构造函数
+coutner::coutner(int number)
 {
-    return w * h;
+    value = number;
 }
-void Rectangle::init(int _w, int _h)
+void coutner::increment() //给value原值加1
 {
-    if (_w <= 0)
-        _w = 1;
-    if (_h <= 0)
-        _h = 1;
-    w = _w;
-    h = _h;
+    value += 1;
 }
-int Rectangle::Compare(Rectangle &r)
+void coutner::decrement() //给value原值减1
 {
-    int a = Area();
-    int b = r.Area();
-    cout<<a<<" "<<b<<endl;
-    if (a > b)
-        return 1;
-    else
-        return 0;
+    value -= 1;
+}
+void coutner::setvalue(int a) //设计计数器值
+{
+    value = a;
+}
+int coutner::getvalue() //取得计数器值
+{
+    return value;
+}
+void coutner::print() //显示计数
+{
+    cout << value << endl;
 }
