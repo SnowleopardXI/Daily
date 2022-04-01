@@ -23,12 +23,11 @@ public:
     friend RationalNumber myMultiply(RationalNumber, RationalNumber); //定义myMultiply()为友元函数
 };
 //定义一个普通函数myDivide()，用来实现两个有理数相除。注意传递参数是RationalNumber类型
-RationalNumber r0;
-RationalNumber myDivide(RationalNumber r1, RationalNumber r2)
+void myDivide(RationalNumber r1, RationalNumber r2)
 {
-    r0.setNumerator(r1.getNumerator()*r2.getDenominator());
-    r0.setDenominator(r1.getDenominator()*r2.getNumerator());
-    return r0;
+    double Num = r1.getNumerator()*r2.getDenominator();
+    double Den = r1.getDenominator()*r2.getNumerator();
+    RationalNumber r3(Num, Den);
 }
 int main()
 {
@@ -59,7 +58,7 @@ int main()
     r2.print();
     cout << "=";
     //调用成员函数print()输出r1/r2的结果
-    r0.print();
+    r3.print();
     cout << endl;
     //调用函数myMultiply计算*p1 * r1的值
     RationalNumber r6 = myMultiply(*p1, r1);
