@@ -20,11 +20,11 @@ public:
     //函数myAdd(),mySubtract()，分别实现两个有理数相加和相减功能。注意传递参数是RationalNumber类型
     RationalNumber myAdd(RationalNumber);
     RationalNumber mySubtract(RationalNumber &r);
-    friend RationalNumber myMultiply(RationalNumber, RationalNumber); //定义myMultiply()为友元函数
+    friend RationalNumber myMultiply(RationalNumber &r1, RationalNumber &r2);//定义myMultiply()为友元函数
 };
 //定义一个普通函数myDivide()，用来实现两个有理数相除。注意传递参数是RationalNumber类型
 RationalNumber r0;
-RationalNumber myDivide(RationalNumber r1, RationalNumber r2)
+RationalNumber myDivide(RationalNumber &r1, RationalNumber &r2)
 {
     r0.setNumerator(r1.getNumerator()*r2.getDenominator());
     r0.setDenominator(r1.getDenominator()*r2.getNumerator());
@@ -116,7 +116,7 @@ RationalNumber RationalNumber::mySubtract(RationalNumber &r)
     result.b = b * r.b;
     return result;
 }
-RationalNumber myMultiply(RationalNumber r1, RationalNumber r2)
+RationalNumber myMultiply(RationalNumber &r1, RationalNumber &r2)
 {
     RationalNumber result;
     result.a = r1.a * r2.a;
