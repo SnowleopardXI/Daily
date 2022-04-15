@@ -23,6 +23,14 @@ public:
     friend RationalNumber operator-(const RationalNumber &r1, int i);
     friend RationalNumber operator-(int i,const RationalNumber &r1);
 };
+//求最大公因数
+int gcd(int a, int b)
+{
+    if (b == 0)
+        return a;
+    else
+        return gcd(b, a % b);
+}
 //有理数类RationalNumber中实现对 + 和 - 运算符重载，使得如下主程序能够输出正确结果。
 int main()
 {
@@ -96,7 +104,10 @@ void RationalNumber::setDenominator(int b)
 }
 void RationalNumber::print()
 {
-    cout << a << "/" << b;
+    if(gcd(a, b)!=1)//约分
+        cout << a / gcd(a, b) << "/" << b / gcd(a, b);
+    else
+        cout << a << "/" << b;
 }
 RationalNumber RationalNumber::operator+(RationalNumber &r)
 {
