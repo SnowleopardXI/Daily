@@ -3,16 +3,12 @@
 using namespace std;
 int main()
 {
-    string s1="Hello";
-    string month= "March";
-    string s2(8,'x');
-    cout<<s1<<endl;
-    cout<<s1.at(3)<<endl;
-    cout<<month<<endl;
-    cout<<s2<<endl;
-    s1+=s2;
-    cout<<s1<<endl;
-    cout<<(month<s1)<<endl;
-    cout<<(s1.length()>month.length())<<endl;
+    string s1,s2,s3;
+    s1="hello";
+    s2='123';
+    s3=s1+s2;
+    cout<<s3<<endl;
+    string s4=s1+"123";
+    cout<<"s1+\"123\"is"<<s4<<endl;
     return 0;
 }
