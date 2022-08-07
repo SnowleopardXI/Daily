@@ -1,14 +1,54 @@
 #include <iostream>
-#include <string>
 using namespace std;
+class RationalNumber
+{
+private:
+    int a = 100, b; // a为分子，b为分母
+public:
+    // construtors
+    RationalNumber()
+    {
+        b = 2;
+    }
+    RationalNumber(int a, int b)
+    {
+        this->a = a;
+        this->b = b;
+    }
+    // getters
+    int getNumerator()
+    {
+        return a;
+    }
+    int getDenominator()
+    {
+        return b;
+    }
+    // setters
+    void setNumerator(int a)
+    {
+        this->a = a;
+    }
+    void setDenominator(int b)
+    {
+        if (b == 0)
+        {
+            this->b = 1;
+        }
+        else
+        {
+            this->b = b;
+        }
+    }
+    //其他成员函数
+    void print()
+    {
+        cout << a << "/" << b << endl;
+    }
+};
 int main()
 {
-    string s1,s2,s3;
-    s1="hello";
-    s2='123';
-    s3=s1+s2;
-    cout<<s3<<endl;
-    string s4=s1+"123";
-    cout<<"s1+\"123\"is"<<s4<<endl;
+    RationalNumber r1, r2(-2, 0);
+    r2.print();
     return 0;
 }

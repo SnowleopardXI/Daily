@@ -106,7 +106,7 @@ Encode DetectEncode(const uint8_t *data, size_t size)
 
 int main()
 {
-    char szChn1[7] = {"汉字"};
+    char szChn1[5] = {"汉字"};
 
     wstring wstrChn = L"汉字";
     string strCh = wstring2string(wstrChn, CP_UTF8);
