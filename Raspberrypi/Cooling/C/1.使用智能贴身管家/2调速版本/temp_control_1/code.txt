@@ -1,0 +1,1 @@
+gcc -o temp_control_1 temp_control_1.c ssd1306_i2c.c -lwiringPi
