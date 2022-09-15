@@ -120,8 +120,108 @@ polynomial *addPolynomial(polynomial *p1, polynomial *p2)
 polynomial *substractPolynomial(polynomial *p1, polynomial *p2)
 {
     polynomial *result = (polynomial *)malloc(sizeof(polynomial));
+    Node *idx1 = p1->firstNode.next;
+    Node *idx2 = p2->firstNode.next;
+    Node *idx = &result->firstNode;
+    while (idx1 != NULL && idx2 != NULL)
+    {
+        Node *newNode = (Node *)malloc(sizeof(Node));
+        newNode->next = NULL;
+        if (idx1->m.exponent == idx2->m.exponent)
+        {
+            newNode->m.exponent = idx1->m.exponent;
+            newNode->m.coefficient = idx1->m.coefficient - idx2->m.coefficient;
+            idx1 = idx1->next;
+            idx2 = idx2->next;
+        }
+        else if (idx1->m.exponent > idx2->m.exponent)
+        {
+            newNode->m.exponent = idx1->m.exponent;
+            newNode->m.coefficient = idx1->m.coefficient;
+            idx1 = idx1->next;
+        }
+        else
+        {
+            SS->m.exponent = idx2->m.exponent;
+            newNode->m.coefficient = -idx2->m.coefficient;
+            idx2 = idx2->next;
+        }
+        idx->next = newNode;
+        idx = newNode;
+    }
+    while (idx1 != NULL)
+    {
+        Node *newNode = (Node *)malloc(sizeof(Node));
+        newNode->next = NULL;
+        newNode->m.exponent = idx1->m.exponent;
+        newNode->m.coefficient = idx1->m.coefficient;
+        idx1 = idx1->next;
+        idx->next = newNode;
+        idx = newNode;
+    }
+    while (idx2 != NULL)
+    {
+        Node *newNode = (Node *)malloc(sizeof(Node));
+        newNode->next = NULL;
+        newNode->m.exponent = idx2->m.exponent;
+        newNode->m.coefficient = -idx2->m.coefficient;
+        idx2 = idx2->next;
+        idx->next = newNode;
+        idx = newNode;
+    }
+    result->lastNode = idx;
+    return result;
 }
-
+// multiply two polynomials
+polynomial *multiplyPolynomial(polynomial *p1, polynomial *p2)
+{
+    polynomial *result = (polynomial *)malloc(sizeof(polynomial));
+    Node *idx1 = p1->firstNode.next;
+    Node *idx2 = p2->firstNode.next;
+    Node *idx = &result->firstNode;
+    while (idx1 != NULL)
+    {
+        while (idx2 != NULL)
+        {
+            Node *newNode = (Node *)malloc(sizeof(Node));
+            newNode->next = NULL;
+            newNode->m.exponent = idx1->m.exponent + idx2->m.exponent;
+            newNode->m.coefficient = idx1->m.coefficient * idx2->m.coefficient;
+            idx2 = idx2->next;
+            idx->next = newNode;
+            idx = newNode;
+        }
+        idx1 = idx1->next;
+        idx2 = p2->firstNode.next;
+    }
+    result->lastNode = idx;
+    return result;
+}
+//divide two polynomials
+polynomial *dividePolynomial(polynomial *p1, polynomial *p2)
+{
+    polynomial *result = (polynomial *)malloc(sizeof(polynomial));
+    Node *idx1 = p1->firstNode.next;
+    Node *idx2 = p2->firstNode.next;
+    Node *idx = &result->firstNode;
+    while (idx1 != NULL)
+    {
+        while (idx2 != NULL)
+        {
+            Node *newNode = (Node *)malloc(sizeof(Node));
+            newNode->next = NULL;
+            newNode->m.exponent = idx1->m.exponent - idx2->m.exponent;
+            newNode->m.coefficient = idx1->m.coefficient / idx2->m.coefficient;
+            idx2 = idx2->next;
+            idx->next = newNode;
+            idx = newNode;
+        }
+        idx1 = idx1->next;
+        idx2 = p2->firstNode.next;
+    }
+    result->lastNode = idx;
+    return result;
+}
 int main(int argc, char *argv[])
 {
     FILE *fp1, *fp2, *outfile;
@@ -170,8 +270,10 @@ int main(int argc, char *argv[])
     polynomial * p2=(polynomial *)malloc(sizeof(polynomial));
     initPolynomial(p1,po1,lines1);
     initPolynomial(p2,po2,lines2);
-    polynomial * out = addPolynomial(p1, p2);
-
+    polynomial * add = addPolynomial(p1, p2);
+    polynomial * sub = substractPolynomial(p1, p2);
+    polynomial * mul = multiplyPolynomial(p1, p2);
+    polynomial * div = dividePolynomial(p1, p2);
     /*For debugging
     printf("line1=%d,line2=%d\n",lines1,lines2);
     printf("p1:\n");
@@ -188,7 +290,28 @@ int main(int argc, char *argv[])
     printPolynomial(out);
     */
     outfile = fopen(argv[3], "w"); //打开并读取参数argv[3]对应的输出文件
-    Node *idx = out->firstNode.next;
+    Node *idx = add->firstNode.next;
+    while (idx != NULL)
+    {
+        fprintf(outfile, "%d,%f\n", idx->m.exponent, idx->m.coefficient);
+        idx = idx->next;
+    }
+    fprintf(outfile, "\n");
+    idx = sub->firstNode.next;
+    while (idx != NULL)
+    {
+        fprintf(outfile, "%d,%f\n", idx->m.exponent, idx->m.coefficient);
+        idx = idx->next;
+    }
+    fprintf(outfile, "\n");
+    idx = mul->firstNode.next;
+    while (idx != NULL)
+    {
+        fprintf(outfile, "%d,%f\n", idx->m.exponent, idx->m.coefficient);
+        idx = idx->next;
+    }
+    fprintf(outfile, "\n");
+    idx = div->firstNode.next;
     while (idx != NULL)
     {
         fprintf(outfile, "%d,%f\n", idx->m.exponent, idx->m.coefficient);
@@ -197,7 +320,10 @@ int main(int argc, char *argv[])
     fclose(outfile);
     freePolynomial(p1);
     freePolynomial(p2);
-    freePolynomial(out);
+    freePolynomial(add);
+    freePolynomial(sub);
+    freePolynomial(mul);
+    freePolynomial(div);
     fclose(outfile);
     return 0;
 }
