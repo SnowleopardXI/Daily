@@ -142,7 +142,7 @@ polynomial *substractPolynomial(polynomial *p1, polynomial *p2)
         }
         else
         {
-            SS->m.exponent = idx2->m.exponent;
+            newNode->m.exponent = idx2->m.exponent;
             newNode->m.coefficient = -idx2->m.coefficient;
             idx2 = idx2->next;
         }
@@ -197,7 +197,7 @@ polynomial *multiplyPolynomial(polynomial *p1, polynomial *p2)
     result->lastNode = idx;
     return result;
 }
-//divide two polynomials
+// divide two polynomials
 polynomial *dividePolynomial(polynomial *p1, polynomial *p2)
 {
     polynomial *result = (polynomial *)malloc(sizeof(polynomial));
@@ -222,6 +222,7 @@ polynomial *dividePolynomial(polynomial *p1, polynomial *p2)
     result->lastNode = idx;
     return result;
 }
+
 int main(int argc, char *argv[])
 {
     FILE *fp1, *fp2, *outfile;
@@ -235,7 +236,7 @@ int main(int argc, char *argv[])
     }
     lines1++;
     fclose(fp1);
-    monomial po1[lines1+1];
+    monomial po1[lines1 + 1];
     float coefficient;
     int exponent;
     fp1 = fopen(argv[1], "r"); //打开并读取参数argv[1]对应的输入文件
@@ -256,9 +257,9 @@ int main(int argc, char *argv[])
     }
     lines2++;
     fclose(fp2);
-    monomial po2[lines2+1];
-    fp2=fopen(argv[2],"r");
-    while (!feof(fp2))         // feof本身是一个非负的整型常量，表明以达到文件末尾
+    monomial po2[lines2 + 1];
+    fp2 = fopen(argv[2], "r");
+    while (!feof(fp2)) // feof本身是一个非负的整型常量，表明以达到文件末尾
     {
         fscanf(fp2, "%d,%f", &exponent, &coefficient);
         po2[j].exponent = exponent;
@@ -266,14 +267,14 @@ int main(int argc, char *argv[])
         j++;
     }
     fclose(fp2);
-    polynomial * p1=(polynomial *)malloc(sizeof(polynomial));
-    polynomial * p2=(polynomial *)malloc(sizeof(polynomial));
-    initPolynomial(p1,po1,lines1);
-    initPolynomial(p2,po2,lines2);
-    polynomial * add = addPolynomial(p1, p2);
-    polynomial * sub = substractPolynomial(p1, p2);
-    polynomial * mul = multiplyPolynomial(p1, p2);
-    polynomial * div = dividePolynomial(p1, p2);
+    polynomial *p1 = (polynomial *)malloc(sizeof(polynomial));
+    polynomial *p2 = (polynomial *)malloc(sizeof(polynomial));
+    initPolynomial(p1, po1, lines1);
+    initPolynomial(p2, po2, lines2);
+    polynomial *add = standardizePolynomial(addPolynomial(p1, p2));
+    polynomial *sub = standardizePolynomial(substractPolynomial(p1, p2));
+    polynomial *mul = standardizePolynomial(multiplyPolynomial(p1, p2));
+    polynomial *div = standardizePolynomial(dividePolynomial(p1, p2));
     /*For debugging
     printf("line1=%d,line2=%d\n",lines1,lines2);
     printf("p1:\n");
