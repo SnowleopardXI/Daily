@@ -133,6 +133,7 @@ int main(int argc, char *argv[])
         if (c == '\n')
             lines1++;
     }
+    lines1++;
     fclose(fp1);
     monomial po1[lines1+1];
     float coefficient;
@@ -141,11 +142,9 @@ int main(int argc, char *argv[])
     while (!feof(fp1))         // feof本身是一个非负的整型常量，表明以达到文件末尾
     {
         fscanf(fp1, "%d,%f", &exponent, &coefficient);
-        for (i = 0; i <= lines1; i++)
-        {
-            po1[i].exponent = exponent;
-            po1[i].coefficient = coefficient;
-        }
+        po1[i].exponent = exponent;
+        po1[i].coefficient = coefficient;
+        i++;
     }
     fclose(fp1);
     i = 0, j = 0;
@@ -155,26 +154,39 @@ int main(int argc, char *argv[])
         if (c == '\n')
             lines2++;
     }
+    lines2++;
     fclose(fp2);
     monomial po2[lines2+1];
     fp2=fopen(argv[2],"r");
     while (!feof(fp2))         // feof本身是一个非负的整型常量，表明以达到文件末尾
     {
         fscanf(fp2, "%d,%f", &exponent, &coefficient);
-        for (j = 0; j <= lines2; j++)
-        {
-            po2[j].exponent = exponent;
-            po2[j].coefficient = coefficient;
-        }
+        po2[j].exponent = exponent;
+        po2[j].coefficient = coefficient;
+        j++;
     }
     fclose(fp2);
     polynomial * p1=(polynomial *)malloc(sizeof(polynomial));
     polynomial * p2=(polynomial *)malloc(sizeof(polynomial));
-    initPolynomial(p1,po1,lines1+1);
-    initPolynomial(p2,po2,lines2+1);
+    initPolynomial(p1,po1,lines1);
+    initPolynomial(p2,po2,lines2);
     polynomial * out = addPolynomial(p1, p2);
-    printf("line1=%d,line2=%d\n",lines1+1,lines2+1);
+
+    /*For debugging
+    printf("line1=%d,line2=%d\n",lines1,lines2);
+    printf("p1:\n");
+    for (i = 0; i < lines1; i++)
+    {
+        printf("%d\t%f\n", po1[i].exponent, po1[i].coefficient);
+    }
+    printf("p2:\n");
+    for (j = 0; j < lines2; j++)
+    {
+        printf("%d\t%f\n", po2[j].exponent, po2[j].coefficient);
+    }
+    printf("out:\n");
     printPolynomial(out);
+    */
     outfile = fopen(argv[3], "w"); //打开并读取参数argv[3]对应的输出文件
     Node *idx = out->firstNode.next;
     while (idx != NULL)
