@@ -222,7 +222,45 @@ polynomial *dividePolynomial(polynomial *p1, polynomial *p2)
     result->lastNode = idx;
     return result;
 }
-
+//standardize Polynomials
+polynomial *standardizePolynomial(polynomial *p)
+{
+    polynomial *result = (polynomial *)malloc(sizeof(polynomial));
+    Node *idx1 = p->firstNode.next;
+    Node *idx2 = &result->firstNode;
+    // judge if the exponents same
+    while (idx1 != NULL)
+    {
+        Node *idx3 = p->firstNode.next;
+        while (idx3 != NULL)
+        {
+            if (idx1->m.exponent == idx3->m.exponent && idx1 != idx3)
+            {
+                idx1->m.coefficient += idx3->m.coefficient;
+                idx3->m.coefficient = 0;
+            }
+            idx3 = idx3->next;
+        }
+        idx1 = idx1->next;
+    }
+    // delete the node which coefficient is 0
+    idx1 = p->firstNode.next;
+    while (idx1 != NULL)
+    {
+        if (idx1->m.coefficient != 0)
+        {
+            Node *newNode = (Node *)malloc(sizeof(Node));
+            newNode->next = NULL;
+            newNode->m.exponent = idx1->m.exponent;
+            newNode->m.coefficient = idx1->m.coefficient;
+            idx2->next = newNode;
+            idx2 = newNode;
+        }
+        idx1 = idx1->next;
+    }
+    result->lastNode = idx2;
+    return result;
+}
 int main(int argc, char *argv[])
 {
     FILE *fp1, *fp2, *outfile;
