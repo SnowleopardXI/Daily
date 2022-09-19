@@ -197,31 +197,6 @@ polynomial *multiplyPolynomial(polynomial *p1, polynomial *p2)
     result->lastNode = idx;
     return result;
 }
-// divide two polynomials
-polynomial *dividePolynomial(polynomial *p1, polynomial *p2)
-{
-    polynomial *result = (polynomial *)malloc(sizeof(polynomial));
-    Node *idx1 = p1->firstNode.next;
-    Node *idx2 = p2->firstNode.next;
-    Node *idx = &result->firstNode;
-    while (idx1 != NULL)
-    {
-        while (idx2 != NULL)
-        {
-            Node *newNode = (Node *)malloc(sizeof(Node));
-            newNode->next = NULL;
-            newNode->m.exponent = idx1->m.exponent - idx2->m.exponent;
-            newNode->m.coefficient = idx1->m.coefficient / idx2->m.coefficient;
-            idx2 = idx2->next;
-            idx->next = newNode;
-            idx = newNode;
-        }
-        idx1 = idx1->next;
-        idx2 = p2->firstNode.next;
-    }
-    result->lastNode = idx;
-    return result;
-}
 //standardize Polynomials
 polynomial *standardizePolynomial(polynomial *p)
 {
@@ -312,22 +287,6 @@ int main(int argc, char *argv[])
     polynomial *add = standardizePolynomial(addPolynomial(p1, p2));
     polynomial *sub = standardizePolynomial(substractPolynomial(p1, p2));
     polynomial *mul = standardizePolynomial(multiplyPolynomial(p1, p2));
-    polynomial *div = standardizePolynomial(dividePolynomial(p1, p2));
-    /*For debugging
-    printf("line1=%d,line2=%d\n",lines1,lines2);
-    printf("p1:\n");
-    for (i = 0; i < lines1; i++)
-    {
-        printf("%d\t%f\n", po1[i].exponent, po1[i].coefficient);
-    }
-    printf("p2:\n");
-    for (j = 0; j < lines2; j++)
-    {
-        printf("%d\t%f\n", po2[j].exponent, po2[j].coefficient);
-    }
-    printf("out:\n");
-    printPolynomial(out);
-    */
     outfile = fopen(argv[3], "w"); //打开并读取参数argv[3]对应的输出文件
     Node *idx = add->firstNode.next;
     while (idx != NULL)
@@ -362,7 +321,6 @@ int main(int argc, char *argv[])
     freePolynomial(add);
     freePolynomial(sub);
     freePolynomial(mul);
-    freePolynomial(div);
     fclose(outfile);
     return 0;
 }
