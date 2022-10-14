@@ -121,16 +121,16 @@ int main()
             show_standard_echelon(matrix, r, c);
         }
         break;
-            /*case 5:
+            case 5:
             {
                 float matrix[20][20] = {0};
                 int i, j, n;
                 printf("Enter the matrix size: ");
                 scanf("%d", &n);
                 printf("Enter the elements of the matrix: \n");
-                input_matrix(matrix, n,n);
+                input_matrix(matrix, n, n);
                 printf("The det of the matrix is: %f\n", det_matrix(matrix, n));
-            }*/
+            }
             break;
         default:
             break;

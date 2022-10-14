@@ -1,41 +1,48 @@
 #include <iostream>
-using namespace std;
-class A
+#include<cmath>
+//点与圆位置关系
+class Point
 {
 public:
-	void display();
-
-private:
-	int x, y;
+	Point(double x, double y) : x(x), y(y) {}
+	double x;
+	double y;
 };
-
-A::A(int _x, int _y)
+class Circle
 {
-	x = _x;
-	y = _y;
-}
-
-void A::display()
-{
-	cout << x << " " << y << endl;
-}
-
-class B : public A
-{
-	int b;
-
 public:
-	B(int a1, int a2, int a3) : A(a1, a2)
-	{
-		b = a3;
-	}
-	void display()
-	{
-		cout<< "  b=" << b << endl;
-	}
+	Circle(Point center, double radius) : center(center), radius(radius) {}
+	Point center;
+	double radius;
 };
+Point getPoint(double x, double y)
+{
+	return Point(x, y);
+}
+Circle getCircle(double x, double y, double radius)
+{
+	return Circle(getPoint(x, y), radius);
+}
+void isPointInCircle(Point point, Circle circle)
+{
+	double distance = sqrt(pow(point.x - circle.center.x, 2) + pow(point.y - circle.center.y, 2));
+	if (distance < circle.radius)
+	{
+		std::cout << "点在圆内" << std::endl;
+	}
+	else if (distance == circle.radius)
+	{
+		std::cout << "点在圆上" << std::endl;
+	}
+	else
+	{
+		std::cout << "点在圆外" << std::endl;
+	}
+}
 int main()
 {
-	B(10, 20, 30);
-	B.display();
+	Circle circle = getCircle(10, 0, 10);
+	Point point = getPoint(10, 10);
+	isPointInCircle(point, circle);
+	return 0;
 }

@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class MyJava {
+public class RationalCalc {
     public class Rational {
         private int numerator;
         private int denominator;
@@ -57,9 +57,9 @@ public class MyJava {
                     System.out.println("分母不能为0，请重新输入！");
                     continue;
                 }
-                MyJava myJava = new MyJava();
-                MyJava.Rational rational1 = myJava.new Rational(numerator1, denominator1);
-                MyJava.Rational rational2 = myJava.new Rational(numerator2, denominator2);
+                RationalCalc myJava = new RationalCalc();
+                RationalCalc.Rational rational1 = myJava.new Rational(numerator1, denominator1);
+                RationalCalc.Rational rational2 = myJava.new Rational(numerator2, denominator2);
                 // 有理数r1与r2的和
                 Rational rational3 = rational1.add(rational2);
                 // 有理数r1与r2的差
