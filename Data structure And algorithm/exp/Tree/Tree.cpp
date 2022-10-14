@@ -168,20 +168,23 @@ void buildBCTree(int index, BrotherChildTree *T)
     }
 }
 //括号表示法输出
-void printBCTree(BrotherChildTree *root,char *string){
-	strcat(string,"(");
-	char temp[10];
-    sprintf(temp,"%d",root->Vname);
-    strcat(string,temp);
-    if(root->firstchild!=NULL){
-    	strcat(string,",");
-		printBCTree(root->firstchild,string);
-	} 
-	if(root->nextsibling != NULL){
-		strcat(string,",");
-   		printBCTree(root->nextsibling,string);
-	}
-	strcat(string,")");
+void printBCTree(BrotherChildTree *root, char *string)
+{
+    strcat(string, "(");
+    char temp[10];
+    sprintf(temp, "%d", root->Vname);
+    strcat(string, temp);
+    if (root->firstchild != NULL)
+    {
+        strcat(string, ",");
+        printBCTree(root->firstchild, string);
+    }
+    if (root->nextsibling != NULL)
+    {
+        strcat(string, ",");
+        printBCTree(root->nextsibling, string);
+    }
+    strcat(string, ")");
 }
 
 int main()
@@ -189,8 +192,7 @@ int main()
     loadData();
     BuildParentTree();
     printParentTree(0);
-    BrotherChildTree *root =
-        (BrotherChildTree *)malloc(sizeof(BrotherChildTree));
+    BrotherChildTree *root =(BrotherChildTree *)malloc(sizeof(BrotherChildTree));
     root->Vname = parentNode[0].Vname;
     root->firstchild = NULL;
     root->nextsibling = NULL;
