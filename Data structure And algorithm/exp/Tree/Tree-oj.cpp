@@ -19,21 +19,15 @@ Edge EdgeSet[N];
 //加载数据
 void loadData()
 {
-    FILE *fp;
-    fp = fopen("input.txt", "r");
-    if (fp == NULL)
-    {
-        printf("ERROR!");
-    }
-    fscanf(fp, "%d\n", &VertexCount);
+    scanf("%d\n", &VertexCount);
     int i;
     for (i = 0; i < VertexCount; i++)
     {
         VertexSet[i].Vname = i + 1;
     }
-    while (!feof(fp))
+    while (scanf("%d,%d\n", &EdgeSet[EdgeCount].v1, &EdgeSet[EdgeCount].v2) != EOF)
     {
-        fscanf(fp, "%d,%d\n", &EdgeSet[EdgeCount].v1, &EdgeSet[EdgeCount].v2);
+        scanf("%d,%d\n", &EdgeSet[EdgeCount].v1, &EdgeSet[EdgeCount].v2);
         EdgeCount++;
     }
 }
@@ -172,7 +166,7 @@ void printBCTree(BrotherChildTree *root, char *string)
 {
     strcat(string, "(");
     char temp[10];
-    sprintf(temp, "%d", root->Vname);//弃用itoa函数转用sprintf
+    sprintf(temp, "%d", root->Vname);
     strcat(string, temp);
     if (root->firstchild != NULL)
     {
@@ -186,7 +180,7 @@ void printBCTree(BrotherChildTree *root, char *string)
     }
     strcat(string, ")");
 }
-//必须同时有input.txt和output.txt
+
 int main()
 {
     loadData();
@@ -199,12 +193,5 @@ int main()
     buildBCTree(0, root);
     char string[1000] = " ";
     printBCTree(root, string);
-    FILE *fp = fopen("output.txt", "w");
-    if (fp == NULL)
-    {
-        printf("open file error");
-        return 0;
-    }
-    fprintf(fp, "%s", string);
-    fclose(fp);
+    printf("%s", string);
 }
