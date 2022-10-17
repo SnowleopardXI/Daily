@@ -1,18 +1,12 @@
 #include<iostream>
-#include<cstdio>
-#include<cstring>
 using namespace std;
-char s[101];
-void change(char s[])
-{
-	int len=strlen(s);
-	for (int i=0,j=len-1; i<j; i++,j--)
-		{ char c=s[i]; s[i]=s[j]; s[j]=c; }
-}
-int main()
-{
-	cin>>s;
-	change(s);
-	cout<<s<<endl;
+int main(){
+	int n;
+	cin>>n;
+	int a,b,c;
+	c=n%60;
+	b=n/60%60;
+	a=n/3600;
+	printf("%02d:%02d:%02d",a,b,c);
 	return 0;
 }

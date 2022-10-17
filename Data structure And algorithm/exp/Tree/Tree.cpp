@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fstream>//文件流
 #define N 100
+using namespace std;
 struct Vertex
 {
     int Vname;
@@ -187,7 +189,7 @@ void printBCTree(BrotherChildTree *root, char *string)
     strcat(string, ")");
 }
 //必须同时有input.txt和output.txt
-int main()
+/*int main()
 {
     loadData();
     BuildParentTree();
@@ -207,4 +209,24 @@ int main()
     }
     fprintf(fp, "%s", string);
     fclose(fp);
+}
+*/
+//只需要imput.txt
+int main()
+{
+    loadData();
+    BuildParentTree();
+    printParentTree(0);
+    BrotherChildTree *root =(BrotherChildTree *)malloc(sizeof(BrotherChildTree));
+    root->Vname = parentNode[0].Vname;
+    root->firstchild = NULL;
+    root->nextsibling = NULL;
+    buildBCTree(0, root);
+    char string[1000] = " ";
+    printBCTree(root, string);
+    //create a file
+    ofstream outfile ("output.txt");
+    outfile<<string;
+    outfile.close();
+    return 0;
 }

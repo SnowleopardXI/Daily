@@ -1,19 +1,33 @@
-import java.util.*;
-public class ClassTest {
-    public static class Test{
-        int a;
-        int b;
-    }
-    public static void main(String[] args) {
-        ClassTest.Test[] lib = new Test[10];
 
-        for(int i = 0; i < 10; i++){
-            lib[i] = new Test();
-            lib[i].a = i;
-            lib[i].b = i+1;
-        }
-        for(int i = 0; i < 10; i++){
-            System.out.println(lib[i].a + " " + lib[i].b);
-        }
+import java.util.Scanner;
+
+/**
+ *
+ * @author 裴宇莹
+ */
+public class ClassTest {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        int m,n; 
+        Scanner reader=new Scanner(System.in);
+        n=reader.nextInt();
+        m=reader.nextInt();
+        System.out.println("最大公约数是"+gys(m,n));
+        System.out.println("最小公倍数是"+gbs(m,n));
+    }
+    public static int gys(int m,int n){
+       int t;
+        do {
+            t=m%n;
+            m=n;
+            n=t;          
+        } while (t!=0);
+        return m;
+    }
+    public static int gbs(int m,int n){
+        return m*n/gys(m,n);
     }
 }
