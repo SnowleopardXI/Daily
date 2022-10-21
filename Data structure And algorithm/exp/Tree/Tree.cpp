@@ -170,48 +170,21 @@ void buildBCTree(int index, BrotherChildTree *T)
     }
 }
 //括号表示法输出
-void printBCTree(BrotherChildTree *root, char *string)
-{
-    strcat(string, "(");
-    char temp[10];
-    sprintf(temp, "%d", root->Vname);//弃用itoa函数转用sprintf
-    strcat(string, temp);
-    if (root->firstchild != NULL)
-    {
-        strcat(string, ",");
-        printBCTree(root->firstchild, string);
-    }
-    if (root->nextsibling != NULL)
-    {
-        strcat(string, ",");
-        printBCTree(root->nextsibling, string);
-    }
-    strcat(string, ")");
+void printBCTree(BrotherChildTree *root,char *string){
+	strcat(string,"(");
+	char buf[2]=" ";
+	itoa(root->Vname,buf,10);
+	strcat(string,buf);
+	if(root->firstchild != NULL){
+		strcat(string,",");
+		printBCTree(root->firstchild,string);
+	} 
+	if(root->nextsibling != NULL){
+		strcat(string,",");
+   		printBCTree(root->nextsibling,string);
+	}
+	strcat(string,")");
 }
-//必须同时有input.txt和output.txt
-/*int main()
-{
-    loadData();
-    BuildParentTree();
-    printParentTree(0);
-    BrotherChildTree *root =(BrotherChildTree *)malloc(sizeof(BrotherChildTree));
-    root->Vname = parentNode[0].Vname;
-    root->firstchild = NULL;
-    root->nextsibling = NULL;
-    buildBCTree(0, root);
-    char string[1000] = " ";
-    printBCTree(root, string);
-    FILE *fp = fopen("output.txt", "w");
-    if (fp == NULL)
-    {
-        printf("open file error");
-        return 0;
-    }
-    fprintf(fp, "%s", string);
-    fclose(fp);
-}
-*/
-//只需要imput.txt
 int main()
 {
     loadData();

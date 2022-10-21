@@ -20,6 +20,8 @@ void mat_menu()
     printf("3. Multiplication\n");
     printf("4. Rank and Standard form\n");
     printf("5. Det of Matrix\n");
+    printf("6. Inverse of Matrix\n");
+    printf("7. Orthogonal Matrix\n");
     printf("Enter a choice:\n");
 }
 int main()
@@ -121,17 +123,39 @@ int main()
             show_standard_echelon(matrix, r, c);
         }
         break;
-            case 5:
-            {
-                float matrix[20][20] = {0};
-                int i, j, n;
-                printf("Enter the matrix size: ");
-                scanf("%d", &n);
-                printf("Enter the elements of the matrix: \n");
-                input_matrix(matrix, n, n);
-                printf("The det of the matrix is: %f\n", det_matrix(matrix, n));
-            }
-            break;
+        case 5:
+        {
+            float matrix[20][20] = {0};
+            int n;
+            printf("Enter the matrix size: ");
+            scanf("%d", &n);
+            printf("Enter the elements of the matrix: \n");
+            input_matrix(matrix, n, n);
+            printf("The det of the matrix is: %f\n", det_matrix(matrix, n));
+        }
+        break;
+        case 6:
+        {
+            float matrix[20][20] = {0};
+            int i, j;
+            printf("Enter the matrix size: ");
+            scanf("%d %d", &i, &j);
+            printf("Enter the elements of the matrix: \n");
+            input_matrix(matrix, i, j);
+            printf("The inverse of the matrix is: \n");
+            inverse_matrix(matrix, i, j);
+        }
+        case 7:
+        {
+            float matrix[20][20] = {0};
+            int i, j;
+            printf("Enter the matrix size: ");
+            scanf("%d %d", &i, &j);
+            printf("Enter the elements of the matrix: \n");
+            input_matrix(matrix, i, j);
+            printf("The orthogonal matrix is: \n");
+            orthogonal_matrix(matrix, i, j);
+        }
         default:
             break;
         }

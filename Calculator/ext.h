@@ -212,30 +212,114 @@ void show_standard_echelon(float matrix[20][20], int r, int c)
     }
 }
 // det of matrix
-float det_matrix(float matrix[][], int n) //输入代表矩阵的二维数组、矩阵阶数，返回矩阵的行列式
+float det_matrix(float matrix[20][20], int n)
 {
     float result = 0;
-
-    // 一阶二阶直接计算
+    // Calculate the determinant of a 2x2 matrix
     if (n == 1)
         result = matrix[0][0];
     if (n == 2)
         result = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
-    else
+    // Calculate the determinant of matrix by recursion
+    if (n > 2)
     {
-        for (int k = 0; k < n; k++)
+        int i, j, k;
+        float temp[20][20];
+        // Expand the matrix by the first row
+        for (i = 0; i < n; i++)
         {
-            // 为代数余子式申请内存
-            float M[sizeof(matrix)];
-            // 为代数余子式赋值
-            for (int i = 0; i < n - 1; i++)
-                for (int j = 0; j < n - 1; j++)
-                    M[i][j] = matrix[i + 1][j < k ? j : j + 1];
-
-            // 按第一行展开，递归计算行列式，注意元素0则不展开可以加快计算速度
-            if (matrix[0][k])
-                result += matrix[0][k] * det_matrix(M, n - 1) * (((2 + k) % 2) ? -1 : 1);
+            // Get the minor of the matrix
+            for (j = 1; j < n; j++)
+                for (k = 0; k < n; k++)
+                    if (k < i)
+                        temp[j - 1][k] = matrix[j][k];
+                    else if (k > i)
+                        temp[j - 1][k - 1] = matrix[j][k];
+            // Calculate sum of the minor
+            result += pow(-1, i) * matrix[0][i] * det_matrix(temp, n - 1);
         }
     }
     return result;
+}
+// Inverse of Matrix
+void inverse_matrix(float matrix[20][20], int i, int j)
+{
+    float temp[20][20], result[20][20];
+    int k, l, m, n;
+    float det = det_matrix(matrix, i);
+    if (det == 0)
+        printf("The matrix is not invertible.\n");
+    else
+    {
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+            {
+                m = 0;
+                n = 0;
+                for (int p = 0; p < i; p++)
+                    for (int q = 0; q < j; q++)
+                        if (p != k && q != l)
+                        {
+                            temp[m][n] = matrix[p][q];
+                            if (n < (i - 2))
+                                n++;
+                            else
+                            {
+                                n = 0;
+                                m++;
+                            }
+                        }
+                result[k][l] = pow(-1, k + l) * det_matrix(temp, i - 1);
+            }
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+                matrix[k][l] = result[l][k] / det;
+    }
+    for (k = 0; k < i; k++)
+    {
+        for (l = 0; l < j; l++)
+            printf("%.3f\t", matrix[k][l]);
+        printf("\n");
+    }
+}
+// The orthogonal matrix
+void orthogonal_matrix(float matrix[20][20], int i, int j)
+{
+    float temp[20][20], result[20][20];
+    int k, l, m, n;
+    float det = det_matrix(matrix, i);
+    if (det == 0)
+        printf("The matrix is not orthogonal.\n");
+    else
+    {
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+            {
+                m = 0;
+                n = 0;
+                for (int p = 0; p < i; p++)
+                    for (int q = 0; q < j; q++)
+                        if (p != k && q != l)
+                        {
+                            temp[m][n] = matrix[p][q];
+                            if (n < (i - 2))
+                                n++;
+                            else
+                            {
+                                n = 0;
+                                m++;
+                            }
+                        }
+                result[k][l] = pow(-1, k + l) * det_matrix(temp, i - 1);
+            }
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+                matrix[k][l] = result[l][k] / det;
+    }
+    for (k = 0; k < i; k++)
+    {
+        for (l = 0; l < j; l++)
+            printf("%.3f\t", matrix[k][l]);
+        printf("\n");
+    }
 }
