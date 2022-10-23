@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fstream>//文件流
+#include <fstream> //文件流
 #define N 100
 using namespace std;
+
 struct Vertex
 {
     int Vname;
@@ -40,7 +41,7 @@ void loadData()
     }
 }
 //打印读入的数据
-void printDate()
+void printData()
 {
     printf("VertextCount is %d\n", VertexCount);
     int i;
@@ -170,36 +171,38 @@ void buildBCTree(int index, BrotherChildTree *T)
     }
 }
 //括号表示法输出
-void printBCTree(BrotherChildTree *root,char *string){
-	strcat(string,"(");
-	char buf[2]=" ";
-	itoa(root->Vname,buf,10);
-	strcat(string,buf);
-	if(root->firstchild != NULL){
-		strcat(string,",");
-		printBCTree(root->firstchild,string);
-	} 
-	if(root->nextsibling != NULL){
-		strcat(string,",");
-   		printBCTree(root->nextsibling,string);
-	}
-	strcat(string,")");
+void printBCTree(BrotherChildTree *root, char *string)
+{
+    strcat(string, "(");
+    char temp[10];
+    sprintf(temp, "%d", root->Vname); //弃用itoa函数转用sprintf
+    strcat(string, temp);
+    if (root->firstchild != NULL)
+    {
+        strcat(string, ",");
+        printBCTree(root->firstchild, string);
+    }
+    if (root->nextsibling != NULL)
+    {
+        strcat(string, ",");
+        printBCTree(root->nextsibling, string);
+    }
+    strcat(string, ")");
 }
 int main()
 {
     loadData();
     BuildParentTree();
     printParentTree(0);
-    BrotherChildTree *root =(BrotherChildTree *)malloc(sizeof(BrotherChildTree));
+    BrotherChildTree *root = (BrotherChildTree *)malloc(sizeof(BrotherChildTree));
     root->Vname = parentNode[0].Vname;
     root->firstchild = NULL;
     root->nextsibling = NULL;
     buildBCTree(0, root);
     char string[1000] = " ";
     printBCTree(root, string);
-    //create a file
-    ofstream outfile ("output.txt");
-    outfile<<string;
+    ofstream outfile("output.txt");
+    outfile << string;
     outfile.close();
     return 0;
 }
