@@ -6,3 +6,4 @@
 *.exe.stackdump
 *.out
 tempCodeRunnerFile.c
+*.class
