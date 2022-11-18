@@ -1,5 +1,5 @@
 #include <stdio.h> 
-void main() 
+int main() 
 {
     char c1='A',c2='B'; 
     int a=97,b=98; 

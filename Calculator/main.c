@@ -22,6 +22,7 @@ void mat_menu()
     printf("5. Det of Matrix\n");
     printf("6. Inverse of Matrix\n");
     printf("7. Orthogonal Matrix\n");
+    printf("8. Feature value of Matrix\n");
     printf("Enter a choice:\n");
 }
 int main()
@@ -95,7 +96,7 @@ int main()
         {
             int e, f, g, h; // Define the size of the matrix
             printf("Enter the size of the matrix1 and matrix2: ");
-            scanf("%d%d%d%d", &e, &f, &g, &h);
+            scanf("%dx%d %dx%d", &e, &f, &g, &h);
             if (f != g)
             {
                 printf("Can't compute the matrix multiplication\n");
@@ -115,7 +116,7 @@ int main()
             float matrix[20][20] = {0};
             int i, j, r, c;
             printf("Enter the number of rows and columns: ");
-            scanf("%d%d", &r, &c);
+            scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix: \n");
             input_matrix(matrix, r, c);
             printf("Rank = %d\n", rank(matrix, r, c));
@@ -139,7 +140,7 @@ int main()
             float matrix[20][20] = {0};
             int i, j;
             printf("Enter the matrix size: ");
-            scanf("%d %d", &i, &j);
+            scanf("%dx%d", &i, &j);
             printf("Enter the elements of the matrix: \n");
             input_matrix(matrix, i, j);
             printf("The inverse of the matrix is: \n");
@@ -150,11 +151,22 @@ int main()
             float matrix[20][20] = {0};
             int i, j;
             printf("Enter the matrix size: ");
-            scanf("%d %d", &i, &j);
+            scanf("%dx%d", &i, &j);
             printf("Enter the elements of the matrix: \n");
             input_matrix(matrix, i, j);
             printf("The orthogonal matrix is: \n");
             orthogonal_matrix(matrix, i, j);
+        }
+        case 8:
+        {
+            float matrix[20][20] = {0};
+            int i, j;
+            printf("Enter the matrix size: ");
+            scanf("%dx%d", &i, &j);
+            printf("Enter the elements of the matrix: \n");
+            input_matrix(matrix, i, j);
+            printf("The feature value of the matrix is: \n");
+            eigenValue_matrix(matrix, i, j);
         }
         default:
             break;

@@ -11,7 +11,7 @@ typedef struct LNode
 typedef LNode *LinkList;
 
 void Creat_List(LinkList &L, int length)
-{   //建立空链表
+{ //建立空链表
     L = (LinkList)malloc(sizeof(LinkList));
     if (!L)
     {
@@ -179,9 +179,7 @@ void display3(LinkList L1, LinkList L2)
         {
             printf("%dX^%d", k->xi, k->mi);
             if (i < L1->xi - count - 1 && k->next->xi != 0)
-            {
                 printf("+");
-            }
         }
         k = k->next;
     }

@@ -4,20 +4,20 @@ using namespace std;
 struct Node
 {
     int data;
-    struct Node* left;
-    struct Node* right;
+    struct Node *left;
+    struct Node *right;
 };
 // Function to create a binary tree
-struct Node* createNode(int data)
+struct Node *createNode(int data)
 {
-    struct Node* node = new Node;
+    struct Node *node = new Node;
     node->data = data;
     node->left = NULL;
     node->right = NULL;
     return node;
 }
 // Function to print the nodes of a binary tree
-void printTree(struct Node* node)
+void printTree(struct Node *node)
 {
     if (node == NULL)
         return;
@@ -26,7 +26,7 @@ void printTree(struct Node* node)
     printTree(node->right);
 }
 // Function to print all the nodes of a binary tree in a pre-order fashion
-void printPreorder(struct Node* node)
+void printPreorder(struct Node *node)
 {
     if (node == NULL)
         return;
@@ -38,7 +38,7 @@ void printPreorder(struct Node* node)
     printPreorder(node->right);
 }
 // Function to print all the nodes of a binary tree in an in-order fashion
-void printInorder(struct Node* node)
+void printInorder(struct Node *node)
 {
     if (node == NULL)
         return;
@@ -50,7 +50,7 @@ void printInorder(struct Node* node)
     printInorder(node->right);
 }
 // Function to print all the nodes of a binary tree in a post-order fashion
-void printPostorder(struct Node* node)
+void printPostorder(struct Node *node)
 {
     if (node == NULL)
         return;
@@ -62,7 +62,7 @@ void printPostorder(struct Node* node)
     cout << node->data << " ";
 }
 // Print as a tree
-void printAsTree(struct Node* node, int level)
+void printAsTree(struct Node *node, int level)
 {
     if (node == NULL)
         return;
@@ -73,7 +73,7 @@ void printAsTree(struct Node* node, int level)
     printAsTree(node->left, level + 1);
 }
 // Print in brackets
-void printInBrackets(struct Node* node)
+void printInBrackets(struct Node *node)
 {
     if (node == NULL)
         return;
@@ -85,7 +85,7 @@ void printInBrackets(struct Node* node)
 }
 int main()
 {
-    struct Node* root = createNode(1);
+    struct Node *root = createNode(1);
     root->left = createNode(2);
     root->right = createNode(3);
     root->left->left = createNode(4);
@@ -93,19 +93,19 @@ int main()
     cout << "Tree: ";
     printTree(root);
     cout << endl;
-    cout << "Print as a tree: "<< endl;
+    cout << "打印出树: " << endl;
     printAsTree(root, 0);
     cout << endl;
-    cout << "Print in brackets: ";
+    cout << "括号表示: ";
     printInBrackets(root);
     cout << endl;
-    cout << "Preorder: ";
+    cout << "前序遍历: ";
     printPreorder(root);
     cout << endl;
-    cout << "Inorder: ";
+    cout << "中序遍历: ";
     printInorder(root);
     cout << endl;
-    cout << "Postorder: ";
+    cout << "后序遍历: ";
     printPostorder(root);
     cout << endl;
     return 0;

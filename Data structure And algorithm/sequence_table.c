@@ -73,7 +73,7 @@ int fibonacci(int n)
 }
 int main(void)
 {
-    int i,j;
+    int i, j;
     SqList A, B, C;
     A = init_SqList();
     B = init_SqList();
@@ -83,22 +83,22 @@ int main(void)
         A = insert_SqList(A, i + 1, fibonacci(i + 1));
         B = insert_SqList(B, i + 1, fibonacci(i + 3));
     }
-    delete_SqList(A,2);
-    insert_SqList(A,2,40);
+    delete_SqList(A, 2);
+    insert_SqList(A, 2, 40);
     printf("A:\n");
-    for (i=0;i<10;i++)
+    for (i = 0; i < 10; i++)
     {
-        printf("%d  ",A.data[i]);
+        printf("%d  ", A.data[i]);
     }
     printf("\nB:\n");
-    for (i=0;i<10;i++)
+    for (i = 0; i < 10; i++)
     {
-        printf("%d  ",B.data[i]);
+        printf("%d  ", B.data[i]);
     }
-    C=merge_SqList(A,B);
+    C = merge_SqList(A, B);
     printf("\nC:\n");
-    for (i=0;i<20;i++)
+    for (i = 0; i < 20; i++)
     {
-        printf("%d  ",C.data[i]);
+        printf("%d  ", C.data[i]);
     }
 }

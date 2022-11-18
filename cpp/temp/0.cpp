@@ -1,187 +1,176 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<math.h>
 #include<string.h>
-#include <fstream>//文件流
-#define N 100
-using namespace std;
-
-//关于顶点集和边集 
-struct vertex{
-	int name;
-};//顶点结构
-int vertexCount=0;
-vertex vertexSet[N]; 
-
-struct edge{
-	int V1,V2;
-}; //边结构 
-int edgeCount=0;
-edge edgeSet[N]; 
-
-//读取数据 
-void loadData(){
-	FILE *fp;
-	fp=fopen("input.txt","r");
-	if(fp==NULL){
-		printf("ERROE!");
-	}
-	fscanf(fp,"%d\n",&vertexCount);//第一行是顶点个数 
-	int i;
-	for(i=0;i<vertexCount;i++){
-		vertexSet[i].name=i+1;//顶点名字从1开始 
-	}
-	while(!feof(fp)){
-		fscanf(fp,"%d,%d\n",&edgeSet[edgeCount].V1,&edgeSet[edgeCount].V2);
-		edgeCount++;
-	}
+#define MaxSize 99
+char calc[MaxSize],expr[MaxSize];
+int i,t;
+struct {
+    char data[MaxSize];
+    int top;
+} Sym;
+struct {
+    double data[MaxSize];
+    int top;
+} Num;
+double ston(char x[],int *p) {
+    int j=*p-1,i;
+    double n=0,m=0;
+    while(x[j]>='0'&&x[j]<='9') {
+        j--;
+    }
+    if(x[j]!='.') {
+        for(i=j+1; i<=*p; i++) {
+            n=10*n+(x[i]-'0');
+        }
+    } else {
+        for(i=j+1; i<=*p; i++) {
+            m=m+pow(0.1,i-j)*(x[i]-'0');
+        }
+        if(x[j]=='.') {
+            *p=--j;
+            while(x[j]>='0'&&x[j]<='9') {
+                j--;
+            }
+            for(i=j+1; i<=*p; i++) {
+                n=10*n+(x[i]-'0');
+            }
+        }
+    }
+    *p=j;
+    if(x[*p]=='-') return(-(n+m));
+    return(n+m);
 }
-
-//打印读入的数据
-void printDate(){
-	printf("vertexCount is %d\n",vertexCount);
-	int i;
-	for(i=0;i<edgeCount;i++){
-		printf("%d,%d\n",edgeSet[i].V1,edgeSet[i].V2);
-	}
-} 
-
-//构建双亲表示法结点结构 
-struct parentTree{
-	int name;//结点本身的信息 
-	int parentIndex;//下标 
-	int k;//层数k 
-};
-parentTree parentNode[N];
-
-#define unknow -1000
-void BuildParentTree(){
-	int i,j,k;
-	for(i=0;i<vertexCount;i++){
-		parentNode[i].name=vertexSet[i].name;
-		parentNode[i].parentIndex=unknow;
-	}
-	parentNode[0].parentIndex=-1;
-	for(i=0;i<vertexCount;i++){
-		for(j=1;j<vertexCount;j++){
-			for(k=0;k<edgeCount;k++){
-				if(
-					(edgeSet[k].V1==parentNode[i].name&&
-					 edgeSet[k].V2==parentNode[j].name&&
-					 parentNode[i].parentIndex!=unknow&&
-					 parentNode[j].parentIndex==unknow)
-					 ||
-					 (edgeSet[k].V1==parentNode[j].name&&
-					  edgeSet[k].V2==parentNode[i].name&&
-					  parentNode[i].parentIndex!=unknow&&
-					  parentNode[j].parentIndex==unknow)
-					)
-				{
-					parentNode[j].parentIndex=i; 
-				}
-		}
-	}
+void InitStack() {
+    Sym.top=Num.top=-1;
 }
-
-//求层数
-for(i=0;i<vertexCount;i++){
-	parentNode[i].k=0;
-	for(j=i;parentNode[j].parentIndex!=-1;j=parentNode[j].parentIndex){
-		parentNode[i].k++;	
-	}
-} 
+void SymPush() {
+    if(Sym.top<MaxSize-1) {
+        Sym.data[++Sym.top]=calc[i--];
+    } else {
+        printf("Sym栈满\n");
+        return;
+    }
 }
-//凹凸表示法
-void printParentTree(int v)
-{
-	if(v==0){
-		printf("%d\n",parentNode[v].name);
-	}
-	int i,j;
-	for(i=0;i<vertexCount;i++){
-		if(parentNode[i].parentIndex==v){
-			for(j=0;i<parentNode[i].k;j++){
-				printf("\t");
-			}
-			printf("%d\n",parentNode[i].name);
-			printParentTree(i);
-		}
-	}
-} 
-
-//孩子兄弟表示法树的建立
-struct BrotherChildTree{
-	int name;
-	BrotherChildTree *firstchild;
-	BrotherChildTree *nextsibling;
-}; 
-void buildBCTree(int index,BrotherChildTree *T){
-	int tIndex;
-	int i;
-	//找孩子
-	for(i=0;i<vertexCount;i++){
-		if(parentNode[i].parentIndex==index){
-			BrotherChildTree *p=(BrotherChildTree*)malloc(sizeof(BrotherChildTree));
-			p->name=parentNode[i].name;
-			p->firstchild=NULL;
-			p->nextsibling=NULL;
-			T->firstchild=p;
-			T->nextsibling=NULL;
-			tIndex=i;
-			break;
-		}
-	} 
-	if(T->firstchild!=NULL){
-		buildBCTree(tIndex,T->firstchild);
-	}
-	//找兄弟
-	for(i=index+1;i<vertexCount;i++){
-		if(parentNode[i].parentIndex==parentNode[index].parentIndex){
-			BrotherChildTree *p=(BrotherChildTree *)malloc(sizeof(BrotherChildTree));
-			p->name=parentNode[i].name;
-			p->firstchild=NULL;
-			p->nextsibling=NULL;
-			T->nextsibling=p;
-			tIndex=i;
-			break;
-		}
-	} 
-	if(T->nextsibling!=NULL){
-		buildBCTree(tIndex,T->nextsibling);
-	}
+void SymPop() {
+    if(Sym.top>=0) {
+        expr[++t]=Sym.data[Sym.top--];
+    } else {
+        printf("Sym栈空\n");
+        return;
+    }
 }
-
-//括号表示法输出
-void printBCTree(BrotherChildTree *root,char *string){
-	strcat(string,"(");
-	char buf[2]=" ";
-	itoa(root->name,buf,10);
-	strcat(string,buf);
-	if(root->firstchild != NULL){
-	strcat(string,",");
-	printBCTree(root->firstchild,string);
- 	} 
-	if(root->nextsibling != NULL){
-	strcat(string,",");
-	printBCTree(root->nextsibling,string);
- 	}
-	strcat(string,")");
+void NumPush() {
+    if(Num.top<MaxSize-1) {
+        Num.data[++Num.top]=ston(expr,&i);
+    } else {
+        printf("Num栈满\n");
+        return;
+    }
 }
-
-int main()
-{
-    loadData();
-    BuildParentTree();
-    printParentTree(0);
-    BrotherChildTree *root =(BrotherChildTree*)malloc(sizeof(BrotherChildTree));
-    root->name=parentNode[0].name;
-    root->firstchild=NULL;
-    root->nextsibling=NULL;
-    buildBCTree(0, root);
-    char string[1000]=" ";
-    printBCTree(root,string);
-    //create a file
-    ofstream outfile("output.txt");
-    outfile<<string;
-    outfile.close();
-    return 0;
+void NumPop() {
+    if(Num.top>=0) {
+        if(expr[i]!=' ') {
+            switch(expr[i]) {
+                case '+':
+                        Num.data[Num.top-1]=Num.data[Num.top]+Num.data[Num.top-1];
+                    break;
+                case '-':
+                        Num.data[Num.top-1]=Num.data[Num.top]-Num.data[Num.top-1];
+                    break;
+                case '*':
+                        Num.data[Num.top-1]=Num.data[Num.top]*Num.data[Num.top-1];
+                    break;
+                case '/':
+                        Num.data[Num.top-1]=Num.data[Num.top]/Num.data[Num.top-1];
+                    break;
+                case '^':
+                        Num.data[Num.top-1]=pow(Num.data[Num.top],Num.data[Num.top-1]);
+                    break;
+            }
+            Num.top--;
+        }
+    } else {
+        printf("Num栈空\n");
+        return;
+    }
+}
+int main(void) {
+    char ch;
+    loop1:
+    i=0,t=-1;
+    system("cls");
+    printf("中缀表达式：");
+    InitStack(),gets(calc);
+    while(calc[i]!='\0') {
+        i++;
+    }
+    while(i>=0) {
+        if(calc[i]>='0'&&calc[i]<='9') {
+            while((i>=0)&&((calc[i]>='0'&&calc[i]<='9')||(calc[i]=='.'))) {
+loop2:
+                expr[++t]=calc[i--];
+            }
+            if((i>=0)&&((i==0&&calc[i]!='(')||(calc[i]=='+'||calc[i]=='-')&&!(calc[i-1]>='0'&&calc[i-1]<='9')&&calc[i-1]!=')')) goto loop2;
+            expr[++t]=' ';
+        } else if(calc[i]==')') {
+            SymPush();
+        } else if(calc[i]=='(') {
+            while(Sym.data[Sym.top]!=')') {
+                SymPop();
+                expr[++t]=' ';
+            }
+            Sym.data[Sym.top--]='\0';
+            i--;
+        } else if(calc[i]=='+'||calc[i]=='-') {
+            while(Sym.top>=0&&Sym.data[Sym.top]!=')'&&Sym.data[Sym.top]!='+'&&Sym.data[Sym.top]!='-') {
+                SymPop();
+                expr[++t]=' ';
+            }
+            SymPush();
+        } else if(calc[i]=='*'||calc[i]=='/') {
+            while(Sym.top>=0&&Sym.data[Sym.top]=='^') {
+                SymPop();
+                expr[++t]=' ';
+            }
+            SymPush();
+        } else if(calc[i]=='^') {
+            SymPush();
+        } else {
+            i--;
+        }
+    }
+    while(Sym.top>=0) {
+        SymPop();
+        expr[++t]=' ';
+    }
+    expr[++t]=Sym.data[++Sym.top]='\0';
+    for(i=0; i<=(t-2)/2; i++) {
+        ch=expr[i];
+        expr[i]=expr[(t-2)-i];
+        expr[(t-2)-i]=ch;
+    }
+    printf("前缀表达式：%s\n",expr);
+    for(i=t-2; i>=0; i--) {
+        if((expr[i]>='0'&&expr[i]<='9')||((expr[i]=='+'||expr[i]=='-')&&(expr[i+1]>='0'&&expr[i+1]<='9'))) {
+            NumPush();
+        } else {
+            NumPop();
+        }
+    }
+    printf("运算结果为：%g\n",Num.data[0]);
+    printf("Continue(y/n) ");
+    ch=getch();
+    switch(ch) {
+        case 'y': {
+                system("cls");
+                goto loop1;
+            }
+            case 'n':
+                default :
+                        exit(0);
+    }
+    getch();
+    return(0);
 }

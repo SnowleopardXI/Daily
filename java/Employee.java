@@ -22,8 +22,6 @@ public class Employee {
         return avg / emp.length;
     }
 
-
-
     public static void main(String args[]) {
         try (Scanner Obj = new Scanner(System.in)) {
             System.out.println("Enter the number of employees");

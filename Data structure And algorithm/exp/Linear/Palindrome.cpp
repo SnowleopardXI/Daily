@@ -14,9 +14,7 @@ Sqstack *Creat_stack()
     Sqstack *s;
     s = (Sqstack *)malloc(sizeof(Sqstack));
     if (!s)
-    {
         printf("内存空间不足，创建失败\n");
-    }
     else
     {
         s->top = 0;
@@ -27,9 +25,7 @@ Sqstack *Creat_stack()
 void input_stack(Sqstack *s, Elemtype x)
 { //入栈
     if (s->top > Maxsize)
-    {
-        printf("栈已经满，无法插入\n");
-    }
+        printf("栈已满，无法插入\n");
     else
     {
         s->data[s->top] = x;
@@ -41,7 +37,7 @@ Elemtype output_stack(Sqstack *s)
 { //出栈
     if (s->top < 0)
     {
-        printf("栈中已无元素，无法栈\n");
+        printf("栈已无元素，无法栈\n");
         return NULL;
     }
     else
@@ -68,8 +64,7 @@ void judge_stack(Sqstack *s, Elemtype str[])
 {
     Elemtype *str1;
     str1 = display(s);
-    int j = 0;
-    int i = 0;
+    int j = 0, i = 0;
     while (str[i] != '\0')
     {
         if (str[i] != *(str1 + i))

@@ -1,10 +1,6 @@
-/*
-带头结点的递增有序单链表，删除介于max和min之间的结点，并释放结点空间
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
-typedef int Elemtype; //定义数据类型
+typedef int Elemtype;
 
 typedef struct LNode
 {
@@ -76,7 +72,7 @@ int main()
     L = Creat_LNode();
     int T; //测试组数
     scanf("%d", &T);
-    int len; //链表长度
+    int len; //链表长
     scanf("%d", &len);
     Elemtype test[len];
     for (int i = 0; i < len; i++)

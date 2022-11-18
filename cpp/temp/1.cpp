@@ -1,54 +1,52 @@
+//数字中缀表达式转前缀
 #include <iostream>
+#include <string>
+#include <stack>
 using namespace std;
-class RationalNumber
+string InfixToPrefix(string infix)
 {
-private:
-    int a = 100, b; // a为分子，b为分母
-public:
-    // construtors
-    RationalNumber()
+    stack<char> s;
+    string prefix;
+    for (int i = infix.size() - 1; i >= 0; i--)
     {
-        b = 2;
-    }
-    RationalNumber(int a, int b)
-    {
-        this->a = a;
-        this->b = b;
-    }
-    // getters
-    int getNumerator()
-    {
-        return a;
-    }
-    int getDenominator()
-    {
-        return b;
-    }
-    // setters
-    void setNumerator(int a)
-    {
-        this->a = a;
-    }
-    void setDenominator(int b)
-    {
-        if (b == 0)
+        if (infix[i] == '+' || infix[i] == '-' || infix[i] == '*' || infix[i] == '/')
         {
-            this->b = 1;
+            while (!s.empty() && s.top() != '(' && s.top() != ')')
+            {
+                prefix += s.top();
+                s.pop();
+            }
+            s.push(infix[i]);
+        }
+        else if (infix[i] == ')')
+        {
+            s.push(infix[i]);
+        }
+        else if (infix[i] == '(')
+        {
+            while (!s.empty() && s.top() != ')')
+            {
+                prefix += s.top();
+                s.pop();
+            }
+            s.pop();
         }
         else
         {
-            this->b = b;
+            prefix += infix[i];
         }
     }
-    //其他成员函数
-    void print()
+    while (!s.empty())
     {
-        cout << a << "/" << b << endl;
+        prefix += s.top();
+        s.pop();
     }
-};
+    return prefix;
+}
 int main()
 {
-    RationalNumber r1, r2(-2, 0);
-    r2.print();
+    string infix = "10+4+(8-(12-(6+4/5)))/3*(6-2)(12-7)";
+    string prefix = InfixToPrefix(infix);
+    cout << prefix << endl;
     return 0;
 }

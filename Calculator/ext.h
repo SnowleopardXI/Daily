@@ -44,11 +44,29 @@ int phi(int n)
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
 {
-    int i, j;
-
-    for (i = 0; i < r; i++)
-        for (j = 0; j < c; j++)
-            scanf("%f", &matrix[i][j]);
+    int choice;
+    printf("Enter 1 for manual input and 2 for fractional input: ");
+    scanf("%d", &choice);
+    switch (choice)
+    {
+    case 1:
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+                scanf("%f", &matrix[i][j]);
+        break;
+    case 2:
+        for (int i = 0; i < r; i++)
+            for (int j = 0; j < c; j++)
+            {
+                int a, b;
+                scanf("%d/%d", &a, &b);
+                matrix[i][j] = (float)a / b;
+            }
+        break;
+    default:
+        printf("Invalid choice");
+        break;
+    }
 }
 // Show Matrix
 void output_matrix(float matrix[20][20], int r, int c)
@@ -62,6 +80,15 @@ void output_matrix(float matrix[20][20], int r, int c)
         printf("\n");
     }
 }
+// Repair the symbol of the matrix
+void repair_symbol(float matrix[20][20], int i, int j)
+{
+    int k, l;
+    for (k = 0; k < i; k++)
+        for (l = 0; l < j; l++)
+            if (fabs(matrix[k][l]) < 0.0005)
+                matrix[k][l] = fabs(matrix[k][l]);
+}
 // Add Matrix
 void add_matrix(float matrix1[20][20], float matrix2[20][20], float matrix3[20][20], int r, int c)
 {
@@ -70,6 +97,7 @@ void add_matrix(float matrix1[20][20], float matrix2[20][20], float matrix3[20][
     for (i = 0; i < r; i++)
         for (j = 0; j < c; j++)
             matrix3[i][j] = matrix1[i][j] + matrix2[i][j];
+    repair_symbol(matrix3, r, c);
 }
 // Subtract Matrix
 void sub_matrix(float matrix1[20][20], float matrix2[20][20], float matrix3[20][20], int r, int c)
@@ -79,6 +107,7 @@ void sub_matrix(float matrix1[20][20], float matrix2[20][20], float matrix3[20][
     for (i = 0; i < r; i++)
         for (j = 0; j < c; j++)
             matrix3[i][j] = matrix1[i][j] - matrix2[i][j];
+    repair_symbol(matrix3, i, j);
 }
 // Multiplication of two matrices
 void multiply_matrix(float matrix1[20][20], float matrix2[20][20], int r1, int c1, int r2, int c2, float result[20][20])
@@ -94,6 +123,7 @@ void multiply_matrix(float matrix1[20][20], float matrix2[20][20], int r1, int c
                 temp += matrix1[i][k] * matrix2[k][j];
             result[i][j] = temp;
         }
+    repair_symbol(result, i, j);
 }
 // Standard Echelon Form
 float standard_echelon(float matrix[20][20], int r, int c, int x, int y)
@@ -163,7 +193,6 @@ float standard_echelon(float matrix[20][20], int r, int c, int x, int y)
             matrix[i][j] = original_matrix[i][j];
     if (fabs(result) <= 0.0005)
         result = 0;
-
     return result;
 }
 // Rank of Matrix
@@ -275,6 +304,7 @@ void inverse_matrix(float matrix[20][20], int i, int j)
             for (l = 0; l < j; l++)
                 matrix[k][l] = result[l][k] / det;
     }
+    repair_symbol(matrix, i, j);
     for (k = 0; k < i; k++)
     {
         for (l = 0; l < j; l++)
@@ -316,6 +346,49 @@ void orthogonal_matrix(float matrix[20][20], int i, int j)
             for (l = 0; l < j; l++)
                 matrix[k][l] = result[l][k] / det;
     }
+    repair_symbol(matrix, i, j);
+    for (k = 0; k < i; k++)
+    {
+        for (l = 0; l < j; l++)
+            printf("%.3f\t", matrix[k][l]);
+        printf("\n");
+    }
+}
+//求矩阵特征值
+void eigenvalue_matrix(float matrix[20][20], int i, int j)
+{
+    float temp[20][20], result[20][20];
+    int k, l, m, n;
+    float det = det_matrix(matrix, i);
+    if (det == 0)
+        printf("The matrix is not orthogonal.\n");
+    else
+    {
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+            {
+                m = 0;
+                n = 0;
+                for (int p = 0; p < i; p++)
+                    for (int q = 0; q < j; q++)
+                        if (p != k && q != l)
+                        {
+                            temp[m][n] = matrix[p][q];
+                            if (n < (i - 2))
+                                n++;
+                            else
+                            {
+                                n = 0;
+                                m++;
+                            }
+                        }
+                result[k][l] = pow(-1, k + l) * det_matrix(temp, i - 1);
+            }
+        for (k = 0; k < i; k++)
+            for (l = 0; l < j; l++)
+                matrix[k][l] = result[l][k] / det;
+    }
+    repair_symbol(matrix, i, j);
     for (k = 0; k < i; k++)
     {
         for (l = 0; l < j; l++)
