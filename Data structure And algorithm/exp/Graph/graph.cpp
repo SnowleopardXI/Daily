@@ -1,7 +1,6 @@
 #include<iostream>
 #include<stack>
 #include<queue>
-#include<cmath>
 #include<cstring>
 #include<fstream>
 using namespace std;
