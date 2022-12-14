@@ -44,29 +44,9 @@ int phi(int n)
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
 {
-    int choice;
-    printf("Enter 1 for manual input and 2 for fractional input: ");
-    scanf("%d", &choice);
-    switch (choice)
-    {
-    case 1:
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-                scanf("%f", &matrix[i][j]);
-        break;
-    case 2:
-        for (int i = 0; i < r; i++)
-            for (int j = 0; j < c; j++)
-            {
-                int a, b;
-                scanf("%d/%d", &a, &b);
-                matrix[i][j] = (float)a / b;
-            }
-        break;
-    default:
-        printf("Invalid choice");
-        break;
-    }
+    for (int i = 0; i < r; i++)
+        for (int j = 0; j < c; j++)
+            scanf("%f", &matrix[i][j]);
 }
 // Show Matrix
 void output_matrix(float matrix[20][20], int r, int c)

@@ -166,7 +166,7 @@ int main()
             printf("Enter the elements of the matrix: \n");
             input_matrix(matrix, i, j);
             printf("The feature value of the matrix is: \n");
-            eigenValue_matrix(matrix, i, j);
+            eigenvalue_matrix(matrix, i, j);
         }
         default:
             break;

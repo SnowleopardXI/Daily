@@ -1,7 +1,8 @@
 #include <iostream>
 #include <cstring>
 using namespace std;
-void * bsearch(const void *key, const void *base, size_t nel, size_t width, int (*cmp)(const void *, const void *)){ 
+void * bsearch(const void *key, const void *base, size_t nel, size_t width, int (*cmp)(const void *, const void *))//二分查找
+{ 
     void *mid = NULL; 
     int sign; 
     while (nel > 0) { 
@@ -20,7 +21,8 @@ void * bsearch(const void *key, const void *base, size_t nel, size_t width, int 
     return NULL; 
 } 
 
-int compare(const void *val1, const void *val2) { 
+int compare(const void *val1, const void *val2)//比较函数
+{ 
     int iVal1 = *(int*)val1; 
     int iVal2 = *(int*)val2; 
     if (iVal1 > iVal2) { 
@@ -44,7 +46,7 @@ int main(int argc, char** argv) {
 	(p == NULL) ? puts("not found") : puts("found");
 	return 0;
 }
-void qsort(void *base ,size_t num,size_t width , int (_cdecl *compare)(const void *,const void *))
+void qsort(void *base ,size_t num,size_t width , int (_cdecl *compare)(const void *,const void *))//快速排序
 {
     int i,j;
 	void *temp;
