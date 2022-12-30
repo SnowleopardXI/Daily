@@ -9,7 +9,8 @@ void menu()
     printf("3. Legendre\n");
     printf("4. Euler's totient\n");
     printf("5. Matrix Manipulation\n");
-    printf("6. Exit\n");
+    printf("6. Large number manipulation\n");
+    printf("7. Exit\n");
     printf("Enter a choice:\n");
 }
 void mat_menu()
@@ -21,8 +22,7 @@ void mat_menu()
     printf("4. Rank and Standard form\n");
     printf("5. Det of Matrix\n");
     printf("6. Inverse of Matrix\n");
-    printf("7. Orthogonal Matrix\n");
-    printf("8. Feature value of Matrix\n");
+    printf("7. Judge if the quadratic form is positive definite\n");
     printf("Enter a choice:\n");
 }
 int main()
@@ -60,6 +60,7 @@ int main()
         printf("The Euler's totient is: %d", phi(p));
         break;
     case 5:
+    {
         short choice1;
         float matrix1[20][20] = {0}, matrix2[20][20] = {0}, result[20][20] = {0}; // Initializing the matrices
         mat_menu();
@@ -68,53 +69,55 @@ int main()
         {
         case 1:
         {
-            int e; // Define the size of the matrix
+            int c, r; // Define the size of the matrix
             printf("Enter the size of the first matrix and the second matrix: ");
-            scanf("%d", &e);
+            scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix1: \n");
-            input_matrix(matrix1, e, e);
+            input_matrix(matrix1, r, c);
             printf("Enter the elements of the matrix2: \n");
-            input_matrix(matrix2, e, e);
-            add_matrix(matrix1, matrix2, result, e, e);
+            input_matrix(matrix2, r, c);
+            add_matrix(matrix1, matrix2, result, r, c);
             printf("The result of the addition is: \n");
-            output_matrix(result, e, e);
+            output_matrix(result, r, c);
         }
         break;
         case 2:
         {
-            int e; // Define the size of the matrix
+            int c, r; // Define the size of the matrix
             printf("Enter the size of the first matrix and the second matrix: ");
-            scanf("%d", &e);
+            scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix1: \n");
-            input_matrix(matrix1, e, e);
+            input_matrix(matrix1, r, c);
             printf("Enter the elements of the matrix2: \n");
-            input_matrix(matrix2, e, e);
-            sub_matrix(matrix1, matrix2, result, e, e);
-            printf("The result of the addition is: \n");
-            output_matrix(result, e, e);
+            input_matrix(matrix2, r, c);
+            add_matrix(matrix1, matrix2, result, r, c);
+            printf("The result of the subtraction is: \n");
+            output_matrix(result, r, c);
+        }
+        break;
         case 3:
         {
-            int e, f, g, h; // Define the size of the matrix
+            int r1, c1, r2, c2; // Define the size of the matrix
             printf("Enter the size of the matrix1 and matrix2: ");
-            scanf("%dx%d %dx%d", &e, &f, &g, &h);
-            if (f != g)
+            scanf("%dx%d %dx%d", &r1, &c1, &r2, &c2);
+            if (c1 != r2)
             {
                 printf("Can't compute the matrix multiplication\n");
                 break;
             }
             printf("Enter the elements of matrix1: \n");
-            input_matrix(matrix1, e, f);
+            input_matrix(matrix1, r1, c1);
             printf("Enter the elements of matrix2: \n");
-            input_matrix(matrix2, g, h);
+            input_matrix(matrix2, r2, c2);
             printf("The matrix multiplication is: \n");
-            multiply_matrix(matrix1, matrix2, e, f, g, h, result);
-            output_matrix(result, e, h);
+            multiply_matrix(matrix1, matrix2, r1, c1, r2, c2, result);
+            output_matrix(result, r1, c2);
         }
         break;
         case 4:
         {
             float matrix[20][20] = {0};
-            int i, j, r, c;
+            int r, c;
             printf("Enter the number of rows and columns: ");
             scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix: \n");
@@ -129,7 +132,7 @@ int main()
             float matrix[20][20] = {0};
             int n;
             printf("Enter the matrix size: ");
-            scanf("%d", &n);
+            scanf("%dx%d", &n, &n);
             printf("Enter the elements of the matrix: \n");
             input_matrix(matrix, n, n);
             printf("The det of the matrix is: %f\n", det_matrix(matrix, n));
@@ -138,44 +141,46 @@ int main()
         case 6:
         {
             float matrix[20][20] = {0};
-            int i, j;
+            int r, c;
             printf("Enter the matrix size: ");
-            scanf("%dx%d", &i, &j);
+            scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix: \n");
-            input_matrix(matrix, i, j);
+            input_matrix(matrix, r, c);
             printf("The inverse of the matrix is: \n");
-            inverse_matrix(matrix, i, j);
+            inverse_matrix(matrix, r, c);
         }
+        break;
         case 7:
         {
             float matrix[20][20] = {0};
-            int i, j;
+            int r, c;
             printf("Enter the matrix size: ");
-            scanf("%dx%d", &i, &j);
+            scanf("%dx%d", &r, &c);
             printf("Enter the elements of the matrix: \n");
-            input_matrix(matrix, i, j);
-            printf("The orthogonal matrix is: \n");
-            orthogonal_matrix(matrix, i, j);
+            input_matrix(matrix, r, c);
+            if (quadratic_matrix(matrix, r, c))
+                printf("The matrix is positive definite\n");
+            else
+                printf("The matrix is not positive definite\n");
         }
-        case 8:
-        {
-            float matrix[20][20] = {0};
-            int i, j;
-            printf("Enter the matrix size: ");
-            scanf("%dx%d", &i, &j);
-            printf("Enter the elements of the matrix: \n");
-            input_matrix(matrix, i, j);
-            printf("The feature value of the matrix is: \n");
-            eigenvalue_matrix(matrix, i, j);
-        }
+        break;
         default:
             break;
         }
-            // pause
-            printf("\nPress any key to continue...");
-            getchar();
-            getchar();
-            return 0;
-        }
+    }
+    case 6:
+    {
+        printf("Please enter a large number: ");
+        char data[1000]={0};
+        store_number(data);
+    }
+    break;
+    default:
+        break;
+        // pause
+        printf("\nPress any key to continue...");
+        getchar();
+        getchar();
+        return 0;
     }
 }

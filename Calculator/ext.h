@@ -44,10 +44,29 @@ int phi(int n)
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
 {
-    for (int i = 0; i < r; i++)
-        for (int j = 0; j < c; j++)
-            scanf("%f", &matrix[i][j]);
+    int i, j;
+    int choice;
+    printf("1 for fractional, 2 for decimal: ");
+    scanf("%d", &choice);
+    if (choice == 1)
+    {
+        printf("Please enter the matrix in the form of a/b: \n");
+        for (i = 0; i < r; i++)
+            for (j = 0; j < c; j++)
+            {
+                int a, b;
+                scanf("%d/%d", &a, &b);
+                matrix[i][j] = (float)a / b;
+            }
+    }
+    else
+    {
+        for (i = 0; i < r; i++)
+            for (j = 0; j < c; j++)
+                scanf("%f", &matrix[i][j]);
+    }
 }
+
 // Show Matrix
 void output_matrix(float matrix[20][20], int r, int c)
 {
@@ -56,7 +75,7 @@ void output_matrix(float matrix[20][20], int r, int c)
     for (i = 0; i < r; i++)
     {
         for (j = 0; j < c; j++)
-            printf("%.3f\t", matrix[i][j]);
+            printf("%.4f\t", matrix[i][j]);
         printf("\n");
     }
 }
@@ -334,14 +353,14 @@ void orthogonal_matrix(float matrix[20][20], int i, int j)
         printf("\n");
     }
 }
-//求矩阵特征值
-void eigenvalue_matrix(float matrix[20][20], int i, int j)
+// Judge if the quadratic matrix is a positive definite
+int quadratic_matrix(float matrix[20][20], int i, int j)
 {
-    float temp[20][20], result[20][20];
+    float temp[20][20];
     int k, l, m, n;
     float det = det_matrix(matrix, i);
     if (det == 0)
-        printf("The matrix is not orthogonal.\n");
+        return 0;
     else
     {
         for (k = 0; k < i; k++)
@@ -362,17 +381,22 @@ void eigenvalue_matrix(float matrix[20][20], int i, int j)
                                 m++;
                             }
                         }
-                result[k][l] = pow(-1, k + l) * det_matrix(temp, i - 1);
+                if (det_matrix(temp, i - 1) == 0)
+                    return 0;
             }
-        for (k = 0; k < i; k++)
-            for (l = 0; l < j; l++)
-                matrix[k][l] = result[l][k] / det;
+        return 1;
     }
-    repair_symbol(matrix, i, j);
-    for (k = 0; k < i; k++)
+}
+// Store large numbers
+void store_number(char number[100])
+{
+    int i = 0;
+    char c;
+    printf("Please enter a number: ");
+    while ((c = getchar()) != '\n')
     {
-        for (l = 0; l < j; l++)
-            printf("%.3f\t", matrix[k][l]);
-        printf("\n");
+        number[i] = c;
+        number[i] -= '0';
+        i++;
     }
 }
