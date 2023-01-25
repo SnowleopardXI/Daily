@@ -168,6 +168,7 @@ int main()
             break;
         }
     }
+    break;
     case 6:
     {
         printf("Please enter a large number: ");
