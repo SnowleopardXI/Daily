@@ -8,9 +8,10 @@ void menu()
     printf("2. LCM of two numbers\n");
     printf("3. Legendre\n");
     printf("4. Euler's totient\n");
-    printf("5. Matrix Manipulation\n");
-    printf("6. Large number manipulation\n");
-    printf("7. Exit\n");
+    printf("5. Reverse of mod\n");
+    printf("6. Matrix Manipulation\n");
+    printf("7. Large number manipulation\n");
+    printf("8. Exit\n");
     printf("Enter a choice:\n");
 }
 void mat_menu()
@@ -60,6 +61,14 @@ int main()
         printf("The Euler's totient is: %d", phi(p));
         break;
     case 5:
+    { // reverse of mod
+        int a, b;
+        printf("Enter the two numbers: ");
+        scanf("%d%d", &a, &b);
+        printf("The reverse of %d mod %d is: %d", a, b, mod_reverse(a, b));
+        break;
+    }
+    case 6:
     {
         short choice1;
         float matrix1[20][20] = {0}, matrix2[20][20] = {0}, result[20][20] = {0}; // Initializing the matrices
@@ -169,10 +178,10 @@ int main()
         }
     }
     break;
-    case 6:
+    case 7:
     {
         printf("Please enter a large number: ");
-        char data[1000]={0};
+        char data[1000] = {0};
         store_number(data);
     }
     break;

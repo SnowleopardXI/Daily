@@ -41,6 +41,13 @@ int phi(int n)
         res -= res / n;
     return res;
 }
+// mod reverse
+int mod_reverse(int a, int b)
+{
+    //use euler's theorem
+    int tmp=phi(b)-1;
+    return pow(a,tmp);
+}
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
 {
