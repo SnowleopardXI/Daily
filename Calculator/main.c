@@ -11,7 +11,8 @@ void menu()
     printf("5. Reverse of mod\n");
     printf("6. Matrix Manipulation\n");
     printf("7. Large number manipulation\n");
-    printf("8. Exit\n");
+    printf("8. Codes\n");
+    printf("9. Exit\n");
     printf("Enter a choice:\n");
 }
 void mat_menu()
@@ -185,6 +186,49 @@ int main()
         store_number(data);
     }
     break;
+    case 8:
+    {
+        int num, bit;
+        char data[32] = {'\0'};
+        printf("Please enter a number: ");
+        scanf("%d", &num);
+        printf("8-bit range is -128 to 127, 16-bit range is -32768 to 32767, 32-bit range is -2147483648 to 2147483647\n");
+        printf("Enter bit : ");
+        scanf("%d", &bit);
+        printf("The binary representation of %d is: ", num);
+        decimal_to_binary(fabs(num), bit, data);
+        print_binary(data, bit);
+        printf("\n");
+        if (num > 0)
+        {
+            printf("The true form of %d is: ", num);
+            print_binary(data, bit);
+            printf("\n");
+            printf("The reverse code of %d is: ", num);
+            print_binary(data, bit);
+            printf("\n");
+            printf("The two's complement of %d is: ", num);
+            print_binary(data, bit);
+        }
+        else
+        {
+            char result[32] = {0};
+            printf("The true form of %d is: ", num);
+            negative_true(data, result, bit);
+            print_binary(result, bit);
+            printf("\n");
+            clear_array(result);
+            printf("The reverse code of %d is: ", num);
+            negative_inverse(data, result, bit);
+            print_binary(result, bit);
+            printf("\n");
+            clear_array(result);
+            printf("The two's complement of %d is: ", num);
+            negative_complement(data, result, bit);
+            print_binary(result, bit);
+            printf("\n");
+        }
+    }
     default:
         break;
         // pause

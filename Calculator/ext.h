@@ -1,4 +1,29 @@
 #include <math.h>
+#include <string.h>
+// Convert int to char
+void itoc(char number[32])
+{
+    int i, j;
+    char tmp;
+    for (i = 0, j = strlen(number) - 1; i < j; i++, j--)
+    {
+        tmp = number[i];
+        number[i] = number[j];
+        number[j] = tmp;
+    }
+}
+// Reverse the array
+void reverse_array(char number[32])
+{
+    int i, j;
+    char tmp;
+    for (i = 0, j = strlen(number) - 1; i < j; i++, j--)
+    {
+        tmp = number[i];
+        number[i] = number[j];
+        number[j] = tmp;
+    }
+}
 // Legendre polynomials
 int Legendre(int a, int p)
 {
@@ -44,9 +69,9 @@ int phi(int n)
 // mod reverse
 int mod_reverse(int a, int b)
 {
-    //use euler's theorem
-    int tmp=phi(b)-1;
-    return pow(a,tmp);
+    // use euler's theorem
+    int tmp = phi(b) - 1;
+    return pow(a, tmp);
 }
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
@@ -405,5 +430,71 @@ void store_number(char number[100])
         number[i] = c;
         number[i] -= '0';
         i++;
+    }
+}
+// Clear the array
+void clear_array(char number[32])
+{
+    int i;
+    for (i = 0; i < 32; i++)
+        number[i] = '\0';
+}
+// Print Binary by bits
+void print_binary(char number[32], int bit)
+{
+    int i;
+    // Place blank per 4 bits
+    for (i = 32 - bit; i < 32; i++)
+    {
+        if (i % 4 == 0)
+            printf(" ");
+        printf("%d", number[i]);
+    }
+}
+// Decimal to Binary
+void decimal_to_binary(int number, int bit, char data[32])
+{
+    int i;
+    char binary[32] = {0};
+    for (i = 0; i < 32; i++)
+    {
+        binary[i] = number % 2 + '0';
+        number /= 2;
+    }
+    for (i = 0; i < 32; i++)
+        data[i] = binary[31 - i] - '0';
+}
+// 负数的原码
+void negative_true(char number[32],char result[32], int bit)
+{
+    int i;
+    for (i = 31; i > 32 - bit; i--)
+        result[i] = number[i];
+    result[32-bit] = 1;
+}
+// 负数的反码
+void negative_inverse(char number[32],char result[32], int bit)
+{
+    int i;
+    for (i = 31; i > 32-bit; i--)
+        result[i] = !number[i];
+    result[32-bit] = 1;
+}
+// 负数的补码
+void negative_complement(char number[32],char result[32], int bit)
+{
+    int i;
+    for (i = 31; i > 32-bit; i--)
+        result[i] = !number[i];
+    result[32-bit] = 1;
+    for (i = 31; i > 32-bit; i--)
+    {
+        if (result[i] == 0)
+        {
+            result[i] = 1;
+            break;
+        }
+        else
+            result[i] = 0;
     }
 }
