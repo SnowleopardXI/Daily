@@ -66,12 +66,24 @@ int phi(int n)
         res -= res / n;
     return res;
 }
-// mod reverse
-int mod_reverse(int a, int b)
+// a ^ b mod n
+int mod_reverse(int a, int n)
 {
-    // use euler's theorem
-    int tmp = phi(b) - 1;
-    return pow(a, tmp);
+    int t, t0 = 0, t1 = 1, r0 = n, r1 = a, q;
+    while (r1)
+    {
+        q = r0 / r1;
+        t = t0 - q * t1;
+        t0 = t1;
+        t1 = t;
+        t = r0 - q * r1;
+        r0 = r1;
+        r1 = t;
+    }
+    if (r0 == 1)
+        return (t0 + n) % n;
+    else
+        return -1;
 }
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
@@ -464,30 +476,30 @@ void decimal_to_binary(int number, int bit, char data[32])
     for (i = 0; i < 32; i++)
         data[i] = binary[31 - i] - '0';
 }
-// 负数的原码
-void negative_true(char number[32],char result[32], int bit)
+// True form of negative number
+void negative_true(char number[32], char result[32], int bit)
 {
     int i;
     for (i = 31; i > 32 - bit; i--)
         result[i] = number[i];
-    result[32-bit] = 1;
+    result[32 - bit] = 1;
 }
-// 负数的反码
-void negative_inverse(char number[32],char result[32], int bit)
+// Inverse form of negative number
+void negative_inverse(char number[32], char result[32], int bit)
 {
     int i;
-    for (i = 31; i > 32-bit; i--)
+    for (i = 31; i > 32 - bit; i--)
         result[i] = !number[i];
-    result[32-bit] = 1;
+    result[32 - bit] = 1;
 }
-// 负数的补码
-void negative_complement(char number[32],char result[32], int bit)
+// Two's complement form of negative number
+void negative_complement(char number[32], char result[32], int bit)
 {
     int i;
-    for (i = 31; i > 32-bit; i--)
+    for (i = 31; i > 32 - bit; i--)
         result[i] = !number[i];
-    result[32-bit] = 1;
-    for (i = 31; i > 32-bit; i--)
+    result[32 - bit] = 1;
+    for (i = 31; i > 32 - bit; i--)
     {
         if (result[i] == 0)
         {

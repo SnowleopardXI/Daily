@@ -51,7 +51,7 @@ int main()
     case 3:
         int m, n;
         printf("Enter the number of terms: ");
-        scanf("%d%d", &m, &n);
+        scanf("%d/%d", &m, &n);
         printf("The Legendre symbol is: ");
         printf("%d", Legendre(m, n));
         break;
