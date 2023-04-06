@@ -185,6 +185,12 @@ int main()
             key1.push_back(key[i] - 'A');
         ifstream fin(plain);
         ofstream fout(cipher);
+        // Judge if the file is open
+        if (!fin.is_open())
+        {
+            cout << "File open failed!" << endl;
+            exit(1);
+        }
         string text;
         getline(fin, text);
         for (int i = 0; i < text.length(); i++)
@@ -193,6 +199,7 @@ int main()
         }
         fin.close();
         fout.close();
+        cout << "Encrypted successfully!" << endl;
         break;
     }
     case 2:
@@ -204,6 +211,11 @@ int main()
             key1.push_back(key[i] - 'A');
         ifstream fin(cipher);
         ofstream fout(plain);
+        if (!fin.is_open())
+        {
+            cout << "File open failed!" << endl;
+            exit(1);
+        }
         string text;
         getline(fin, text);
         for (int i = 0; i < text.length(); i++)
@@ -212,11 +224,17 @@ int main()
         }
         fin.close();
         fout.close();
+        cout << "Decrypted successfully!" << endl;
         break;
     }
     case 3:
     {
         ifstream fin(cipher);
+        if (!fin.is_open())
+        {
+            cout << "File open failed!" << endl;
+            exit(1);
+        }
         string text;
         getline(fin, text);
         int clen = text.size();
