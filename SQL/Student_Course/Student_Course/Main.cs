@@ -1,17 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
+using Student_Course;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Student_Course
 {
-	public partial class Main : Form
+    public partial class Main : Form
 	{
 
 		public Main()
@@ -23,8 +18,7 @@ namespace Student_Course
         {
             try
             {
-                string str = "server=" + Program.server + ";User Id=" + Program.username + ";password=" + Program.password + ";Database=" + Program.database;
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 string sql = "set foreign_key_checks=1";
                 //执行并返回是否成功
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -44,8 +38,7 @@ namespace Student_Course
         {
             try
             {
-                string str = "server=" + Program.server + ";User Id=" + Program.username + ";password=" + Program.password + ";Database=" + Program.database;
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 string sql = "set foreign_key_checks=0";
                 //执行并返回是否成功
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -147,5 +140,88 @@ namespace Student_Course
 
         }
 
+        private void 查看成绩ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FormScoreBrowse frm = new FormScoreBrowse();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 课程修改ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FormCourceModify frm = new FormCourceModify();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void superCourseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Course frm = new Course();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void superStudentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Student frm = new Student();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 关于ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AboutBox frm = new AboutBox();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 学生修改ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FormStudentModify frm = new FormStudentModify();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

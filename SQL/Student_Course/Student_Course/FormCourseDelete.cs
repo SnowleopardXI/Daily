@@ -1,15 +1,8 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using MySql.Data.MySqlClient;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Student_Course
 {
@@ -24,8 +17,7 @@ namespace Student_Course
         {
             try
             {
-                string str = "server=" + Program.server + ";User Id=" + Program.username + ";password=" + Program.password + ";Database=" + Program.database;
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 string sql = "select * from course";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);  //数据适配器
                 DataTable dt = new DataTable();   //数据表
@@ -50,8 +42,7 @@ namespace Student_Course
                 if (result == DialogResult.No)
                     return;
                 string cno = dataGridView1["cno", row].Value.ToString();
-                string str = "server=" + Program.server + ";User Id=" + Program.username + ";password=" + Program.password + ";Database=" + Program.database;
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 string sql = "delete from course where cno=?";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlParameter param = new MySqlParameter();

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("WindowsFormsApp2")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("学生课程管理")]
+[assembly: AssemblyDescription("Build date: 2023-04-09")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WindowsFormsApp2")]
-[assembly: AssemblyCopyright("Copyright ©  2023")]
+[assembly: AssemblyProduct("学生课程管理")]
+[assembly: AssemblyCopyright("Ephraim Steve Micaiah")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

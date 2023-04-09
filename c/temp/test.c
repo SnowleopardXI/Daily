@@ -1,15 +1,24 @@
 #include <stdio.h>
-#define C(a) ((a)*(a)*(a))
-int main()
-{
-    int x,y;
-    for (y=9;y>-6;y--)
-    {
-        for (x=-8;x<9;x++)
-        {
-            putchar(C (x*x+y*y-25)<25*x*x*y*y*y?"*##*"[(x+10)%4]:'-');
-        }
-        putchar('\n');
+
+int main() {
+    FILE *fptr; // 定义指向文件的指针
+    char c, upper, lower;
+    int i;
+    
+    // 打开文件
+    fptr = fopen("output.txt", "w");
+    
+    //大小写交替写入
+    for (i = 0; i < 26; i++) {
+        upper = 'A' + i;
+        lower = 'a' + i;
+        fputc(upper, fptr);
+        fputc(lower, fptr);
     }
+    
+    
+    // 关闭文件
+    fclose(fptr);
+    
     return 0;
 }

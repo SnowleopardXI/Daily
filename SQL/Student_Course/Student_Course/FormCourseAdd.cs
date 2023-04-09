@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using MySql.Data.MySqlClient;
-using MySql.Data.Types;
 
 
 namespace Student_Course
@@ -36,9 +28,8 @@ namespace Student_Course
                 string ccredit = this.ccredit.Text.Trim();
                 string cpno = this.cpno.Text.Trim();
 
-                string str="server="+Program.server+ ";User Id="+Program.username +";password="+Program.password +";Database="+Program.database;
                 
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 //判断cno,cname是否存在
                 string sql = "select * from course where cno = '" + cno + "' or cname = '" + cname + "'";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);

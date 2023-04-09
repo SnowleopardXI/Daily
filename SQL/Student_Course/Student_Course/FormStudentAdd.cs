@@ -1,12 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Student_Course
@@ -57,9 +50,8 @@ namespace Student_Course
                 string Ssex = this.ssex.Text.Trim();
                 string sage = this.sage.Text.Trim();
                 string sdept = this.sdept.Text.Trim();
-                string str = "server=" + Program.server + ";User Id=" + Program.username + ";password=" + Program.password + ";Database=" + Program.database;
-
-                MySqlConnection conn = new MySqlConnection(str);//实例化连接
+                
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 //判断sno是否存在
                 string sql = "select * from student where sno = '" + sno + "'";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
