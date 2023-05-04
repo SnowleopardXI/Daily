@@ -2,11 +2,17 @@ import java.io.*;
 import java.net.*;
 
 public class FileClient {
-    private static final String SERVER_HOST = "localhost"; // 服务器主机名
-    private static final int SERVER_PORT = 9091; // 服务器端口号
 
     public static void main(String[] args) {
         try {
+            int SERVER_PORT;
+            String SERVER_HOST;
+            System.out.print("请输入服务器地址：");
+            BufferedReader in1 = new BufferedReader(new InputStreamReader(System.in));
+            SERVER_HOST = in1.readLine();
+            System.out.print("请输入服务器端口：");
+            BufferedReader in2 = new BufferedReader(new InputStreamReader(System.in));
+            SERVER_PORT = Integer.parseInt(in2.readLine());
             Socket socket = new Socket(SERVER_HOST, SERVER_PORT); // 创建客户端Socket对象
             System.out.println("连接到服务器：" + socket.getInetAddress());
 
