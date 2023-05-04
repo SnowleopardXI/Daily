@@ -510,3 +510,31 @@ void negative_complement(char number[32], char result[32], int bit)
             result[i] = 0;
     }
 }
+// 奇偶校验码
+void parity_code(char number[64], int type)// type = 0: 奇校验码，type = 1: 偶校验码
+{
+    int i, j, sum = 0;
+    for (i = 0; i < 64; i++)
+    {
+        if (i % 8 == 0)
+            sum = 0;
+        sum += number[i];
+        if (i % 8 == 7)
+        {
+            if (type == 0)
+            {
+                if (sum % 2 == 0)
+                    number[i] = 1;
+                else
+                    number[i] = 0;
+            }
+            else
+            {
+                if (sum % 2 == 0)
+                    number[i] = 0;
+                else
+                    number[i] = 1;
+            }
+        }
+    }
+}

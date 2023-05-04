@@ -4,6 +4,7 @@ D:\Workspace\Daily\SQL\Student_Course\Student_Course\bin\Release\Student_Course.
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\bin\Release\MySql.Data.dll
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\StudentCourse.csproj.AssemblyReference.cache
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\StudentCourse.csproj.SuggestedBindingRedirects.cache
+D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.AboutBox.resources
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.Course.resources
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.FormCourceModify.resources
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.FormCourseAdd.resources
@@ -22,4 +23,3 @@ D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\StudentCourse.c
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\StudentCourse.csproj.CopyComplete
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.exe
 D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.pdb
-D:\Workspace\Daily\SQL\Student_Course\Student_Course\obj\Release\Student_Course.AboutBox.resources

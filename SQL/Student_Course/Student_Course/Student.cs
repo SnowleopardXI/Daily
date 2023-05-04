@@ -2,7 +2,8 @@
 using System;
 using System.Data;
 using System.Windows.Forms;
-
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
+#pragma warning disable IDE0017 // Simplify object initialization
 namespace Student_Course
 {
     public partial class Student : Form
@@ -12,7 +13,9 @@ namespace Student_Course
             InitializeComponent();
 
         }
+
         public void Refresh()
+
         {
             try
             {

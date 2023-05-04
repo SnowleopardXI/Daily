@@ -12,6 +12,13 @@ namespace Student_Course
             InitializeComponent();
 
         }
+        public void clear()
+        {
+            this.cno.Text = "";
+            this.cname.Text = "";
+            this.cpno.Text = "";
+            this.ccredit.Text = "";
+        }
         public void Refresh()
         {
             try

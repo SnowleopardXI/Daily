@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "ext.h"
 void menu()
 {
@@ -12,7 +13,8 @@ void menu()
     printf("6. Matrix Manipulation\n");
     printf("7. Large number manipulation\n");
     printf("8. Codes\n");
-    printf("9. Exit\n");
+    printf("9. Error correction codes\n");
+    printf("10. Exit\n");
     printf("Enter a choice:\n");
 }
 void mat_menu()
@@ -228,6 +230,64 @@ int main()
             print_binary(result, bit);
             printf("\n");
         }
+    }
+    case 9:
+    {
+        // Odd-even error code calculation
+        int data[32] = {0};
+        int temp[8] = {0};
+        int parity = 0;
+        int error = 0;
+        printf("Please enter 32-bit data: ");
+        // 16进制数据
+        for (int i = 0; i < 8; i++)
+            scanf("%x", &temp[i]);
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                data[i * 4 + j] = temp[i] % 2;
+                temp[i] /= 2;
+            }
+        }
+        // 输出二进制数据
+        printf("The binary data is: ");
+        for (int i = 0; i < 32; i++)
+            printf("%d", data[i]);
+        printf("\n");
+        // 奇偶校验
+        for (int i = 0; i < 32; i++)
+        {
+            parity += data[i];
+        }
+        if (parity % 2 == 0)
+            data[31] = 0;
+        else
+            data[31] = 1;
+        // 错误检测
+        // Generate random error bit position
+        srand((unsigned)time(NULL));
+        error = rand() % 32;
+        data[error] = !data[error];
+        // 奇偶校验
+        parity = 0;
+        for (int i = 0; i < 32; i++)
+        {
+            parity += data[i];
+        }
+        if (parity % 2 == 0)
+            data[31] = 0;
+        else
+            data[31] = 1;
+        // 错误检测
+        if (data[31] == 0)
+            printf("No error\n");
+        else
+            printf("Error bit position: %d\n", error);
+        for (int i=0;i<32;i++)
+            printf("%d",data[i]);
+        printf("\n");
+    
     }
     default:
         break;
