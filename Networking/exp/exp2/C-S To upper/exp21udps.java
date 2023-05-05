@@ -3,7 +3,7 @@ import java.net.*;
 
 public class exp21udps {
     public static void main(String args[]) throws Exception {
-        DatagramSocket serverSocket = new DatagramSocket(9091);// 创建serverSocket对象，并在9876端口监听
+        DatagramSocket serverSocket = new DatagramSocket(9091);// 创建serverSocket对象，并在9091端口监听
         byte[] sendData = new byte[1024];// 用来存储要发送给服务器的数据
         byte[] receiveData = new byte[1024];// 用来接收从服务器，返回来的数据
         while (true) {
