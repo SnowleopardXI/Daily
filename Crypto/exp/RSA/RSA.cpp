@@ -1,93 +1,160 @@
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
-#include <ctime>
+#include <string>
+#include <vector>
 #include <cmath>
-#include <cstring>
-
-using namespace std;
-
-long RSA(char* m, long* ed, long n, bool Type);
-void computeED(long* ed, long t);
-
-int main() {
-    // Set the file names and user-defined keys
-    const char* plain_file = "plain.txt";
-    const char* cipher_file = "ciphertext.txt";
-    //
-
-
-    // Open the plain text file
-    ifstream in_file(plain_file);
-    if (!in_file.is_open()) {
-        cerr << "Error opening plain text file." << endl;
-        return 1;
+int gcd(int a, int b)
+{
+    if (a < b)
+    {
+        std::swap(a, b);
     }
-    
-    // Open the cipher text file
-    ofstream out_file(cipher_file);
-    if (!out_file.is_open()) {
-        cerr << "Error opening cipher text file." << endl;
-        return 1;
+    if (b == 0)
+    {
+        return a;
     }
-    
-    // Encrypt or decrypt the plain text file and write the result to the cipher text file
-    while (in_file.good()) {
-        char m[256];
-        in_file.getline(m, 256);
-        
-        // Encrypt or decrypt the message and write the result to the output file
-        long c = RSA(m, ed, n, encrypt);
-        out_file << c << endl;
+    else
+    {
+        return gcd(b, a % b);
     }
-    
-    // Close the files
-    in_file.close();
-    out_file.close();
-    
-    return 0;
+}
+// RSA加密函数
+long long int encrypt(long long int plaintext, long long int e, long long int n)
+{
+    long long int ciphertext = 1;
+    for (int i = 0; i < e; ++i)
+    {
+        ciphertext = (ciphertext * plaintext) % n;
+    }
+    return ciphertext;
 }
 
-// RSA encryption and decryption function
-long RSA(char* m, long* ed, long n, bool Type) {
-    long c = 0;
-    
-    // Convert the message to a number
-    long m_num = 0;
-    for (int i = 0; i < strlen(m); i++) {
-        m_num += (long) m[i] * pow(256, i);
+// RSA解密函数
+long long int decrypt(long long int ciphertext, long long int d, long long int n)
+{
+    long long int plaintext = 1;
+    for (int i = 0; i < d; ++i)
+    {
+        plaintext = (plaintext * ciphertext) % n;
     }
-    
-    // Encrypt or decrypt the message using the public or private key
-    if (Type) {
-        // Encrypt
-        c = (long) fmod(pow(m_num, ed[0]), n);
-    } else {
-        // Decrypt
-        c = (long) fmod(pow(m_num, ed[1]), n);
-    }
-    
-    return c;
+    return plaintext;
 }
 
-// Calculate the public and private keys given the parameter t=((p-1)*(q-1))
-void computeED(long* ed, long t) {
-    long e = 3;  // Start with a small prime number
-    while (true) {
-        // Calculate d
-        long d = 0;
-        while ((d * e) % t != 1) {
-            d++;
-        }
-        
-        // Check if d and e are valid keys
-        if (d != e && d > 1 && e > 1) {
-            ed[0] = e;
-            ed[1] = d;
+// 生成密钥函数
+void generateKeys(long long int p, long long int q, long long int &e, long long int &d, long long int &n)
+{
+    long long int phi = (p - 1) * (q - 1);
+    n = p * q;
+
+    for (e = 2; e < phi; ++e)
+    {
+        if (gcd(e, phi) == 1)
+        { // 使用C++17中的__gcd函数，需要包含头文件<numeric>
             break;
         }
-        
-        // Try the next prime number
-        e += 2;
     }
+
+    for (d = 2; d < phi; ++d)
+    {
+        if ((d * e) % phi == 1)
+        {
+            break;
+        }
+    }
+}
+
+int main()
+{
+    // 设置参数
+    long long int p = 17;
+    long long int q = 23;
+    long long int e, d, n;
+
+    // 生成密钥
+    generateKeys(p, q, e, d, n);
+
+    // 明文
+    std::string plaintext = "Hello, RSA!";
+    // 创建明文文件
+    std::ofstream plaintextFile("plaintext.txt");
+    if (!plaintextFile)
+    {
+        std::cerr << "无法创建明文文件。" << std::endl;
+        return 1;
+    }
+    plaintextFile << plaintext;
+    plaintextFile.close();
+
+    // 加密
+    std::ifstream file("plaintext.txt");
+    if (!file)
+    {
+        std::cerr << "无法打开明文文件。" << std::endl;
+        return 1;
+    }
+
+    std::string line;
+    std::vector<long long int> encryptedData;
+
+    while (std::getline(file, line))
+    {
+        for (char c : line)
+        {
+            long long int encryptedChar = encrypt(c, e, n);
+            encryptedData.push_back(encryptedChar);
+        }
+    }
+
+    file.close();
+
+    // 创建密文文件
+    std::ofstream ciphertextFile("ciphertext.txt");
+    if (!ciphertextFile)
+    {
+        std::cerr << "无法创建明文文件。" << std::endl;
+        return 1;
+    }
+
+    for (long long int c : encryptedData)
+    {
+        ciphertextFile << c << std::endl;
+    }
+
+    ciphertextFile.close();
+
+    // 解密
+    std::ifstream encryptedFile("ciphertext.txt");
+    if (!encryptedFile)
+    {
+        std::cerr << "无法打开明文文件。" << std::endl;
+        return 1;
+    }
+
+    std::vector<long long int> decryptedData;
+
+    long long int encryptedChar;
+    while (encryptedFile >> encryptedChar)
+    {
+        long long int decryptedChar = decrypt(encryptedChar, d, n);
+        decryptedData.push_back(decryptedChar);
+    }
+
+    encryptedFile.close();
+
+    // 创建解密后的明文文件
+    std::ofstream decryptedFile("decrypted.txt");
+    if (!decryptedFile)
+    {
+        std::cerr << "无法创建解密文件。" << std::endl;
+        return 1;
+    }
+
+    for (long long int c : decryptedData)
+    {
+        decryptedFile << static_cast<char>(c);
+    }
+
+    decryptedFile.close();
+
+    return 0;
 }
