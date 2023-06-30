@@ -30,7 +30,7 @@
   "targets": {
     "Target 1": {
       "excludeList": [
-        "<virtual_root>/Source Group 1/2.c"
+        "<virtual_root>/Source Group 1/time.c"
       ],
       "toolchain": "Keil_C51",
       "compileConfig": {
