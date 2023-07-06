@@ -12,9 +12,6 @@
         "files": [
           {
             "path": "2.c"
-          },
-          {
-            "path": "time.c"
           }
         ],
         "folders": []
