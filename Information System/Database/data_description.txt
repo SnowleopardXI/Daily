@@ -1,0 +1,41 @@
+管理员表 (Admins)
+
+Admin_ID (主键，自增)
+Admin_Name
+Password (使用哈希和盐加密)
+Admin_Type (1-普通管理员，2-超级管理员)
+Email
+Phone
+管理员操作记录表 (Admin_Actions)
+
+Action_ID (主键，自增)
+Admin_ID (外键，关联管理员表的Admin_ID)
+Action_Type (例如添加，删除，修改等)
+Action_Description
+Action_Time (存储操作的时间戳)
+库存信息表 (Inventory)
+
+Inventory_ID (主键，自增)
+Product_Name
+Quantity
+Supplier_ID (外键，关联供应商表的Supplier_ID)
+Warehouse_ID (外键，关联仓库数据表的Warehouse_ID)
+供应商表 (Suppliers)
+
+Supplier_ID (主键，自增)
+Supplier_Name
+Contact_Info
+Address
+仓库数据表 (Warehouses)
+
+Warehouse_ID (主键，自增)
+Warehouse_Location
+Warehouse_Capacity
+Warehouse_Contact
+库存记录表 (Stock_Records)
+
+Record_ID (主键，自增)
+Inventory_ID (外键，关联库存信息表的Inventory_ID)
+Quantity_Change
+Record_Time (存储记录的时间戳)
+Admin_ID (外键，关联管理员表的Admin_ID)

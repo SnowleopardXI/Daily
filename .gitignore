@@ -10,3 +10,5 @@ tempCodeRunnerFile.c
 *.pdb
 *.cache
 *.CopyComplete
+*.vsidx
+*.lock
