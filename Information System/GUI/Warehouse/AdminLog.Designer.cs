@@ -73,14 +73,14 @@
             "不限",
             "货物管理",
             "用户管理",
-            "修改密码",
+            "用户验证",
             "仓库管理",
             "供应商管理"});
             this.operateType.Location = new System.Drawing.Point(95, 31);
             this.operateType.Name = "operateType";
             this.operateType.Size = new System.Drawing.Size(121, 21);
             this.operateType.TabIndex = 3;
-            this.operateType.SelectedIndex = 0;
+            this.operateType.Text = "不限";
             // 
             // contextMenuStrip1
             // 

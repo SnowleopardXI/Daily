@@ -58,7 +58,7 @@ namespace Warehouse
         {
             try
             {
-                StockInfo frm = new StockInfo();
+                WarehouseInfo frm = new WarehouseInfo();
                 frm.MdiParent = this;
                 frm.Show();
             }
@@ -127,6 +127,20 @@ namespace Warehouse
             try
             {
                 Supplier frm = new Supplier();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 人员管理_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AdminManage frm = new AdminManage();
                 frm.MdiParent = this;
                 frm.Show();
             }

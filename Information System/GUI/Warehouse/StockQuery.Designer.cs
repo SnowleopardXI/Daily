@@ -36,8 +36,6 @@
             this.Warehouse_ID = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Product_Name = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.Product_Price = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -108,29 +106,11 @@
             this.Product_Name.Size = new System.Drawing.Size(100, 20);
             this.Product_Name.TabIndex = 6;
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(251, 73);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "产品价格";
-            // 
-            // Product_Price
-            // 
-            this.Product_Price.Location = new System.Drawing.Point(309, 73);
-            this.Product_Price.Name = "Product_Price";
-            this.Product_Price.Size = new System.Drawing.Size(100, 20);
-            this.Product_Price.TabIndex = 8;
-            // 
             // StockQuery
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.Product_Price);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Product_Name);
             this.Controls.Add(this.Warehouse_ID);
@@ -157,7 +137,5 @@
         private System.Windows.Forms.TextBox Warehouse_ID;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Product_Name;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox Product_Price;
     }
 }

@@ -50,9 +50,9 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "修改密码")
+            else if(operateType.Text == "用户验证")
             {
-                sql = "select * from admin_actions where Action_Type='修改密码'";
+                sql = "select * from admin_actions where Action_Type like '%密码%' or Action_Type like '%登录%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);

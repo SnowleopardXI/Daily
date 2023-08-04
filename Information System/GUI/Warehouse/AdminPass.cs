@@ -21,7 +21,7 @@ namespace Warehouse
                     return;
                 }
                 //Read Admin_ID from Login.cs
-                string before = "SELECT Password FROM Admins WHERE Admin_ID='" + Program.current + "'";
+                string before = "SELECT Password FROM admins WHERE Admin_ID='" + Program.current + "'";
                 //Execute the query
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
@@ -43,7 +43,7 @@ namespace Warehouse
                 }
                 else
                 {
-                    string after = "UPDATE Admins SET Password=sha1('" + newPass.Text + "') WHERE Admin_ID='" + Program.current + "'";
+                    string after = "UPDATE admins SET Password=sha1('" + newPass.Text + "') WHERE Admin_ID='" + Program.current + "'";
                     MySqlCommand cmd2 = new MySqlCommand(after, conn);
                     cmd2.ExecuteNonQuery();
                     MessageBox.Show("修改成功！");

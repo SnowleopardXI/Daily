@@ -37,6 +37,11 @@ namespace Warehouse
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
+            if (supplierName.Text == "" || contact.Text == "" || address.Text == "")
+            {
+                MessageBox.Show("请填写完整信息");
+                return;
+            }
             string sql = "CALL Add_Suppliers('" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             try 
@@ -95,9 +100,28 @@ namespace Warehouse
 
         private void modify_Click(object sender, EventArgs e)
         {
+            if (SupplierID.Text == "" || (supplierName.Text == "" && contact.Text == "" && address.Text == ""))
+            {
+                MessageBox.Show("请填写完整信息");
+                return;
+            }
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
-            string sql = "CALL Update_Supplier(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
+            string sql = "";
+            if(supplierName.Text != "" && contact.Text == "" && address.Text == "")
+            sql="CALL Update_Supplier_Name(" + SupplierID.Text + ",'" + supplierName.Text + "'," + Program.current + ")";
+            if(supplierName.Text == "" && contact.Text != "" && address.Text == "")
+                sql="CALL Update_Supplier_Contact(" + SupplierID.Text + ",'" + contact.Text + "'," + Program.current + ")";
+            else if(supplierName.Text == "" && contact.Text == "" && address.Text != "")
+                sql="CALL Update_Supplier_Address(" + SupplierID.Text + ",'" + address.Text + "'," + Program.current + ")";
+            else if(supplierName.Text != "" && contact.Text != "" && address.Text == "")
+                sql="CALL Update_Supplier_Name_Contact(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "'," + Program.current + ")";
+            else if(supplierName.Text != "" && contact.Text == "" && address.Text != "")
+                sql="CALL Update_Supplier_Name_Address(" + SupplierID.Text + ",'" + supplierName.Text + "','" + address.Text + "'," + Program.current + ")";
+            else if(supplierName.Text == "" && contact.Text != "" && address.Text != "")
+                sql="CALL Update_Supplier_Contact_Address(" + SupplierID.Text + ",'" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
+            else if(supplierName.Text != "" && contact.Text != "" && address.Text != "")
+             sql = "CALL Update_Supplier(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             try
             {

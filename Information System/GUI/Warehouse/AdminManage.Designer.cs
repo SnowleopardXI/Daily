@@ -33,7 +33,7 @@
             // 
             // pass
             // 
-            this.pass.Location = new System.Drawing.Point(669, 32);
+            this.pass.Location = new System.Drawing.Point(674, 35);
             this.pass.Name = "pass";
             this.pass.Size = new System.Drawing.Size(75, 23);
             this.pass.TabIndex = 1;

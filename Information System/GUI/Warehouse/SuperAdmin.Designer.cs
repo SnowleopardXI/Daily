@@ -62,6 +62,7 @@
             this.人员管理.Name = "人员管理";
             this.人员管理.Size = new System.Drawing.Size(71, 20);
             this.人员管理.Text = "人员管理";
+            this.人员管理.Click += new System.EventHandler(this.人员管理_Click);
             // 
             // 基础信息管理ToolStripMenuItem
             // 
@@ -76,7 +77,7 @@
             // 供应商
             // 
             this.供应商.Name = "供应商";
-            this.供应商.Size = new System.Drawing.Size(180, 22);
+            this.供应商.Size = new System.Drawing.Size(165, 22);
             this.供应商.Text = "供应商信息管理";
             this.供应商.Click += new System.EventHandler(this.供应商_Click);
             // 
@@ -88,41 +89,41 @@
             this.入库ToolStripMenuItem,
             this.出库ToolStripMenuItem});
             this.货物信息管理.Name = "货物信息管理";
-            this.货物信息管理.Size = new System.Drawing.Size(180, 22);
+            this.货物信息管理.Size = new System.Drawing.Size(165, 22);
             this.货物信息管理.Text = "货物信息管理";
             // 
             // 查询库存ToolStripMenuItem
             // 
             this.查询库存ToolStripMenuItem.Name = "查询库存ToolStripMenuItem";
-            this.查询库存ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查询库存ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.查询库存ToolStripMenuItem.Text = "查询库存";
             this.查询库存ToolStripMenuItem.Click += new System.EventHandler(this.查询库存ToolStripMenuItem_Click);
             // 
             // 查询流水ToolStripMenuItem
             // 
             this.查询流水ToolStripMenuItem.Name = "查询流水ToolStripMenuItem";
-            this.查询流水ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查询流水ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.查询流水ToolStripMenuItem.Text = "查询流水";
             this.查询流水ToolStripMenuItem.Click += new System.EventHandler(this.查询流水ToolStripMenuItem_Click);
             // 
             // 入库ToolStripMenuItem
             // 
             this.入库ToolStripMenuItem.Name = "入库ToolStripMenuItem";
-            this.入库ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.入库ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.入库ToolStripMenuItem.Text = "入库";
             this.入库ToolStripMenuItem.Click += new System.EventHandler(this.入库ToolStripMenuItem_Click);
             // 
             // 出库ToolStripMenuItem
             // 
             this.出库ToolStripMenuItem.Name = "出库ToolStripMenuItem";
-            this.出库ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.出库ToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.出库ToolStripMenuItem.Text = "出库";
             this.出库ToolStripMenuItem.Click += new System.EventHandler(this.出库ToolStripMenuItem_Click);
             // 
             // 仓库信息管理
             // 
             this.仓库信息管理.Name = "仓库信息管理";
-            this.仓库信息管理.Size = new System.Drawing.Size(180, 22);
+            this.仓库信息管理.Size = new System.Drawing.Size(165, 22);
             this.仓库信息管理.Text = "仓库信息管理";
             this.仓库信息管理.Click += new System.EventHandler(this.仓库信息管理_Click);
             // 
@@ -137,7 +138,7 @@
             // 管理员日志
             // 
             this.管理员日志.Name = "管理员日志";
-            this.管理员日志.Size = new System.Drawing.Size(180, 22);
+            this.管理员日志.Size = new System.Drawing.Size(126, 22);
             this.管理员日志.Text = "系统日志";
             this.管理员日志.Click += new System.EventHandler(this.管理员日志_Click);
             // 

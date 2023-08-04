@@ -36,14 +36,19 @@ namespace Warehouse
                         superadmin.Show();//显示超级管理员窗体
                         this.Hide();//隐藏登录窗体
                     }
+                    sql = "INSERT into admin_actions(Admin_ID,Action_Type,Action_Description,Action_Time) VALUES('" + Program.current + "','登录','ID: " + Program.current + " 登录系统','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "')";
                 }
                 else//如果没有读取到结果
                 {
                     MessageBox.Show("用户名或密码错误！");//弹出提示
                     this.id.Text = "";//清空用户名输入框
                     this.pass.Text = "";//清空密码输入框
+                    sql = "INSERT into admin_actions(Admin_ID,Action_Type,Action_Description,Action_Time) VALUES('" + Program.current + "','登录','ID: " + Program.current + " 登录系统失败','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "')";
                 }
                 reader.Close();//关闭读取
+                
+                cmd = new MySqlCommand(sql, conn);
+                cmd.ExecuteNonQuery();
                 conn.Close();//关闭连接
             }
             catch (Exception ex)
