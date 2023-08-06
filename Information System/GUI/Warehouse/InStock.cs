@@ -9,7 +9,14 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-
+        public void Refresh()
+        {
+            this.productName.Text = "";
+            this.supplierName.Text = "";
+            this.warehouseId.Text = "";
+            this.quantity.Text = "";
+            this.employeeId.Text = "";
+        }
         private void stockin_Click(object sender, EventArgs e)
         {
             if(productName.Text==""||supplierName.Text==""||warehouseId.Text==""||quantity.Text=="")

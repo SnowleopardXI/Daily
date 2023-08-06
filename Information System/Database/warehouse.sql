@@ -1,109 +1,94 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : Lan
- Source Server Type    : MariaDB
- Source Server Version : 100612
- Source Host           : 127.0.0.1:3306
- Source Schema         : warehouse
-
- Target Server Type    : MariaDB
- Target Server Version : 100612
- File Encoding         : 65001
-
- Date: 04/08/2023 01:11:49
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
--- Table structure for Admin_Actions
+-- Table structure for admin_actions
 -- ----------------------------
-DROP TABLE IF EXISTS `Admin_Actions`;
-CREATE TABLE `Admin_Actions`  (
-  `Action_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Admin_ID` int(11) NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `admin_actions`;
+CREATE TABLE `admin_actions`  (
+  `Action_ID` int NOT NULL AUTO_INCREMENT,
+  `Admin_ID` int NULL DEFAULT NULL,
   `Action_Type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `Action_Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `Action_Time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP,
+  `Action_Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL,
+  `Action_Time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`Action_ID`) USING BTREE,
   INDEX `Admin_ID`(`Admin_ID`) USING BTREE,
-  CONSTRAINT `Admin_Actions_ibfk_1` FOREIGN KEY (`Admin_ID`) REFERENCES `Admins` (`Admin_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `Admin_Actions_ibfk_1` FOREIGN KEY (`Admin_ID`) REFERENCES `admins` (`Admin_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for Admins
+-- Table structure for admins
 -- ----------------------------
-DROP TABLE IF EXISTS `Admins`;
-CREATE TABLE `Admins`  (
-  `Admin_ID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `admins`;
+CREATE TABLE `admins`  (
+  `Admin_ID` int NOT NULL AUTO_INCREMENT,
   `Admin_Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `Admin_Type` int(11) NULL DEFAULT NULL,
+  `Admin_Type` int NULL DEFAULT NULL,
   `Email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`Admin_ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for Inventory
+-- Table structure for inventory
 -- ----------------------------
-DROP TABLE IF EXISTS `Inventory`;
-CREATE TABLE `Inventory`  (
-  `Inventory_ID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `inventory`;
+CREATE TABLE `inventory`  (
+  `Inventory_ID` int NOT NULL AUTO_INCREMENT,
   `Product_Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `Quantity` int(11) NULL DEFAULT NULL,
-  `Supplier_ID` int(11) NULL DEFAULT NULL,
-  `Warehouse_ID` int(11) NULL DEFAULT NULL,
+  `Quantity` int NULL DEFAULT NULL,
+  `Supplier_ID` int NULL DEFAULT NULL,
+  `Warehouse_ID` int NULL DEFAULT NULL,
+  `Action_ID` int NULL DEFAULT NULL,
   PRIMARY KEY (`Inventory_ID`) USING BTREE,
   INDEX `Supplier_ID`(`Supplier_ID`) USING BTREE,
   INDEX `Warehouse_ID`(`Warehouse_ID`) USING BTREE,
-  CONSTRAINT `Inventory_ibfk_1` FOREIGN KEY (`Supplier_ID`) REFERENCES `Suppliers` (`Supplier_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `Inventory_ibfk_2` FOREIGN KEY (`Warehouse_ID`) REFERENCES `Warehouses` (`Warehouse_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `Inventory_ibfk_1` FOREIGN KEY (`Supplier_ID`) REFERENCES `suppliers` (`Supplier_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `Inventory_ibfk_2` FOREIGN KEY (`Warehouse_ID`) REFERENCES `warehouses` (`Warehouse_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for Stock_Records
+-- Table structure for stock_records
 -- ----------------------------
-DROP TABLE IF EXISTS `Stock_Records`;
-CREATE TABLE `Stock_Records`  (
-  `Record_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `Inventory_ID` int(11) NULL DEFAULT NULL,
-  `Quantity_Change` int(11) NULL DEFAULT NULL,
-  `Record_Time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE CURRENT_TIMESTAMP,
-  `Admin_ID` int(11) NULL DEFAULT NULL,
+DROP TABLE IF EXISTS `stock_records`;
+CREATE TABLE `stock_records`  (
+  `Record_ID` int NOT NULL AUTO_INCREMENT,
+  `Inventory_ID` int NULL DEFAULT NULL,
+  `Quantity_Change` int NULL DEFAULT NULL,
+  `Record_Time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `Admin_ID` int NULL DEFAULT NULL,
   PRIMARY KEY (`Record_ID`) USING BTREE,
   INDEX `Inventory_ID`(`Inventory_ID`) USING BTREE,
   INDEX `Admin_ID`(`Admin_ID`) USING BTREE,
-  CONSTRAINT `Stock_Records_ibfk_1` FOREIGN KEY (`Inventory_ID`) REFERENCES `Inventory` (`Inventory_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `Stock_Records_ibfk_2` FOREIGN KEY (`Admin_ID`) REFERENCES `Admins` (`Admin_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `Stock_Records_ibfk_3` FOREIGN KEY (`Record_ID`) REFERENCES `Admin_Actions` (`Action_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `Stock_Records_ibfk_1` FOREIGN KEY (`Inventory_ID`) REFERENCES `inventory` (`Inventory_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `Stock_Records_ibfk_2` FOREIGN KEY (`Admin_ID`) REFERENCES `admins` (`Admin_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `Stock_Records_ibfk_3` FOREIGN KEY (`Record_ID`) REFERENCES `admin_actions` (`Action_ID`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for Suppliers
+-- Table structure for suppliers
 -- ----------------------------
-DROP TABLE IF EXISTS `Suppliers`;
-CREATE TABLE `Suppliers`  (
-  `Supplier_ID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `suppliers`;
+CREATE TABLE `suppliers`  (
+  `Supplier_ID` int NOT NULL AUTO_INCREMENT,
   `Supplier_Name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Contact_Info` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`Supplier_ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for Warehouses
+-- Table structure for warehouses
 -- ----------------------------
-DROP TABLE IF EXISTS `Warehouses`;
-CREATE TABLE `Warehouses`  (
-  `Warehouse_ID` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `warehouses`;
+CREATE TABLE `warehouses`  (
+  `Warehouse_ID` int NOT NULL AUTO_INCREMENT,
   `Warehouse_Location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Warehouse_Name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `Warehouse_Contact` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`Warehouse_ID`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Procedure structure for Add_Inventory
@@ -185,6 +170,33 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Procedure structure for Add_Warehouse
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `Add_Warehouse`;
+delimiter ;;
+CREATE PROCEDURE `Add_Warehouse`(IN p_Warehouse_Name VARCHAR(255),
+    IN p_Warehouse_Location VARCHAR(255),
+    IN p_Warehouse_Contact VARCHAR(100),
+    IN p_Admin_ID INT)
+BEGIN
+    DECLARE existing_name INT;
+    
+    SELECT COUNT(*) INTO existing_name FROM Warehouses WHERE Warehouse_Name = p_Warehouse_Name;
+    
+    IF existing_name = 0 THEN
+        INSERT INTO Warehouses(Warehouse_Name, Warehouse_Location, Warehouse_Contact) 
+        VALUES (p_Warehouse_Name, p_Warehouse_Location, p_Warehouse_Contact);
+        
+        INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
+        VALUES (p_Admin_ID, '添加仓库', CONCAT('添加仓库: ', p_Warehouse_Name), NOW());
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '仓库已存在';
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for Delete_Supplier
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `Delete_Supplier`;
@@ -219,6 +231,41 @@ BEGIN
     END IF;
 END
 ;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for Delete_Warehouse
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `Delete_Warehouse`;
+delimiter ;;
+CREATE PROCEDURE `Delete_Warehouse`(
+    IN p_Warehouse_ID INT,
+    IN p_Admin_ID INT
+)
+BEGIN
+    DECLARE warehouse_count INT;
+    DECLARE inventory_count INT;
+    DECLARE warehouse_name VARCHAR(255);
+
+    -- 检查仓库是否存在
+    SELECT COUNT(*), Warehouse_Name INTO warehouse_count, warehouse_name FROM Warehouses WHERE Warehouse_ID = p_Warehouse_ID;
+
+    IF warehouse_count = 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '仓库不存在';
+    ELSE
+        -- 检查该仓库是否还有库存
+        SELECT COUNT(*) INTO inventory_count FROM Inventory WHERE Warehouse_ID = p_Warehouse_ID;
+
+        IF inventory_count > 0 THEN
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '仓库中还有库存，无法删除';
+        ELSE
+            DELETE FROM Warehouses WHERE Warehouse_ID = p_Warehouse_ID;
+
+            INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
+            VALUES (p_Admin_ID, '删除仓库', CONCAT('删除仓库: ', warehouse_name), NOW());
+        END IF;
+    END IF;
+END;;
 delimiter ;
 
 -- ----------------------------
@@ -310,6 +357,35 @@ BEGIN
             INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time)
             VALUES (p_Admin_ID, '更新供应商', CONCAT('更新的供应商名称: ', p_Supplier_Name), NOW());
         END IF;
+    END IF;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for Update_Warehouse
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `Update_Warehouse`;
+delimiter ;;
+CREATE PROCEDURE `Update_Warehouse`(IN p_Warehouse_ID INT,
+    IN p_Warehouse_Name VARCHAR(255),
+    IN p_Warehouse_Location VARCHAR(255),
+    IN p_Warehouse_Contact VARCHAR(100),
+    IN p_Admin_ID INT)
+BEGIN
+    DECLARE existing_name INT;
+    
+    SELECT COUNT(*) INTO existing_name FROM Warehouses WHERE Warehouse_Name = p_Warehouse_Name AND Warehouse_ID != p_Warehouse_ID;
+    
+    IF existing_name = 0 THEN
+        UPDATE Warehouses
+        SET Warehouse_Name = p_Warehouse_Name, Warehouse_Location = p_Warehouse_Location, Warehouse_Contact = p_Warehouse_Contact
+        WHERE Warehouse_ID = p_Warehouse_ID;
+        
+        INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
+        VALUES (p_Admin_ID, '修改仓库', CONCAT('修改仓库ID: ', p_Warehouse_ID), NOW());
+    ELSE
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '仓库已存在';
     END IF;
 END
 ;;

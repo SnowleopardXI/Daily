@@ -160,7 +160,7 @@
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "SuperAdmin";
-            this.Text = "超级管理   当前管理员ID: ";
+            this.Text = "超级管理   当前管理员ID: " + Program.current;
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

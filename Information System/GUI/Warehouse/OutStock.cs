@@ -10,7 +10,13 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-
+        public void Refresh()
+        {
+            this.productName.Text = "";
+            this.quantity.Text = "";
+            this.warehouseId.Text = "";
+            this.employeeId.Text = "";
+        }
         private void quantity_TextChanged(object sender, EventArgs e)
         {
             try

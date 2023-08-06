@@ -11,7 +11,23 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-
+        public void Refresh()
+        {
+            this.Product_ID.Text = "";
+            this.Product_Name.Text = "";
+            this.Warehouse_ID.Text = "";
+            dataGridView1.DataSource = null;
+            dataGridView1.Rows.Clear();
+            dataGridView1.Columns.Clear();
+            string sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM Inventory AS i JOIN Warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID";
+            MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
+            conn.Open();//开启连接
+            MySqlDataAdapter adapter = new MySqlDataAdapter(sql, conn);
+            DataSet ds = new DataSet();
+            adapter.Fill(ds);
+            dataGridView1.DataSource = ds.Tables[0];
+            conn.Close();
+        }
         private void Query_Click(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
@@ -59,6 +75,7 @@ namespace Warehouse
             da.Fill(ds);
             dataGridView1.DataSource = ds.Tables[0].DefaultView;
             conn.Close();
+            Refresh();
         }
     }
 }
