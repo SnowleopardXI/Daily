@@ -1,9 +1,0 @@
-D:\Workspace\Daily\Information System\GUI\Warehouse\bin\Debug\Warehouse.exe
-D:\Workspace\Daily\Information System\GUI\Warehouse\bin\Debug\Warehouse.pdb
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.csproj.AssemblyReference.cache
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.Properties.Resources.resources
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.csproj.GenerateResource.cache
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.csproj.CoreCompileInputs.cache
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.exe
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.pdb
-D:\Workspace\Daily\Information System\GUI\Warehouse\obj\Debug\Warehouse.Form1.resources

@@ -372,8 +372,7 @@ delimiter ;;
 CREATE PROCEDURE `Remove_Inventory`(IN p_Admin_ID INT,
     IN p_Product_Name VARCHAR(100),
     IN p_Quantity INT,
-    IN p_Warehouse_ID INT,
-    IN p_Status INT)
+    IN p_Warehouse_ID INT)
 BEGIN
     DECLARE p_Inventory_ID INT;
     DECLARE p_Action_ID INT;
@@ -393,28 +392,26 @@ BEGIN
         IF p_Quantity_Left = 0 OR p_Quantity_Left < p_Quantity THEN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = '商品库存不足';
         ELSE
-            IF p_Status = 1 THEN
-                -- 减少库存数量
-                UPDATE Inventory SET Quantity = Quantity - p_Quantity WHERE Inventory_ID = p_Inventory_ID;
+            -- 减少库存数量
+            UPDATE Inventory SET Quantity = Quantity - p_Quantity WHERE Inventory_ID = p_Inventory_ID;
             
-                -- 添加管理员操作记录，并获取操作ID
+            -- 添加管理员操作记录，并获取操作ID
+            INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
+            VALUES (p_Admin_ID, '出库', CONCAT(' 仓库ID:', p_Warehouse_ID,'商品名称:', p_Product_Name, ' 数量:', p_Quantity), NOW());
+
+            SET p_Action_ID = LAST_INSERT_ID();
+
+            -- 添加库存记录，使用操作ID作为记录ID
+            INSERT INTO Stock_Records(Record_ID, Inventory_ID, Quantity_Change, Record_Time, Admin_ID) 
+            VALUES (p_Action_ID, p_Inventory_ID, -p_Quantity, NOW(), p_Admin_ID);
+
+            -- 检查剩余库存数量
+            SELECT Quantity INTO p_Quantity_Left FROM Inventory WHERE Inventory_ID = p_Inventory_ID;
+
+            -- 如果库存数量为0，记录管理员操作
+            IF p_Quantity_Left = 0 THEN
                 INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
-                VALUES (p_Admin_ID, '出库', CONCAT(' 仓库ID:', p_Warehouse_ID,'商品名称:', p_Product_Name, ' 数量:', p_Quantity), NOW());
-
-                SET p_Action_ID = LAST_INSERT_ID();
-
-                -- 添加库存记录，使用操作ID作为记录ID
-                INSERT INTO Stock_Records(Record_ID, Inventory_ID, Quantity_Change, Record_Time, Admin_ID) 
-                VALUES (p_Action_ID, p_Inventory_ID, -p_Quantity, NOW(), p_Admin_ID);
-
-                -- 检查剩余库存数量
-                SELECT Quantity INTO p_Quantity_Left FROM Inventory WHERE Inventory_ID = p_Inventory_ID;
-
-                -- 如果库存数量为0，记录管理员操作
-                IF p_Quantity_Left = 0 THEN
-                    INSERT INTO Admin_Actions(Admin_ID, Action_Type, Action_Description, Action_Time) 
-                    VALUES (p_Admin_ID, '库存警告', CONCAT('仓库ID:', p_Warehouse_ID,'商品名称:', p_Product_Name, ' 库存已为空'), NOW());
-                END IF;
+                VALUES (p_Admin_ID, '库存警告', CONCAT('仓库ID:', p_Warehouse_ID,'商品名称:', p_Product_Name, ' 库存已为空'), NOW());
             END IF;
         END IF;
     END IF;

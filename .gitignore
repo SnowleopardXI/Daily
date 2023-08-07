@@ -12,3 +12,5 @@ tempCodeRunnerFile.c
 *.CopyComplete
 *.vsidx
 *.lock
+obj/
+bin/

@@ -22,7 +22,7 @@ namespace Warehouse
         {
             try
             {
-                string sql = "CALL Remove_Inventory(" + Program.current + ",'" + productName.Text + "'," + quantity.Text + "," + warehouseId.Text + ",1)";
+                string sql = "CALL Remove_Inventory(" + Program.current + ",'" + productName.Text + "'," + quantity.Text + "," + warehouseId.Text + ")";
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
