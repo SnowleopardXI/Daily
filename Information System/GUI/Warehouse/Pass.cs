@@ -1,12 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Warehouse
@@ -22,7 +15,10 @@ namespace Warehouse
         {
             try
             {
-                if (userId.Text!=Program.current && newPass.Text != verify.Text)
+                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
+                conn.Open();//开启连接
+                MySqlCommand cmd = null;
+                if (newPass.Text != verify.Text)
                 {
                     MessageBox.Show("两次输入的密码不一致！");
                     return;
@@ -30,9 +26,7 @@ namespace Warehouse
                 //Read Admin_ID from Login.cs
                 string before = "SELECT Password FROM admins WHERE Admin_ID='" + userId.Text + "'";
                 //Execute the query
-                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
-                conn.Open();//开启连接
-                MySqlCommand cmd = new MySqlCommand(before, conn);
+                cmd = new MySqlCommand(before, conn);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
                 dataReader.Read();
                 string password = dataReader.GetString("Password");
@@ -43,9 +37,13 @@ namespace Warehouse
                 dataReader1.Read();
                 string old = dataReader1.GetString(0);
                 dataReader1.Close();
+                string user=userId.Text;
                 if (password != old && userId.Text == Program.current)
                 {
                     MessageBox.Show("原密码错误！");
+                    string sql= "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改" + user + "的密码时输入了错误的原密码', NOW())";
+                    MySqlCommand cmd3 = new MySqlCommand(sql, conn);
+                    cmd3.ExecuteNonQuery();
                     return;
                 }
                 else
@@ -55,7 +53,7 @@ namespace Warehouse
                     cmd2.ExecuteNonQuery();
                     MessageBox.Show("修改成功！");
                     this.Close();
-                    string log = "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改了" + userId.Text + "的密码', NOW())";
+                    string log = "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改了" + user + "的密码', NOW())";
                     MySqlCommand cmd3 = new MySqlCommand(log, conn);
                     cmd3.ExecuteNonQuery();
                 }

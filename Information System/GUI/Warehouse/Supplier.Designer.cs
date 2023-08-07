@@ -47,81 +47,96 @@
             // id
             // 
             this.id.AutoSize = true;
-            this.id.Location = new System.Drawing.Point(32, 29);
+            this.id.Location = new System.Drawing.Point(43, 36);
+            this.id.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.id.Name = "id";
-            this.id.Size = new System.Drawing.Size(54, 13);
+            this.id.Size = new System.Drawing.Size(65, 16);
             this.id.TabIndex = 0;
             this.id.Text = "供应商ID";
             // 
             // SupplierID
             // 
-            this.SupplierID.Location = new System.Drawing.Point(101, 26);
+            this.SupplierID.Location = new System.Drawing.Point(135, 32);
+            this.SupplierID.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.SupplierID.MaxLength = 8;
             this.SupplierID.Name = "SupplierID";
-            this.SupplierID.Size = new System.Drawing.Size(100, 20);
+            this.SupplierID.Size = new System.Drawing.Size(132, 22);
             this.SupplierID.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(276, 29);
+            this.label1.Location = new System.Drawing.Point(368, 36);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(67, 16);
             this.label1.TabIndex = 2;
             this.label1.Text = "供应商名";
             // 
             // supplierName
             // 
-            this.supplierName.Location = new System.Drawing.Point(339, 26);
+            this.supplierName.Location = new System.Drawing.Point(452, 32);
+            this.supplierName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.supplierName.MaxLength = 32;
             this.supplierName.Name = "supplierName";
-            this.supplierName.Size = new System.Drawing.Size(100, 20);
+            this.supplierName.Size = new System.Drawing.Size(132, 22);
             this.supplierName.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(32, 78);
+            this.label2.Location = new System.Drawing.Point(43, 96);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
+            this.label2.Size = new System.Drawing.Size(67, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "联系信息";
             // 
             // contact
             // 
-            this.contact.Location = new System.Drawing.Point(101, 78);
+            this.contact.Location = new System.Drawing.Point(135, 96);
+            this.contact.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.contact.MaxLength = 64;
             this.contact.Name = "contact";
-            this.contact.Size = new System.Drawing.Size(100, 20);
+            this.contact.Size = new System.Drawing.Size(132, 22);
             this.contact.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(276, 81);
+            this.label3.Location = new System.Drawing.Point(368, 100);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 13);
+            this.label3.Size = new System.Drawing.Size(37, 16);
             this.label3.TabIndex = 6;
             this.label3.Text = "地址";
             // 
             // address
             // 
-            this.address.Location = new System.Drawing.Point(339, 78);
+            this.address.Location = new System.Drawing.Point(452, 96);
+            this.address.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.address.MaxLength = 64;
             this.address.Name = "address";
-            this.address.Size = new System.Drawing.Size(100, 20);
+            this.address.Size = new System.Drawing.Size(132, 22);
             this.address.TabIndex = 7;
             // 
             // dataGridView1
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(21, 114);
+            this.dataGridView1.Location = new System.Drawing.Point(28, 140);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(1005, 464);
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.Size = new System.Drawing.Size(1340, 571);
             this.dataGridView1.TabIndex = 8;
             // 
             // add
             // 
-            this.add.Location = new System.Drawing.Point(848, 24);
+            this.add.Location = new System.Drawing.Point(1131, 30);
+            this.add.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.add.Name = "add";
-            this.add.Size = new System.Drawing.Size(75, 23);
+            this.add.Size = new System.Drawing.Size(100, 28);
             this.add.TabIndex = 9;
             this.add.Text = "添加";
             this.add.UseVisualStyleBackColor = true;
@@ -129,9 +144,10 @@
             // 
             // modify
             // 
-            this.modify.Location = new System.Drawing.Point(848, 75);
+            this.modify.Location = new System.Drawing.Point(1131, 92);
+            this.modify.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.modify.Name = "modify";
-            this.modify.Size = new System.Drawing.Size(75, 23);
+            this.modify.Size = new System.Drawing.Size(100, 28);
             this.modify.TabIndex = 10;
             this.modify.Text = "修改";
             this.modify.UseVisualStyleBackColor = true;
@@ -139,9 +155,10 @@
             // 
             // delete
             // 
-            this.delete.Location = new System.Drawing.Point(951, 24);
+            this.delete.Location = new System.Drawing.Point(1268, 30);
+            this.delete.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.delete.Name = "delete";
-            this.delete.Size = new System.Drawing.Size(75, 23);
+            this.delete.Size = new System.Drawing.Size(100, 28);
             this.delete.TabIndex = 11;
             this.delete.Text = "删除";
             this.delete.UseVisualStyleBackColor = true;
@@ -149,9 +166,10 @@
             // 
             // query
             // 
-            this.query.Location = new System.Drawing.Point(951, 73);
+            this.query.Location = new System.Drawing.Point(1268, 90);
+            this.query.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.query.Name = "query";
-            this.query.Size = new System.Drawing.Size(75, 23);
+            this.query.Size = new System.Drawing.Size(100, 28);
             this.query.TabIndex = 12;
             this.query.Text = "查询";
             this.query.UseVisualStyleBackColor = true;
@@ -159,9 +177,9 @@
             // 
             // Supplier
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1051, 603);
+            this.ClientSize = new System.Drawing.Size(1401, 742);
             this.Controls.Add(this.query);
             this.Controls.Add(this.delete);
             this.Controls.Add(this.modify);
@@ -175,6 +193,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.SupplierID);
             this.Controls.Add(this.id);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Supplier";
             this.Text = "供应商管理";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

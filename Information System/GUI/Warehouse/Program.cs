@@ -5,8 +5,8 @@ namespace Warehouse
 {
     internal static class Program
     {
-        public static string server = "127.0.0.1";
-        public static string username = "root";
+        public static string server = "192.168.153.11";
+        public static string username = "warehouse";
         public static string password = "87514813";
         public static string database = "warehouse";
         /// 定义连接字符串

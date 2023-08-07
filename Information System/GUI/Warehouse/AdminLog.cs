@@ -1,12 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Warehouse
@@ -25,10 +19,9 @@ namespace Warehouse
             dataGridView1.Columns.Clear();
             MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
             conn.Open();//开启连接
-            string sql = "";
+            string sql = "SELECT Action_ID AS '操作编号',Action_Type AS '操作类型',Action_Time AS '操作时间',Admin_ID AS '操作用户',Action_Description AS '操作内容' FROM admin_actions ";
             if (operateType.Text == "不限")
             {
-                sql = "select * from admin_actions";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -36,7 +29,7 @@ namespace Warehouse
             }
             else if(operateType.Text == "货物管理")
             {
-                sql = "select * from admin_actions where Action_Type='入库' or Action_Type='出库'";
+                sql += "where Action_Type='入库' or Action_Type='出库'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -44,7 +37,7 @@ namespace Warehouse
             }
             else if(operateType.Text == "用户管理")
             {
-                sql= "select * from admin_actions where Action_Type='添加用户' or Action_Type='删除用户' or Action_Type='修改用户'";
+                sql += "where Action_Type like '%用户%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -52,7 +45,7 @@ namespace Warehouse
             }
             else if(operateType.Text == "用户验证")
             {
-                sql = "select * from admin_actions where Action_Type like '%密码%' or Action_Type like '%登录%'";
+                sql += "where Action_Type like '%密码%' or Action_Type like '%登录%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -60,7 +53,7 @@ namespace Warehouse
             }
             else if(operateType.Text == "仓库管理")
             {
-                sql = "select * from admin_actions where Action_Type like '%仓库%'";
+                sql += "where Action_Type like '%仓库%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -68,7 +61,7 @@ namespace Warehouse
             }
             else if(operateType.Text == "供应商管理")
             {
-                sql = "select * from admin_actions where Action_Type like '%供应商%'";
+                sql += "where Action_Type like '%供应商%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
                 DataSet ds = new DataSet();
                 da.Fill(ds);

@@ -42,17 +42,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 22);
+            this.label1.Location = new System.Drawing.Point(16, 27);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 13);
+            this.label1.Size = new System.Drawing.Size(48, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "用户id";
             // 
             // Modify
             // 
-            this.Modify.Location = new System.Drawing.Point(210, 211);
+            this.Modify.Location = new System.Drawing.Point(280, 260);
+            this.Modify.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Modify.Name = "Modify";
-            this.Modify.Size = new System.Drawing.Size(75, 23);
+            this.Modify.Size = new System.Drawing.Size(100, 28);
             this.Modify.TabIndex = 1;
             this.Modify.Text = "修改";
             this.Modify.UseVisualStyleBackColor = true;
@@ -61,65 +63,74 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 116);
+            this.label2.Location = new System.Drawing.Point(16, 143);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(52, 16);
             this.label2.TabIndex = 3;
             this.label2.Text = "新密码";
             // 
             // newPass
             // 
-            this.newPass.Location = new System.Drawing.Point(109, 113);
+            this.newPass.Location = new System.Drawing.Point(145, 139);
+            this.newPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.newPass.MaxLength = 32;
             this.newPass.Name = "newPass";
-            this.newPass.Size = new System.Drawing.Size(100, 20);
+            this.newPass.Size = new System.Drawing.Size(132, 22);
             this.newPass.TabIndex = 4;
             // 
             // oldPass
             // 
-            this.oldPass.Location = new System.Drawing.Point(109, 65);
+            this.oldPass.Location = new System.Drawing.Point(145, 80);
+            this.oldPass.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.oldPass.MaxLength = 32;
             this.oldPass.Name = "oldPass";
-            this.oldPass.Size = new System.Drawing.Size(100, 20);
+            this.oldPass.Size = new System.Drawing.Size(132, 22);
             this.oldPass.TabIndex = 6;
             // 
             // verify
             // 
-            this.verify.Location = new System.Drawing.Point(109, 152);
+            this.verify.Location = new System.Drawing.Point(145, 187);
+            this.verify.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.verify.MaxLength = 32;
             this.verify.Name = "verify";
-            this.verify.Size = new System.Drawing.Size(100, 20);
+            this.verify.Size = new System.Drawing.Size(132, 22);
             this.verify.TabIndex = 7;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 155);
+            this.label3.Location = new System.Drawing.Point(16, 191);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(55, 13);
+            this.label3.Size = new System.Drawing.Size(67, 16);
             this.label3.TabIndex = 8;
             this.label3.Text = "再次输入";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 72);
+            this.label4.Location = new System.Drawing.Point(16, 89);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(43, 13);
+            this.label4.Size = new System.Drawing.Size(52, 16);
             this.label4.TabIndex = 9;
             this.label4.Text = "原密码";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(106, 22);
+            this.label5.Location = new System.Drawing.Point(141, 27);
+            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(82, 13);
+            this.label5.Size = new System.Drawing.Size(0, 16);
             this.label5.TabIndex = 10;
-            this.label5.Text = Program.current;
             // 
             // AdminPass
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 270);
+            this.ClientSize = new System.Drawing.Size(404, 332);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -129,6 +140,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.Modify);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AdminPass";
             this.Text = "修改密码";
             this.ResumeLayout(false);

@@ -19,19 +19,26 @@ namespace Warehouse
         }
         private void stockin_Click(object sender, EventArgs e)
         {
-            if(productName.Text==""||supplierName.Text==""||warehouseId.Text==""||quantity.Text=="")
+            try
             {
-                MessageBox.Show("请输入完整信息！");
+                if (productName.Text == "" || supplierName.Text == "" || warehouseId.Text == "" || quantity.Text == "")
+                {
+                    MessageBox.Show("请输入完整信息！");
+                }
+                else
+                {
+                    string sql = "CALL Add_Inventory('" + productName.Text + "','" + supplierName.Text + "','" + warehouseId.Text + "'," + quantity.Text + "," + Program.current + ")";
+                    MySqlConnection conn = new MySqlConnection(Program.str);
+                    conn.Open();
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    MessageBox.Show("入库成功！");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                string sql = "CALL Add_Inventory('" + productName.Text + "','" + supplierName.Text + "','" + warehouseId.Text + "'," + quantity.Text + ","+Program.current+")";
-                MySqlConnection conn = new MySqlConnection(Program.str);
-                conn.Open();
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-                conn.Close();
-                MessageBox.Show("入库成功！");
+                MessageBox.Show(ex.Message);
             }
         }
     }

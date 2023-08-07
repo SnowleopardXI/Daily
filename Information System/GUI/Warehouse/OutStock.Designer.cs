@@ -42,24 +42,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 29);
+            this.label1.Location = new System.Drawing.Point(33, 34);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.Size = new System.Drawing.Size(63, 16);
             this.label1.TabIndex = 0;
             this.label1.Text = "销售员id";
             // 
             // employeeId
             // 
-            this.employeeId.Location = new System.Drawing.Point(128, 26);
+            this.employeeId.Location = new System.Drawing.Point(152, 30);
+            this.employeeId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.employeeId.MaxLength = 8;
             this.employeeId.Name = "employeeId";
-            this.employeeId.Size = new System.Drawing.Size(100, 20);
+            this.employeeId.Size = new System.Drawing.Size(132, 22);
             this.employeeId.TabIndex = 1;
             // 
             // 出库
             // 
-            this.出库.Location = new System.Drawing.Point(192, 201);
+            this.出库.Location = new System.Drawing.Point(256, 247);
+            this.出库.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.出库.Name = "出库";
-            this.出库.Size = new System.Drawing.Size(75, 23);
+            this.出库.Size = new System.Drawing.Size(100, 28);
             this.出库.TabIndex = 9;
             this.出库.Text = "出库";
             this.出库.UseVisualStyleBackColor = true;
@@ -67,58 +71,66 @@
             // 
             // productName
             // 
-            this.productName.Location = new System.Drawing.Point(128, 69);
+            this.productName.Location = new System.Drawing.Point(152, 83);
+            this.productName.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.productName.MaxLength = 32;
             this.productName.Name = "productName";
-            this.productName.Size = new System.Drawing.Size(100, 20);
+            this.productName.Size = new System.Drawing.Size(132, 22);
             this.productName.TabIndex = 4;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(39, 72);
+            this.label2.Location = new System.Drawing.Point(33, 87);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(52, 16);
             this.label2.TabIndex = 3;
             this.label2.Text = "货物名";
             // 
             // warehouseId
             // 
-            this.warehouseId.Location = new System.Drawing.Point(128, 115);
+            this.warehouseId.Location = new System.Drawing.Point(152, 140);
+            this.warehouseId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.warehouseId.MaxLength = 8;
             this.warehouseId.Name = "warehouseId";
-            this.warehouseId.Size = new System.Drawing.Size(100, 20);
+            this.warehouseId.Size = new System.Drawing.Size(132, 22);
             this.warehouseId.TabIndex = 6;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(39, 118);
+            this.label3.Location = new System.Drawing.Point(33, 143);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(52, 16);
             this.label3.TabIndex = 5;
             this.label3.Text = "仓库号";
             // 
             // quantity
             // 
-            this.quantity.Location = new System.Drawing.Point(128, 158);
+            this.quantity.Location = new System.Drawing.Point(152, 192);
+            this.quantity.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.quantity.MaxLength = 8;
             this.quantity.Name = "quantity";
-            this.quantity.Size = new System.Drawing.Size(100, 20);
+            this.quantity.Size = new System.Drawing.Size(132, 22);
             this.quantity.TabIndex = 8;
-            this.quantity.TextChanged += new System.EventHandler(this.quantity_TextChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(39, 161);
+            this.label4.Location = new System.Drawing.Point(33, 196);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 13);
+            this.label4.Size = new System.Drawing.Size(37, 16);
             this.label4.TabIndex = 7;
             this.label4.Text = "数量";
             // 
             // OutStock
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(291, 248);
+            this.ClientSize = new System.Drawing.Size(388, 305);
             this.Controls.Add(this.quantity);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.warehouseId);
@@ -128,6 +140,7 @@
             this.Controls.Add(this.出库);
             this.Controls.Add(this.employeeId);
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "OutStock";
             this.Text = "商品出库";
             this.ResumeLayout(false);

@@ -1,12 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Warehouse
@@ -26,7 +20,7 @@ namespace Warehouse
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();
-            string sql = "select * from warehouses";
+            string sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -120,10 +114,10 @@ namespace Warehouse
             {
                 string sql = "";
                 if(id.Text == "" && name.Text == "" && addr.Text == "" && contact.Text == "")
-                sql= "select * from warehouses";
+                sql= "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
                 else
                 {
-                    sql = "select * from warehouses where ";
+                    sql += " where ";
                     if (id.Text != "")
                         sql += "Warehouse_ID = '" + id.Text + "' and ";
                     if (name.Text != "")

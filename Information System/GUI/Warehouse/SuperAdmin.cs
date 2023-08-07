@@ -136,7 +136,21 @@ namespace Warehouse
             }
         }
 
-        private void 人员管理_Click(object sender, EventArgs e)
+        private void 修改密码ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                Pass frm = new Pass();
+                frm.MdiParent = this;
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 信息管理ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {

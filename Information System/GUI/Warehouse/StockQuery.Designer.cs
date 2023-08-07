@@ -41,9 +41,10 @@
             // 
             // Query
             // 
-            this.Query.Location = new System.Drawing.Point(661, 25);
+            this.Query.Location = new System.Drawing.Point(920, 31);
+            this.Query.Margin = new System.Windows.Forms.Padding(4);
             this.Query.Name = "Query";
-            this.Query.Size = new System.Drawing.Size(75, 23);
+            this.Query.Size = new System.Drawing.Size(100, 28);
             this.Query.TabIndex = 0;
             this.Query.Text = "查询";
             this.Query.UseVisualStyleBackColor = true;
@@ -53,64 +54,75 @@
             // 
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(43, 99);
+            this.dataGridView1.Location = new System.Drawing.Point(40, 123);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(705, 329);
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.Size = new System.Drawing.Size(980, 402);
             this.dataGridView1.TabIndex = 1;
             // 
             // Product_ID
             // 
-            this.Product_ID.Location = new System.Drawing.Point(86, 22);
+            this.Product_ID.Location = new System.Drawing.Point(115, 27);
+            this.Product_ID.Margin = new System.Windows.Forms.Padding(4);
+            this.Product_ID.MaxLength = 8;
             this.Product_ID.Name = "Product_ID";
-            this.Product_ID.Size = new System.Drawing.Size(100, 20);
+            this.Product_ID.Size = new System.Drawing.Size(132, 22);
             this.Product_ID.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 25);
+            this.label1.Location = new System.Drawing.Point(37, 31);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Size = new System.Drawing.Size(52, 16);
             this.label1.TabIndex = 3;
             this.label1.Text = "产品号";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(28, 73);
+            this.label2.Location = new System.Drawing.Point(37, 78);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.Size = new System.Drawing.Size(52, 16);
             this.label2.TabIndex = 4;
             this.label2.Text = "仓库号";
             // 
             // Warehouse_ID
             // 
-            this.Warehouse_ID.Location = new System.Drawing.Point(86, 73);
+            this.Warehouse_ID.Location = new System.Drawing.Point(115, 78);
+            this.Warehouse_ID.Margin = new System.Windows.Forms.Padding(4);
+            this.Warehouse_ID.MaxLength = 8;
             this.Warehouse_ID.Name = "Warehouse_ID";
-            this.Warehouse_ID.Size = new System.Drawing.Size(100, 20);
+            this.Warehouse_ID.Size = new System.Drawing.Size(132, 22);
             this.Warehouse_ID.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(251, 25);
+            this.label3.Location = new System.Drawing.Point(335, 31);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(52, 16);
             this.label3.TabIndex = 7;
             this.label3.Text = "产品名";
             // 
             // Product_Name
             // 
-            this.Product_Name.Location = new System.Drawing.Point(309, 22);
+            this.Product_Name.Location = new System.Drawing.Point(412, 27);
+            this.Product_Name.Margin = new System.Windows.Forms.Padding(4);
+            this.Product_Name.MaxLength = 32;
             this.Product_Name.Name = "Product_Name";
-            this.Product_Name.Size = new System.Drawing.Size(100, 20);
+            this.Product_Name.Size = new System.Drawing.Size(132, 22);
             this.Product_Name.TabIndex = 6;
             // 
             // StockQuery
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1067, 554);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.Product_Name);
             this.Controls.Add(this.Warehouse_ID);
@@ -119,6 +131,7 @@
             this.Controls.Add(this.Product_ID);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.Query);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "StockQuery";
             this.Text = "库存查询";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
