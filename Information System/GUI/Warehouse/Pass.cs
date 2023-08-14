@@ -38,6 +38,21 @@ namespace Warehouse
                 string old = dataReader1.GetString(0);
                 dataReader1.Close();
                 string user=userId.Text;
+                if (this.userId.Text == "" || !System.Text.RegularExpressions.Regex.IsMatch(this.userId.Text, @"^[0-9]*$"))
+                {
+                    MessageBox.Show("ID格式错误");
+                    return;
+                }
+                if (this.oldPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[-][-]"))
+                {
+                    MessageBox.Show("原密码格式错误");
+                    return;
+                }
+                if (this.newPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[-][-]"))
+                {
+                    MessageBox.Show("新密码格式错误");
+                    return;
+                }
                 if (password != old && userId.Text == Program.current)
                 {
                     MessageBox.Show("原密码错误！");

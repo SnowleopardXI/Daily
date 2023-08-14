@@ -5,7 +5,7 @@ namespace Warehouse
 {
     internal static class Program
     {
-        public static string server = "192.168.153.11";
+        public static string server = "10.40.172.1";
         public static string username = "warehouse";
         public static string password = "87514813";
         public static string database = "warehouse";

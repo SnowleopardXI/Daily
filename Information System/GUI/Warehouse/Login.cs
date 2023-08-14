@@ -16,9 +16,19 @@ namespace Warehouse
             try 
             {
                 //this.id.Text只能为纯数字
-                int.Parse(this.id.Text);
+                if (this.id.Text == "" || !System.Text.RegularExpressions.Regex.IsMatch(this.id.Text, @"^[0-9]*$"))
+                {
+                    MessageBox.Show("ID格式错误");
+                    return;
+                }
                 Program.current=this.id.Text;
                 password=this.pass.Text;
+                //this.password.Text不能包含空格或 --)
+                if (this.pass.Text.Contains(" ") || System.Text.RegularExpressions.Regex.IsMatch(this.pass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.pass.Text, @"[-][-]"))
+                {
+                    MessageBox.Show("密码格式错误");
+                    return;
+                }
                 MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
                 conn.Open();//开启连接
                 string sql="SELECT count(*) FROM admins WHERE Admin_ID = " + this.id.Text;

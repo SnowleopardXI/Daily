@@ -15,6 +15,16 @@ namespace Warehouse
         {
             try
             {
+                if (this.oldPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[-][-]"))
+                {
+                    MessageBox.Show("原密码格式错误");
+                    return;
+                }
+                if (this.newPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[-][-]"))
+                {
+                    MessageBox.Show("新密码格式错误");
+                    return;
+                }
                 if (newPass.Text != verify.Text)
                 {
                     MessageBox.Show("两次输入的密码不一致！");

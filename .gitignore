@@ -14,3 +14,4 @@ tempCodeRunnerFile.c
 *.lock
 obj/
 bin/
+.vs/
