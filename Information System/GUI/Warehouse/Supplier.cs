@@ -14,7 +14,7 @@ namespace Warehouse
             dataGridView1.Columns.Clear();
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
-            string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from Suppliers";
+            string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             MySqlDataAdapter da = new MySqlDataAdapter(cmd);
             DataSet ds = new DataSet();
@@ -57,7 +57,7 @@ namespace Warehouse
             conn.Open();
             if (SupplierID.Text == "" && supplierName.Text == "" && contact.Text == "" && address.Text == "")
             {
-                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from Suppliers";
+                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
@@ -66,7 +66,7 @@ namespace Warehouse
             }
             else
             {
-                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from Suppliers where ";
+                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers where ";
                 if (SupplierID.Text != "")
                 {
                     sql += "Supplier_ID = " + SupplierID.Text + " and ";
