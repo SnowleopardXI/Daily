@@ -104,7 +104,8 @@ def update_Admin(number):
     for i in result:
         admin_id.append(i[0])
     for i in range(number):
-        sql="Call Update_Admin('%s','%s','%s','%s','%s','%s','%s')"%(superadmin_id[random.randint(0,len(superadmin_id)-1)],admin_id[random.randint(0,len(admin_id)-1)],name_dict[random.randint(0,len(name_dict)-1)],random.randint(0,1),random.randint(1,2),faker.email(),random.randint(13100000000,19320212368))
+        mod_id=random.randint(1,(len(superadmin_id)-1))
+        sql="Call Update_Admin('%s','%s','%s','%s','%s','%s','%s')"%(superadmin_id[random.randint(1,(len(superadmin_id)-1))],mod_id,name_dict[random.randint(0,len(name_dict)-1)],random.randint(0,1),random.randint(1,2),faker.email(),random.randint(13100000000,19320212368))
         cursor.execute(sql)
         conn.commit()
     print('更新成功')
@@ -177,6 +178,7 @@ if __name__ == "__main__":
         print('请输入范围：')
         min=int(input())
         max=int(input())
+        add_admin(random.randint(min,max))
         add_warehouse(random.randint(min,max))
         add_supplier(random.randint(min,max))
         add_inventory(random.randint(min,max))
