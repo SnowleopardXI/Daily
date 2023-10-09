@@ -10,8 +10,12 @@ tempCodeRunnerFile.c
 *.pdb
 *.cache
 *.CopyComplete
-*.vsidx
-*.lock
-obj/
-bin/
-.vs/
+[d]ebug/
+[d]ebugPublic/
+[r]elease/
+[r]eleases/
+x64/
+x86/
+[b]in/
+[o]bj/
+[l]og/
