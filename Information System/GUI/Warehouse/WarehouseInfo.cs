@@ -11,9 +11,10 @@ namespace Warehouse
         {
             InitializeComponent();
         }
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public void Refresh()
         {
-            this.id.Text="";
+            this.id.Text = "";
             this.name.Text = "";
             this.addr.Text = "";
             this.contact.Text = "";
@@ -30,7 +31,7 @@ namespace Warehouse
             dataGridView1.DataSource = ds.Tables[0];
             conn.Close();
         }
-        private void add_Click(object sender, EventArgs e)
+        private void Add_Click(object sender, EventArgs e)
         {
             try
             {
@@ -56,7 +57,7 @@ namespace Warehouse
             }
         }
 
-        private void delete_Click(object sender, EventArgs e)
+        private void Delete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -82,7 +83,7 @@ namespace Warehouse
             }
         }
 
-        private void modify_Click(object sender, EventArgs e)
+        private void Modify_Click(object sender, EventArgs e)
         {
             try
             {
@@ -108,13 +109,13 @@ namespace Warehouse
             }
         }
 
-        private void query_Click(object sender, EventArgs e)
+        private void Query_Click(object sender, EventArgs e)
         {
             try
             {
                 string sql = "";
-                if(id.Text == "" && name.Text == "" && addr.Text == "" && contact.Text == "")
-                sql= "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
+                if (id.Text == "" && name.Text == "" && addr.Text == "" && contact.Text == "")
+                    sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
                 else
                 {
                     sql += " where ";

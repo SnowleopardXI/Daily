@@ -11,7 +11,7 @@ namespace Warehouse
         public static string database = "warehouse";
         /// 定义连接字符串
         public static string str = "server=" + server + ";User Id=" + username + ";password=" + password + ";Database=" + database;
-        public static string current= "";
+        public static string current = "";
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button_login = new System.Windows.Forms.Button();
+            this.Login_Button = new System.Windows.Forms.Button();
             this.id = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.pass = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // button_login
+            // Login_Button
             // 
-            this.button_login.Location = new System.Drawing.Point(316, 203);
-            this.button_login.Name = "button_login";
-            this.button_login.Size = new System.Drawing.Size(75, 23);
-            this.button_login.TabIndex = 0;
-            this.button_login.Text = "登录";
-            this.button_login.UseVisualStyleBackColor = true;
-            this.button_login.Click += new System.EventHandler(this.button_login_Click);
+            this.Login_Button.Location = new System.Drawing.Point(316, 203);
+            this.Login_Button.Name = "Login_Button";
+            this.Login_Button.Size = new System.Drawing.Size(75, 23);
+            this.Login_Button.TabIndex = 0;
+            this.Login_Button.Text = "登录";
+            this.Login_Button.UseVisualStyleBackColor = true;
+            this.Login_Button.Click += new System.EventHandler(this.Login_Button_Click);
             // 
             // id
             // 
@@ -89,7 +89,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.id);
-            this.Controls.Add(this.button_login);
+            this.Controls.Add(this.Login_Button);
             this.Name = "Login";
             this.Text = "登录";
             this.ResumeLayout(false);
@@ -99,7 +99,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button_login;
+        private System.Windows.Forms.Button Login_Button;
         private System.Windows.Forms.TextBox id;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;

@@ -14,8 +14,10 @@ namespace Warehouse
         {
             try
             {
-                Pass frm = new Pass();
-                frm.MdiParent = this;
+                Pass frm = new Pass
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -43,8 +45,10 @@ namespace Warehouse
         {
             try
             {
-                AdminLog frm = new AdminLog();
-                frm.MdiParent = this;
+                AdminLog frm = new AdminLog
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -58,8 +62,10 @@ namespace Warehouse
         {
             try
             {
-                WarehouseInfo frm = new WarehouseInfo();
-                frm.MdiParent = this;
+                WarehouseInfo frm = new WarehouseInfo
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -72,8 +78,10 @@ namespace Warehouse
         {
             try
             {
-                StockLog frm = new StockLog();
-                frm.MdiParent = this;
+                StockLog frm = new StockLog
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -86,8 +94,10 @@ namespace Warehouse
         {
             try
             {
-                StockQuery frm = new StockQuery();
-                frm.MdiParent = this;
+                StockQuery frm = new StockQuery
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -99,8 +109,10 @@ namespace Warehouse
         {
             try
             {
-                InStock frm = new InStock();
-                frm.MdiParent = this;
+                InStock frm = new InStock
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -112,8 +124,10 @@ namespace Warehouse
         {
             try
             {
-                OutStock frm = new OutStock();
-                frm.MdiParent = this;
+                OutStock frm = new OutStock
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -126,8 +140,10 @@ namespace Warehouse
         {
             try
             {
-                Supplier frm = new Supplier();
-                frm.MdiParent = this;
+                Supplier frm = new Supplier
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -140,8 +156,10 @@ namespace Warehouse
         {
             try
             {
-                Pass frm = new Pass();
-                frm.MdiParent = this;
+                Pass frm = new Pass
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -154,8 +172,10 @@ namespace Warehouse
         {
             try
             {
-                AdminManage frm = new AdminManage();
-                frm.MdiParent = this;
+                AdminManage frm = new AdminManage
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)

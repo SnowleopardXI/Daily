@@ -145,7 +145,7 @@
             this.query.TabIndex = 17;
             this.query.Text = "查询";
             this.query.UseVisualStyleBackColor = true;
-            this.query.Click += new System.EventHandler(this.query_Click);
+            this.query.Click += new System.EventHandler(this.Query_Click);
             // 
             // add
             // 
@@ -156,7 +156,7 @@
             this.add.TabIndex = 18;
             this.add.Text = "添加";
             this.add.UseVisualStyleBackColor = true;
-            this.add.Click += new System.EventHandler(this.add_Click);
+            this.add.Click += new System.EventHandler(this.Add_Click);
             // 
             // delete
             // 
@@ -167,7 +167,7 @@
             this.delete.TabIndex = 19;
             this.delete.Text = "删除(仅当不存在记录）";
             this.delete.UseVisualStyleBackColor = true;
-            this.delete.Click += new System.EventHandler(this.delete_Click);
+            this.delete.Click += new System.EventHandler(this.Delete_Click);
             // 
             // disable
             // 
@@ -178,7 +178,7 @@
             this.disable.TabIndex = 20;
             this.disable.Text = "禁用";
             this.disable.UseVisualStyleBackColor = true;
-            this.disable.Click += new System.EventHandler(this.disable_Click);
+            this.disable.Click += new System.EventHandler(this.Disable_Click);
             // 
             // modify
             // 
@@ -189,7 +189,7 @@
             this.modify.TabIndex = 21;
             this.modify.Text = "修改";
             this.modify.UseVisualStyleBackColor = true;
-            this.modify.Click += new System.EventHandler(this.modify_Click);
+            this.modify.Click += new System.EventHandler(this.Modify_Click);
             // 
             // enable
             // 
@@ -200,7 +200,7 @@
             this.enable.TabIndex = 22;
             this.enable.Text = "启用";
             this.enable.UseVisualStyleBackColor = true;
-            this.enable.Click += new System.EventHandler(this.enable_Click);
+            this.enable.Click += new System.EventHandler(this.Enable_Click);
             // 
             // dataGridView1
             // 

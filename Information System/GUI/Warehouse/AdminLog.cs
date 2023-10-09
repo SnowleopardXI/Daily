@@ -11,7 +11,7 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-        private void query_Click(object sender, EventArgs e)
+        private void Query_Click(object sender, EventArgs e)
         {
             // Clear the data in the table
             dataGridView1.DataSource = null;
@@ -27,7 +27,7 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "货物管理")
+            else if (operateType.Text == "货物管理")
             {
                 sql += "where Action_Type='入库' or Action_Type='出库'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
@@ -35,7 +35,7 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "用户管理")
+            else if (operateType.Text == "用户管理")
             {
                 sql += "where Action_Type like '%用户%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
@@ -43,7 +43,7 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "用户验证")
+            else if (operateType.Text == "用户验证")
             {
                 sql += "where Action_Type like '%密码%' or Action_Type like '%登录%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
@@ -51,7 +51,7 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "仓库管理")
+            else if (operateType.Text == "仓库管理")
             {
                 sql += "where Action_Type like '%仓库%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);
@@ -59,7 +59,7 @@ namespace Warehouse
                 da.Fill(ds);
                 dataGridView1.DataSource = ds.Tables[0];
             }
-            else if(operateType.Text == "供应商管理")
+            else if (operateType.Text == "供应商管理")
             {
                 sql += "where Action_Type like '%供应商%'";
                 MySqlDataAdapter da = new MySqlDataAdapter(sql, conn);

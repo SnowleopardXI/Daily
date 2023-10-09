@@ -53,7 +53,7 @@
             this.add.TabIndex = 0;
             this.add.Text = "添加";
             this.add.UseVisualStyleBackColor = true;
-            this.add.Click += new System.EventHandler(this.add_Click);
+            this.add.Click += new System.EventHandler(this.Add_Click);
             // 
             // delete
             // 
@@ -64,7 +64,7 @@
             this.delete.TabIndex = 1;
             this.delete.Text = "删除";
             this.delete.UseVisualStyleBackColor = true;
-            this.delete.Click += new System.EventHandler(this.delete_Click);
+            this.delete.Click += new System.EventHandler(this.Delete_Click);
             // 
             // modify
             // 
@@ -75,7 +75,7 @@
             this.modify.TabIndex = 2;
             this.modify.Text = "修改";
             this.modify.UseVisualStyleBackColor = true;
-            this.modify.Click += new System.EventHandler(this.modify_Click);
+            this.modify.Click += new System.EventHandler(this.Modify_Click);
             // 
             // query
             // 
@@ -86,7 +86,7 @@
             this.query.TabIndex = 3;
             this.query.Text = "查询";
             this.query.UseVisualStyleBackColor = true;
-            this.query.Click += new System.EventHandler(this.query_Click);
+            this.query.Click += new System.EventHandler(this.Query_Click);
             // 
             // label1
             // 

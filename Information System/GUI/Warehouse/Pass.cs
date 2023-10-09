@@ -37,7 +37,7 @@ namespace Warehouse
                 dataReader1.Read();
                 string old = dataReader1.GetString(0);
                 dataReader1.Close();
-                string user=userId.Text;
+                string user = userId.Text;
                 if (this.userId.Text == "" || !System.Text.RegularExpressions.Regex.IsMatch(this.userId.Text, @"^[0-9]*$"))
                 {
                     MessageBox.Show("ID格式错误");
@@ -56,7 +56,7 @@ namespace Warehouse
                 if (password != old && userId.Text == Program.current)
                 {
                     MessageBox.Show("原密码错误！");
-                    string sql= "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改" + user + "的密码时输入了错误的原密码', NOW())";
+                    string sql = "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改" + user + "的密码时输入了错误的原密码', NOW())";
                     MySqlCommand cmd3 = new MySqlCommand(sql, conn);
                     cmd3.ExecuteNonQuery();
                     return;

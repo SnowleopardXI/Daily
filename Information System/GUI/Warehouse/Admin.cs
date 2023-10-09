@@ -14,8 +14,10 @@ namespace Warehouse
         {
             try
             {
-                StockQuery frm = new StockQuery();
-                frm.MdiParent = this;
+                StockQuery frm = new StockQuery
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -28,8 +30,10 @@ namespace Warehouse
         {
             try
             {
-                AdminPass frm = new AdminPass();
-                frm.MdiParent = this;
+                AdminPass frm = new AdminPass
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -42,8 +46,10 @@ namespace Warehouse
         {
             try
             {
-                InStock frm = new InStock();
-                frm.MdiParent = this;
+                InStock frm = new InStock
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)
@@ -56,8 +62,10 @@ namespace Warehouse
         {
             try
             {
-                OutStock frm = new OutStock();
-                frm.MdiParent = this;
+                OutStock frm = new OutStock
+                {
+                    MdiParent = this
+                };
                 frm.Show();
             }
             catch (Exception ex)

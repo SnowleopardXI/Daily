@@ -7,6 +7,7 @@ namespace Warehouse
 {
     public partial class Supplier : Form
     {
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public void Refresh()
         {
             dataGridView1.DataSource = null;
@@ -27,7 +28,7 @@ namespace Warehouse
             InitializeComponent();
         }
 
-        private void add_Click(object sender, EventArgs e)
+        private void Add_Click(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
@@ -38,20 +39,20 @@ namespace Warehouse
             }
             string sql = "CALL Add_Suppliers('" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
-            try 
+            try
             {
                 cmd.ExecuteNonQuery();
                 MessageBox.Show("添加成功");
                 Refresh();
             }
-            catch (Exception ex) 
-            { 
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message);
             }
             conn.Close();
         }
 
-        private void query_Click(object sender, EventArgs e)
+        private void Query_Click(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
@@ -92,7 +93,7 @@ namespace Warehouse
             }
         }
 
-        private void modify_Click(object sender, EventArgs e)
+        private void Modify_Click(object sender, EventArgs e)
         {
             if (SupplierID.Text == "" || (supplierName.Text == "" && contact.Text == "" && address.Text == ""))
             {
@@ -102,20 +103,20 @@ namespace Warehouse
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
             string sql = "";
-            if(supplierName.Text != "" && contact.Text == "" && address.Text == "")
-            sql="CALL Update_Supplier_Name(" + SupplierID.Text + ",'" + supplierName.Text + "'," + Program.current + ")";
-            if(supplierName.Text == "" && contact.Text != "" && address.Text == "")
-                sql="CALL Update_Supplier_Contact(" + SupplierID.Text + ",'" + contact.Text + "'," + Program.current + ")";
-            else if(supplierName.Text == "" && contact.Text == "" && address.Text != "")
-                sql="CALL Update_Supplier_Address(" + SupplierID.Text + ",'" + address.Text + "'," + Program.current + ")";
-            else if(supplierName.Text != "" && contact.Text != "" && address.Text == "")
-                sql="CALL Update_Supplier_Name_Contact(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "'," + Program.current + ")";
-            else if(supplierName.Text != "" && contact.Text == "" && address.Text != "")
-                sql="CALL Update_Supplier_Name_Address(" + SupplierID.Text + ",'" + supplierName.Text + "','" + address.Text + "'," + Program.current + ")";
-            else if(supplierName.Text == "" && contact.Text != "" && address.Text != "")
-                sql="CALL Update_Supplier_Contact_Address(" + SupplierID.Text + ",'" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
-            else if(supplierName.Text != "" && contact.Text != "" && address.Text != "")
-             sql = "CALL Update_Supplier(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
+            if (supplierName.Text != "" && contact.Text == "" && address.Text == "")
+                sql = "CALL Update_Supplier_Name(" + SupplierID.Text + ",'" + supplierName.Text + "'," + Program.current + ")";
+            if (supplierName.Text == "" && contact.Text != "" && address.Text == "")
+                sql = "CALL Update_Supplier_Contact(" + SupplierID.Text + ",'" + contact.Text + "'," + Program.current + ")";
+            else if (supplierName.Text == "" && contact.Text == "" && address.Text != "")
+                sql = "CALL Update_Supplier_Address(" + SupplierID.Text + ",'" + address.Text + "'," + Program.current + ")";
+            else if (supplierName.Text != "" && contact.Text != "" && address.Text == "")
+                sql = "CALL Update_Supplier_Name_Contact(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "'," + Program.current + ")";
+            else if (supplierName.Text != "" && contact.Text == "" && address.Text != "")
+                sql = "CALL Update_Supplier_Name_Address(" + SupplierID.Text + ",'" + supplierName.Text + "','" + address.Text + "'," + Program.current + ")";
+            else if (supplierName.Text == "" && contact.Text != "" && address.Text != "")
+                sql = "CALL Update_Supplier_Contact_Address(" + SupplierID.Text + ",'" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
+            else if (supplierName.Text != "" && contact.Text != "" && address.Text != "")
+                sql = "CALL Update_Supplier(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             try
             {
@@ -129,7 +130,7 @@ namespace Warehouse
             }
             conn.Close();
         }
-        private void delete_Click(object sender, EventArgs e)
+        private void Delete_Click(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();

@@ -12,7 +12,7 @@ namespace Warehouse
             InitializeComponent();
         }
 
-        private void query_Click(object sender, EventArgs e)
+        private void Query_Click(object sender, EventArgs e)
         {
             // Clear the data in the table
             dataGridView1.DataSource = null;

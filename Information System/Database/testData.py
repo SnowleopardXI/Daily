@@ -104,8 +104,8 @@ def update_Admin(number):
     for i in result:
         admin_id.append(i[0])
     for i in range(number):
-        mod_id=random.randint(1,(len(superadmin_id)-1))
-        sql="Call Update_Admin('%s','%s','%s','%s','%s','%s','%s')"%(superadmin_id[random.randint(1,(len(superadmin_id)-1))],mod_id,name_dict[random.randint(0,len(name_dict)-1)],random.randint(0,1),random.randint(1,2),faker.email(),random.randint(13100000000,19320212368))
+        mod_id=random.randint(2,(len(superadmin_id)-1))
+        sql="Call Update_Admin('%s','%s','%s','%s','%s','%s','%s')"%(superadmin_id[random.randint(2,(len(superadmin_id)-1))],mod_id,name_dict[random.randint(0,len(name_dict)-1)],random.randint(0,1),random.randint(1,2),faker.email(),random.randint(13100000000,19320212368))
         cursor.execute(sql)
         conn.commit()
     print('更新成功')
@@ -132,11 +132,78 @@ def update_Supplier(number):
     for i in result:
         supplier_id.append(i[0])
     for i in range(number):
-        sql="Call Update_Supplier('%s','%s','%s','%s','%s')"%(supplier_id[random.randint(0,len(supplier_id)-1)],supplier_name[random.randint(0,len(supplier_name)-1)],random.randint(13100000000,19320212368),addr_dict[random.randint(0,len(addr_dict)-1)],superadmin_id[random.randint(0,len(superadmin_id)-1)])
+        #在原始供应商名称后追加随机数
+        id=random.randint(0,len(supplier_name)-1)
+        mod_name=supplier_name[id]+str(random.randint(0,100))
+        sql="Call Update_Supplier('%s','%s','%s','%s','%s')"%(supplier_id[id],mod_name,faker.phone_number(),addr_dict[random.randint(0,len(addr_dict)-1)],superadmin_id[random.randint(1,(len(superadmin_id)-1))])
         cursor.execute(sql)
         conn.commit()
     print('更新成功')
 
+def update_Warehouse(number):
+    conn=pymysql.connect(host='10.40.172.1', port=3306, user='warehouse', password='87514813', database='warehouse', charset='utf8')
+    cursor=conn.cursor()
+    sql="select Admin_ID from admins where Admin_Type=2"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    superadmin_id=[]
+    for i in result:
+        superadmin_id.append(i[0])
+    sql="select Warehouse_ID from warehouses"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    warehouse_id=[]
+    for i in result:
+        warehouse_id.append(i[0])
+    sql="select Warehouse_Name from warehouses"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    warehouse_name=[]
+    for i in result:
+        warehouse_name.append(i[0])
+    for i in range(number):
+        #在原始仓库名称后追加随机数
+        id=random.randint(0,len(warehouse_name)-1)
+        mod_name=warehouse_name[id]+str(random.randint(0,100))
+        sql="Call Update_Warehouse('%s','%s','%s','%s','%s')"%(warehouse_id[id],mod_name,addr_dict[random.randint(0,len(addr_dict)-1)],faker.name(),superadmin_id[random.randint(1,(len(superadmin_id)-1))])
+    print('更新成功')
+    
+def delete_Admin(number):
+    conn=pymysql.connect(host='10.40.172.1', port=3306, user='warehouse', password='87514813', database='warehouse', charset='utf8')
+    cursor=conn.cursor()
+    sql="select Admin_ID from admins where Admin_ID>=2"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    admin_id=[]
+    for i in result:
+        admin_id.append(i[0])
+    for i in range(number):
+        sql="Call Delete_Admin('%s','%s')"%(1,admin_id[random.randint(0,len(admin_id)-1)])
+        cursor.execute(sql)
+        conn.commit()
+    print('删除成功')
+        
+def delete_Supplier(number):
+    conn=pymysql.connect(host='10.40.172.1', port=3306, user='warehouse', password='87514813', database='warehouse', charset='utf8')
+    cursor=conn.cursor()
+    sql="select Admin_ID from admins where Admin_Type=2"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    superadmin_id=[]
+    for i in result:
+        superadmin_id.append(i[0])
+    sql="select Supplier_ID from suppliers"
+    cursor.execute(sql)
+    result=cursor.fetchall()
+    supplier_id=[]
+    for i in result:
+        supplier_id.append(i[0])
+    for i in range(number):
+        sql="Call Delete_Supplier('%s','%s')"%(supplier_id[random.randint(0,len(supplier_id)-1)],superadmin_id[random.randint(1,(len(superadmin_id)-1))])
+        cursor.execute(sql)
+        conn.commit()
+    print('删除成功')
+        
 def clear():
     conn=pymysql.connect(host='10.40.172.1', port=3306, user='warehouse', password='87514813', database='warehouse', charset='utf8')
     cursor=conn.cursor()
@@ -184,3 +251,5 @@ if __name__ == "__main__":
         add_inventory(random.randint(min,max))
         update_Admin(random.randint(min,max))
         update_Supplier(random.randint(min,max))
+        update_Warehouse(random.randint(min,max))
+        delete_Admin(random.randint(min,max))

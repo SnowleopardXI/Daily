@@ -69,7 +69,7 @@
             this.stockin.TabIndex = 5;
             this.stockin.Text = "入库";
             this.stockin.UseVisualStyleBackColor = true;
-            this.stockin.Click += new System.EventHandler(this.stockin_Click);
+            this.stockin.Click += new System.EventHandler(this.Stockin_Click);
             // 
             // productName
             // 

@@ -11,6 +11,7 @@ namespace Warehouse
         {
             InitializeComponent();
         }
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public void Refresh()
         {
             this.Product_ID.Text = "";
@@ -40,31 +41,31 @@ namespace Warehouse
             }
             else
             {
-                if(Product_ID.Text != "" && Product_Name.Text != "" && Warehouse_ID.Text != "")
+                if (Product_ID.Text != "" && Product_Name.Text != "" && Warehouse_ID.Text != "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Inventory_ID = '" + Product_ID.Text + "' AND i.Product_Name = '" + Product_Name.Text + "' AND i.Warehouse_ID = '" + Warehouse_ID.Text + "'";
                 }
-                if(Product_ID.Text != "" && Product_Name.Text != "" && Warehouse_ID.Text == "")
+                if (Product_ID.Text != "" && Product_Name.Text != "" && Warehouse_ID.Text == "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Inventory_ID = '" + Product_ID.Text + "' AND i.Product_Name = '" + Product_Name.Text + "'";
                 }
-                if(Product_ID.Text != "" && Product_Name.Text == "" && Warehouse_ID.Text != "")
+                if (Product_ID.Text != "" && Product_Name.Text == "" && Warehouse_ID.Text != "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Inventory_ID = '" + Product_ID.Text + "' AND i.Warehouse_ID = '" + Warehouse_ID.Text + "'";
                 }
-                if(Product_ID.Text == "" && Product_Name.Text != "" && Warehouse_ID.Text != "")
+                if (Product_ID.Text == "" && Product_Name.Text != "" && Warehouse_ID.Text != "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Product_Name = '" + Product_Name.Text + "' AND i.Warehouse_ID = '" + Warehouse_ID.Text + "'";
                 }
-                if(Product_ID.Text != "" && Product_Name.Text == "" && Warehouse_ID.Text == "")
+                if (Product_ID.Text != "" && Product_Name.Text == "" && Warehouse_ID.Text == "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Inventory_ID = '" + Product_ID.Text + "'";
                 }
-                if(Product_ID.Text == "" && Product_Name.Text != "" && Warehouse_ID.Text == "")
+                if (Product_ID.Text == "" && Product_Name.Text != "" && Warehouse_ID.Text == "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Product_Name = '" + Product_Name.Text + "'";
                 }
-                if(Product_ID.Text == "" && Product_Name.Text == "" && Warehouse_ID.Text != "")
+                if (Product_ID.Text == "" && Product_Name.Text == "" && Warehouse_ID.Text != "")
                 {
                     sql = "SELECT i.Inventory_ID AS 产品号,i.Product_Name AS 商品名 ,w.Warehouse_Name AS 仓库名,w.Warehouse_Contact AS 仓库联系人,i.Quantity AS 库存数量 FROM inventory AS i JOIN warehouses AS w ON i.Warehouse_ID = w.Warehouse_ID WHERE i.Warehouse_ID = '" + Warehouse_ID.Text + "'";
                 }

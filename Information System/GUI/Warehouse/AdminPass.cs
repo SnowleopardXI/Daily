@@ -49,7 +49,7 @@ namespace Warehouse
                 if (password != old)
                 {
                     MessageBox.Show("原密码错误！");
-                    string error="INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改密码时输入了错误的原密码', NOW())";
+                    string error = "INSERT INTO admin_actions (Admin_ID, Action_Type, Action_Description, Action_Time) VALUES (" + Program.current + ", '修改密码', + 'ID: " + Program.current + " 的管理员修改密码时输入了错误的原密码', NOW())";
                     MySqlCommand cmd4 = new MySqlCommand(error, conn);
                     cmd4.ExecuteNonQuery();
                     return;

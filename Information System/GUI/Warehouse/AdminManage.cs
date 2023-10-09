@@ -13,13 +13,13 @@ namespace Warehouse
         }
         public void Clear()
         {
-            this.id.Text="";
-            this.name.Text="";
-            this.email.Text="";
-            this.phone.Text="";
-            this.Admintype.Text="";
+            this.id.Text = "";
+            this.name.Text = "";
+            this.email.Text = "";
+            this.phone.Text = "";
+            this.Admintype.Text = "";
         }
-        private void query_Click(object sender, EventArgs e)
+        private void Query_Click(object sender, EventArgs e)
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
@@ -49,7 +49,7 @@ namespace Warehouse
             conn.Close();
         }
 
-        private void add_Click(object sender, EventArgs e)
+        private void Add_Click(object sender, EventArgs e)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace Warehouse
                 MessageBox.Show(ex.Message);
             }
         }
-        private void delete_Click(object sender, EventArgs e)
+        private void Delete_Click(object sender, EventArgs e)
         {
             try
             {
@@ -98,13 +98,13 @@ namespace Warehouse
             }
         }
 
-        private void modify_Click(object sender, EventArgs e)
+        private void Modify_Click(object sender, EventArgs e)
         {
             try
             {
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
-                if(id.Text == "" || name.Text == "" || email.Text == "" || phone.Text == "" || Admintype.Text == "")
+                if (id.Text == "" || name.Text == "" || email.Text == "" || phone.Text == "" || Admintype.Text == "")
                 {
                     MessageBox.Show("请填写完整信息");
                     return;
@@ -119,17 +119,17 @@ namespace Warehouse
                 MessageBox.Show("修改成功");
                 Clear();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
 
-        private void enable_Click(object sender, EventArgs e)
+        private void Enable_Click(object sender, EventArgs e)
         {
             try
             {
-                if(id.Text == "")
+                if (id.Text == "")
                 {
                     MessageBox.Show("请填写完整信息");
                     return;
@@ -153,13 +153,13 @@ namespace Warehouse
                 MessageBox.Show("启用成功");
                 Clear();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
 
-        private void disable_Click(object sender, EventArgs e)
+        private void Disable_Click(object sender, EventArgs e)
         {
             try
             {
@@ -187,7 +187,7 @@ namespace Warehouse
                 MessageBox.Show("禁用成功");
                 Clear();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }

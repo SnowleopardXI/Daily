@@ -67,7 +67,7 @@
             this.query.TabIndex = 5;
             this.query.Text = "查询";
             this.query.UseVisualStyleBackColor = true;
-            this.query.Click += new System.EventHandler(this.query_Click);
+            this.query.Click += new System.EventHandler(this.Query_Click);
             // 
             // dataGridView1
             // 

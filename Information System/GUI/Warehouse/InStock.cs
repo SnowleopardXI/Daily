@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Windows.Forms;
-using MySql.Data.MySqlClient;
 namespace Warehouse
 {
     public partial class InStock : Form
@@ -9,6 +9,7 @@ namespace Warehouse
         {
             InitializeComponent();
         }
+#pragma warning disable CS0114 // Member hides inherited member; missing override keyword
         public void Refresh()
         {
             this.productName.Text = "";
@@ -17,7 +18,7 @@ namespace Warehouse
             this.quantity.Text = "";
             this.employeeId.Text = "";
         }
-        private void stockin_Click(object sender, EventArgs e)
+        private void Stockin_Click(object sender, EventArgs e)
         {
             try
             {
