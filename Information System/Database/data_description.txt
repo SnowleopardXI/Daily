@@ -1,0 +1,41 @@
+1. `admin_actions` 表:
+    - `Action_ID` (主键): 表示操作的唯一标识。
+    - `Admin_ID` (外键): 引用 `admins` 表的 `Admin_ID`，指向执行该操作的管理员。
+    - `Action_Type`: 表示操作的类型。
+    - `Action_Description`: 提供有关操作的详细信息。
+    - `Action_Time`: 记录操作的时间戳。
+  
+2. `admins` 表:
+    - `Admin_ID` (主键): 管理员的唯一标识。
+    - `Admin_Name`: 管理员的名字。
+    - `Admin_Type`: 表示管理员的类型。(1-普通管理员，2-超级管理员)
+    - `Valid`: 表示管理员账户是否有效。
+    - `Password`: 管理员的密码。(使用哈希和盐加密)
+    - `Email`: 管理员的电子邮箱地址。
+    - `Phone`: 管理员的联系电话号码。
+  
+3. `inventory` 表:
+    - `Inventory_ID` (主键): 存货的唯一标识。
+    - `Product_Name`: 产品的名称。
+    - `Quantity`: 产品的数量。
+    - `Supplier_ID` (外键): 引用 `suppliers` 表的 `Supplier_ID`，指向供应该产品的供应商。
+    - `Warehouse_ID` (外键): 引用 `warehouses` 表的 `Warehouse_ID`，指向存储该产品的仓库。
+  
+4. `stock_records` 表:
+    - `Record_ID` (主键): 记录的唯一标识。
+    - `Inventory_ID` (外键): 引用 `inventory` 表的 `Inventory_ID`。
+    - `Quantity_Change`: 表示库存数量的变化。
+    - `Record_Time`: 记录库存更改的时间戳。
+    - `Admin_ID` (外键): 引用 `admins` 表的 `Admin_ID`，指向执行库存更改的管理员。
+  
+5. `suppliers` 表:
+    - `Supplier_ID` (主键): 供应商的唯一标识。
+    - `Supplier_Name`: 供应商的名称。
+    - `Contact_Info`: 供应商的联系信息。
+    - `Address`: 供应商的地址。
+  
+6. `warehouses` 表:
+    - `Warehouse_ID` (主键): 仓库的唯一标识。
+    - `Warehouse_Location`: 仓库的位置。
+    - `Warehouse_Name`: 仓库的名称。
+    - `Warehouse_Contact`: 仓库的联系信息。

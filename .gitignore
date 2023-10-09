@@ -10,16 +10,12 @@ tempCodeRunnerFile.c
 *.pdb
 *.cache
 *.CopyComplete
-Build results
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
+[d]ebug/
+[d]ebugPublic/
+[r]elease/
+[r]eleases/
 x64/
 x86/
-[Aa][Rr][Mm]/
-[Aa][Rr][Mm]64/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+[b]in/
+[o]bj/
+[l]og/
