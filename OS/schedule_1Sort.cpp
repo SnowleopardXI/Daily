@@ -101,7 +101,7 @@ struct queue
    
 int main()
 {
-    unsigned clock = 0, i = 0; 
+    unsigned int clock = 0, i = 0; 
     queue *q = new queue(NULL, NULL);
     PCB *pcb[num];
     for (i=0; i<num; i++)
