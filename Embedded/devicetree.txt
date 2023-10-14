@@ -1,0 +1,55 @@
+Type commands separately.
+Remember: All configs will be discarded after reboot, write to .profile if necessary.
+
+Stage 1: Configure environment
+export SLOTS=/sys/devices/platform/bone_capemgr/slots
+cat $SLOTS
+export PINS=/sys/kernel/debug/pinctrl/44e10800.pinmux/pins
+cat $PINS
+
+Stage 2: Create DeviceTree
+vi /boot/dtbs/BB-ADC-00A0.dtb
+
+File content:
+
+/dts-v1/;
+/plugin/;
+
+/{
+        compatible="ti,beaglebone","ti,beaglebone-black","ti,beaglebone-green";
+
+        part-number="BB-ADC";
+        version="00A0";
+
+        exclusive-use=
+                "p9.39",
+                "p9.40",
+                "p9.37",
+                "p9.38",
+                "p9.33",
+                "p9.36",
+                "p9.35",
+
+                "tscadc";
+        fragment@0{
+                target=<&tscadc>;
+                __overlay__{
+                        status="okay";
+                        adc{
+                                ti,adc-channels=<0 1 2 3 4 5 6>;
+                        };
+                };
+        };
+};
+
+Stage 3: Compile DeviceTree and Verify
+dtc -I dts -O dtb -o /boot/dtbs/BB-ADC-00A0.dtbo /boot/dtbs/BB-ADC-00A0.dts
+echo BB-ADC > $SLOTS
+cat $SLOTS
+
+Now you should see devices like : P-O-L-    0   Override Board Name
+
+Stage 4: Verify ADC
+ls -l /sys/bus/iio/devices/iio:device0
+
+Notice: You don't need to run Stage 2 & 3 after reboot.

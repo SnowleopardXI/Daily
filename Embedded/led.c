@@ -13,7 +13,7 @@ void write_to_file(const char *path, const char *value) {
 
 int main() {
     unsigned int delay = 500000; // 500ms
-    unsigned int cycles = 3;
+    unsigned int cycles = 3;// Flash the LEDs 3 times
 
     // Setup GPIOs
     write_to_file(GPIO_DIR "export", "44");
