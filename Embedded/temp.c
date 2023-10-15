@@ -18,8 +18,7 @@ float readADC() {
     close(fd);
 
     int raw = atoi(buf);
-    float voltage = (raw / (float)ADC_MAX_VALUE) * ADC_RESOLUTION;
-    return voltage;
+    return raw;
 }
 
 float voltageToTemperature(float voltage) {
@@ -28,11 +27,11 @@ float voltageToTemperature(float voltage) {
 
 int main() {
     while(1) {
-        float voltage = readADC();
+        int ADC = readADC();
+        float voltage = ADC*(float)ADC_RESOLUTION/ADC_MAX_VALUE;
         float temperature = voltageToTemperature(voltage);
         
-        printf("adc=%.6f\n", voltage);
-        printf("temp=%.6f\n", temperature);
+        printf("%d\tadc=%f\ntemp=%f\n", ADC, voltage, temperature);
         
         sleep(1);
     }

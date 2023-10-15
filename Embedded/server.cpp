@@ -2,12 +2,14 @@
 #include <iostream>
 #include <cstring>
 #include <fstream>
+#include <sstream>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
 #define GPIO_DIR "/sys/class/gpio/"
 #define adc_path "/sys/bus/iio/devices/iio:device0/in_voltage0_raw"
 #define PORT 8080
+using namespace std;
 void write_to_file(const char *path, const char *value)
 {
     FILE *stream = fopen(path, "w");
@@ -30,7 +32,6 @@ void led_control(int action)
         write_to_file(GPIO_DIR "gpio44/value", "0");
     }
 }
-
 int main()
 {
     int server_fd, new_socket;
@@ -78,7 +79,7 @@ int main()
     {
         ssize_t valread = read(new_socket, buffer, 1024);
         buffer[valread] = '\0';
-        std::cout << "Client request: " << buffer << std::endl;
+        cout << "Client request: " << buffer << endl;
         if (strcmp(buffer, "on") == 0)
         {
             led_control(1);
@@ -89,12 +90,24 @@ int main()
             led_control(0);
             send(new_socket, "LED is off", strlen("LED is off"), 0);
         }
+        else if (strcmp(buffer, "adc") == 0)
+        {
+            ifstream adc_file(adc_path);
+            string adc_value;
+            getline(adc_file, adc_value);
+            send(new_socket, adc_value.c_str(), strlen(adc_value.c_str()), 0);
+        }
         else if (strcmp(buffer, "temp") == 0)
         {
-            std::ifstream adc_file(adc_path);
-            std::string adc_value;
-            std::getline(adc_file, adc_value);
-            send(new_socket, adc_value.c_str(), strlen(adc_value.c_str()), 0);
+            ifstream adc_file(adc_path);
+            string adc_value, temp_str;
+            getline(adc_file, adc_value);
+            int adc_value_int = stoi(adc_value);
+            float temp = ((float)adc_value_int / 4096 * 1.8 ) * 100 - 50;
+            stringstream ss;
+            ss << temp;
+            ss >> temp_str;
+            send(new_socket, temp_str.c_str(), strlen(temp_str.c_str()), 0);
         }
         else if (strcmp(buffer, "exit") == 0)
         {

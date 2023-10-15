@@ -34,7 +34,7 @@ int main() {
         return -1;
     }
 
-    std::cout << "Connected to the server. Enter your commands ('on', 'off', 'temp', 'exit'):" << std::endl;
+    std::cout << "Connected to the server. Enter your commands ('on', 'off', 'temp', 'exit', 'adc')" << std::endl;
     while (true) {
         std::cin.getline(input, BUFFER_SIZE);
         
