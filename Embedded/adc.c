@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#define BASE_PATH "/sys/bus/iio/devices/iio:device0/in_voltage"
+#define BASE_PATH "/sys/bus/iio/devices/iio:device0/in_voltage0_raw"
 #define MAX_BUF 64
 
 double convertToVoltage(int rawValue) {
@@ -15,9 +15,9 @@ int main() {
     char path[MAX_BUF];
     char buf[MAX_BUF];
     int rawValue;
-
-    for (int i = 0; i <= 6; i++) {
-        snprintf(path, sizeof(path), "%s%d_raw", BASE_PATH, i);
+    int times = 20;
+    for (int i = 0; i < times; i++) {
+        snprintf(path, sizeof(path), BASE_PATH);
         
         FILE *file = fopen(path, "r");
         if (!file) {
@@ -37,6 +37,7 @@ int main() {
         double voltage = convertToVoltage(rawValue);
         
         printf("%d\tadc=%.6fV\n", rawValue, voltage);
+        usleep(1000);
     }
 
     return 0;

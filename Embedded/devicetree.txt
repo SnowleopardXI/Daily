@@ -8,7 +8,7 @@ export PINS=/sys/kernel/debug/pinctrl/44e10800.pinmux/pins
 cat $PINS
 
 Stage 2: Create DeviceTree
-vi /boot/dtbs/BB-ADC-00A0.dtb
+vi /boot/dtbs/BB-ADC-00A0.dts
 
 File content:
 
@@ -44,6 +44,7 @@ File content:
 
 Stage 3: Compile DeviceTree and Verify
 dtc -I dts -O dtb -o /boot/dtbs/BB-ADC-00A0.dtbo /boot/dtbs/BB-ADC-00A0.dts
+cp /boot/dtbs/BB-ADC-00A0.dtbo /lib/firmware
 echo BB-ADC > $SLOTS
 cat $SLOTS
 

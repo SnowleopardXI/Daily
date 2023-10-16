@@ -23,7 +23,7 @@ float readADC() {
 }
 
 float voltageToTemperature(float voltage) {
-    return (voltage - 0.5) * 100.0;  // Convert voltage to temperature
+    return voltage*100-50;  // Convert voltage to temperature
 }
 
 int main() {
