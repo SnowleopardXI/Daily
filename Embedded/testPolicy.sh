@@ -16,4 +16,4 @@ iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT -p tcp --dport 22 -j ACCEPT
 
 # 允许 Web 服务（通常是 TCP 端口 80 和 443）
-iptables -A INPUT -p tcp --dport 80 -j
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
