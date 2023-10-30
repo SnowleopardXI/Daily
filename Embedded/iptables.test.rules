@@ -1,0 +1,28 @@
+*filter
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+# Allow established and related
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+# Allows all outbound traffic
+# -A OUTPUT - j ACCEPT
+# Allow ssh:22 http:80 https:443 ftp:21(20000-20500)
+-A INPUT -m state --state NEW -p tcp --dport 22 -j ACCEPT
+-A INPUT -m state --state NEW -p tcp --dport 80 -j ACCEPT
+-A INPUT -m state --state NEW -p tcp --dport 443 -j ACCEPT
+# -A INPUT -m state --state NEW -p tcp -m multiport --dports 21,20000:20500 -j ACCEPT
+# -A INPUT -p tcp -s 0/0 --sport 20000:20500 --dport 21 -m state --state NEW, ESTABLISHED -j ACCEPT
+
+# Allow DNS
+-A OUTPUT -p udp -d 114.114.114.114 --dport 53 -j ACCEPT
+-A OUTPUT -p udp -d 180.76.76.76 --dport 53 -j ACCEPT
+# -A OUTPUT -p udp --dport 123 -j ACCEPT
+# Allow ping
+-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT
+# Log rejected (log-level=7) freq: 5 per minute, using dmesg or syslog
+# -A INPUT -m limit - limit 5/min -j LOG --log-prefix "iptables denied: " --log-level=7
+# Reject other policies
+-A OUTPUT -p udp -j REJECT --reject-with icmp-port-unreachable
+-A INPUT -j REJECT --reject-with icmp-port-unreachable
+-A FORWARD -j REJECT --reject-with icmp-port-unreachable
+COMMIT
