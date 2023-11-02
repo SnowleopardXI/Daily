@@ -1,5 +1,6 @@
 library(ggplot2)
 p <- seq(0.01, 0.99, by = 0.01)
+H <- -p * log2(p) - (1 - p) * log2(1 - p)
 data <- data.frame(p, H)
 ggplot(data, aes(x = p, y = H)) +
     geom_line(color = "blue") +
