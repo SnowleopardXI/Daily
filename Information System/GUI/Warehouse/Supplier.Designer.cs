@@ -1,4 +1,6 @@
-﻿namespace Warehouse
+﻿using System.Windows.Forms;
+
+namespace Warehouse
 {
     partial class Supplier
     {
@@ -217,5 +219,12 @@
         private System.Windows.Forms.Button modify;
         private System.Windows.Forms.Button delete;
         private System.Windows.Forms.Button query;
+        private void SupplierID_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

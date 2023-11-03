@@ -1,4 +1,6 @@
-﻿namespace Warehouse
+﻿using System.Windows.Forms;
+
+namespace Warehouse
 {
     partial class StockQuery
     {
@@ -150,5 +152,19 @@
         private System.Windows.Forms.TextBox Warehouse_ID;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox Product_Name;
+        private void Product_ID_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+        private void Warehouse_ID_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

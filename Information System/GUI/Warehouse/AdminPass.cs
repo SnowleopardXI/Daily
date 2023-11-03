@@ -31,7 +31,7 @@ namespace Warehouse
                     return;
                 }
                 //Read Admin_ID from Login.cs
-                string before = "SELECT Password FROM admins WHERE Admin_ID='" + Program.current + "'";
+                string before = "SELECT Password FROM admins WHERE Admin_ID=" + Program.current;
                 //Execute the query
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
@@ -40,7 +40,7 @@ namespace Warehouse
                 dataReader.Read();
                 string password = dataReader.GetString("Password");
                 dataReader.Close();
-                string oldstr = "SELECT sha1('" + oldPass.Text + "')";
+                string oldstr = "SELECT sha1(@oldPass)";
                 MySqlCommand cmd1 = new MySqlCommand(oldstr, conn);
                 MySqlDataReader dataReader1 = cmd1.ExecuteReader();
                 dataReader1.Read();

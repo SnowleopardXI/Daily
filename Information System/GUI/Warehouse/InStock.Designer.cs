@@ -1,4 +1,6 @@
-﻿namespace Warehouse
+﻿using System.Windows.Forms;
+
+namespace Warehouse
 {
     partial class InStock
     {
@@ -184,5 +186,26 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox quantity;
         private System.Windows.Forms.Label label5;
+        private void employeeId_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+        private void quantity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
+        private void warehouseId_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
     }
 }

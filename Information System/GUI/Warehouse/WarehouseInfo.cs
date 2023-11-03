@@ -41,10 +41,13 @@ namespace Warehouse
                     MessageBox.Show("请填写完整信息");
                     return;
                 }
-                sql = "CALL Add_Warehouse('" + name.Text + "','" + addr.Text + "','" + contact.Text + "'," + Program.current + ")";
+                sql = "CALL Add_Warehouse(@name,@addr,@contact," + Program.current + ")";
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("name", name.Text);
+                cmd.Parameters.AddWithValue("addr", addr.Text);
+                cmd.Parameters.AddWithValue("contact", contact.Text);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 MessageBox.Show("添加成功");
@@ -93,10 +96,13 @@ namespace Warehouse
                     MessageBox.Show("请填写完整信息");
                     return;
                 }
-                sql = "CALL Update_Warehouse(" + id.Text + ",'" + name.Text + "','" + addr.Text + "','" + contact.Text + "'," + Program.current + ")";
+                sql = "CALL Update_Warehouse(" + id.Text + ",@name,@addr,@contact," + Program.current + ")";
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("name", name.Text);
+                cmd.Parameters.AddWithValue("addr", addr.Text);
+                cmd.Parameters.AddWithValue("contact", contact.Text);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 MessageBox.Show("修改成功");
@@ -113,25 +119,16 @@ namespace Warehouse
         {
             try
             {
-                string sql = "";
-                if (id.Text == "" && name.Text == "" && addr.Text == "" && contact.Text == "")
-                    sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
-                else
-                {
-                    sql += " where ";
-                    if (id.Text != "")
-                        sql += "Warehouse_ID = '" + id.Text + "' and ";
-                    if (name.Text != "")
-                        sql += "Warehouse_Name = '" + name.Text + "' and ";
-                    if (addr.Text != "")
-                        sql += "Warehouse_Location = '" + addr.Text + "' and ";
-                    if (contact.Text != "")
-                        sql += "Warehouse_Contact = '" + contact.Text + "' and ";
-                    sql = sql.Substring(0, sql.Length - 5);
-                }
+                string sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
+                if (id.Text != "" || name.Text != "" || addr.Text != "" || contact.Text != "")
+                    sql += " where Warehouse_ID = @id or Warehouse_Name = @name or Warehouse_Location = @addr or Warehouse_Contact = @contact";
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("id", id.Text);
+                cmd.Parameters.AddWithValue("name", name.Text);
+                cmd.Parameters.AddWithValue("addr", addr.Text);
+                cmd.Parameters.AddWithValue("contact", contact.Text);
                 MySqlDataAdapter ada = new MySqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
                 ada.Fill(ds);

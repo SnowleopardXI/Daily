@@ -37,9 +37,10 @@
             // 
             // Login_Button
             // 
-            this.Login_Button.Location = new System.Drawing.Point(316, 203);
+            this.Login_Button.Location = new System.Drawing.Point(474, 312);
+            this.Login_Button.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Login_Button.Name = "Login_Button";
-            this.Login_Button.Size = new System.Drawing.Size(75, 23);
+            this.Login_Button.Size = new System.Drawing.Size(112, 35);
             this.Login_Button.TabIndex = 0;
             this.Login_Button.Text = "登录";
             this.Login_Button.UseVisualStyleBackColor = true;
@@ -47,49 +48,54 @@
             // 
             // id
             // 
-            this.id.Location = new System.Drawing.Point(86, 32);
-            this.id.MaxLength = 8;
+            this.id.Location = new System.Drawing.Point(129, 49);
+            this.id.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.id.MaxLength = 6;
             this.id.Name = "id";
-            this.id.Size = new System.Drawing.Size(100, 20);
+            this.id.Size = new System.Drawing.Size(148, 26);
             this.id.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 35);
+            this.label1.Location = new System.Drawing.Point(34, 54);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(42, 13);
+            this.label1.Size = new System.Drawing.Size(58, 20);
             this.label1.TabIndex = 2;
             this.label1.Text = "用户ID";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(23, 104);
+            this.label2.Location = new System.Drawing.Point(34, 160);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 13);
+            this.label2.Size = new System.Drawing.Size(41, 20);
             this.label2.TabIndex = 3;
             this.label2.Text = "密码";
             // 
             // pass
             // 
-            this.pass.Location = new System.Drawing.Point(86, 101);
-            this.pass.MaxLength = 32;
+            this.pass.Location = new System.Drawing.Point(129, 155);
+            this.pass.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pass.MaxLength = 16;
             this.pass.Name = "pass";
             this.pass.PasswordChar = '*';
-            this.pass.Size = new System.Drawing.Size(100, 20);
+            this.pass.Size = new System.Drawing.Size(148, 26);
             this.pass.TabIndex = 4;
             // 
             // Login
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(416, 258);
+            this.ClientSize = new System.Drawing.Size(624, 397);
             this.Controls.Add(this.pass);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.id);
             this.Controls.Add(this.Login_Button);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Login";
             this.Text = "登录";
             this.ResumeLayout(false);

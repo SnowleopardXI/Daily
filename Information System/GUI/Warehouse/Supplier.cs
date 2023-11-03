@@ -67,25 +67,15 @@ namespace Warehouse
             }
             else
             {
-                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers where ";
-                if (SupplierID.Text != "")
+                string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers ";
+                if (SupplierID.Text != "" || supplierName.Text != "" || contact.Text != "" || address.Text != "")
                 {
-                    sql += "Supplier_ID = " + SupplierID.Text + " and ";
+                    sql += "where Supplier_ID = " + SupplierID.Text + " or Supplier_Name = @Supplier_Name or Contact_Info = @Contact_Info or Address = @Address";
                 }
-                if (supplierName.Text != "")
-                {
-                    sql += "Supplier_Name = '" + supplierName.Text + "' and ";
-                }
-                if (contact.Text != "")
-                {
-                    sql += "Contact_Info = '" + contact.Text + "' and ";
-                }
-                if (address.Text != "")
-                {
-                    sql += "Address = '" + address.Text + "' and ";
-                }
-                sql = sql.Substring(0, sql.Length - 4);
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Supplier_Name", supplierName.Text);
+                cmd.Parameters.AddWithValue("@Contact_Info", contact.Text);
+                cmd.Parameters.AddWithValue("@Address", address.Text);
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -95,29 +85,19 @@ namespace Warehouse
 
         private void Modify_Click(object sender, EventArgs e)
         {
-            if (SupplierID.Text == "" || (supplierName.Text == "" && contact.Text == "" && address.Text == ""))
+            if (SupplierID.Text == "" || supplierName.Text == "" || contact.Text == "" || address.Text == "")
             {
                 MessageBox.Show("请填写完整信息");
                 return;
             }
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
-            string sql = "";
-            if (supplierName.Text != "" && contact.Text == "" && address.Text == "")
-                sql = "CALL Update_Supplier_Name(" + SupplierID.Text + ",'" + supplierName.Text + "'," + Program.current + ")";
-            if (supplierName.Text == "" && contact.Text != "" && address.Text == "")
-                sql = "CALL Update_Supplier_Contact(" + SupplierID.Text + ",'" + contact.Text + "'," + Program.current + ")";
-            else if (supplierName.Text == "" && contact.Text == "" && address.Text != "")
-                sql = "CALL Update_Supplier_Address(" + SupplierID.Text + ",'" + address.Text + "'," + Program.current + ")";
-            else if (supplierName.Text != "" && contact.Text != "" && address.Text == "")
-                sql = "CALL Update_Supplier_Name_Contact(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "'," + Program.current + ")";
-            else if (supplierName.Text != "" && contact.Text == "" && address.Text != "")
-                sql = "CALL Update_Supplier_Name_Address(" + SupplierID.Text + ",'" + supplierName.Text + "','" + address.Text + "'," + Program.current + ")";
-            else if (supplierName.Text == "" && contact.Text != "" && address.Text != "")
-                sql = "CALL Update_Supplier_Contact_Address(" + SupplierID.Text + ",'" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
-            else if (supplierName.Text != "" && contact.Text != "" && address.Text != "")
-                sql = "CALL Update_Supplier(" + SupplierID.Text + ",'" + supplierName.Text + "','" + contact.Text + "','" + address.Text + "'," + Program.current + ")";
+            string sql = "CALL Update_Supplier(@Supplier_ID,@Supplier_Name,@Contact_Info,@Address," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@Supplier_ID", SupplierID.Text);
+            cmd.Parameters.AddWithValue("@Supplier_Name", supplierName.Text);
+            cmd.Parameters.AddWithValue("@Contact_Info", contact.Text);
+            cmd.Parameters.AddWithValue("@Address", address.Text);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -134,8 +114,9 @@ namespace Warehouse
         {
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
-            string sql = "CALL Delete_Supplier(" + SupplierID.Text + "," + Program.current + ")";
+            string sql = "CALL Delete_Supplier(@Supplier_ID," + Program.current + ")";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.AddWithValue("@Supplier_ID", SupplierID.Text);
             try
             {
                 cmd.ExecuteNonQuery();

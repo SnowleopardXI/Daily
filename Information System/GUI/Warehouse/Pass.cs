@@ -24,9 +24,10 @@ namespace Warehouse
                     return;
                 }
                 //Read Admin_ID from Login.cs
-                string before = "SELECT Password FROM admins WHERE Admin_ID='" + userId.Text + "'";
+                string before = "SELECT Password FROM admins WHERE Admin_ID=@Admin_ID";
                 //Execute the query
                 cmd = new MySqlCommand(before, conn);
+                cmd.Parameters.AddWithValue("@Admin_ID", Program.current);
                 MySqlDataReader dataReader = cmd.ExecuteReader();
                 dataReader.Read();
                 string password = dataReader.GetString("Password");
@@ -63,8 +64,9 @@ namespace Warehouse
                 }
                 else
                 {
-                    string after = "UPDATE admins SET Password=sha1('" + newPass.Text + "') WHERE Admin_ID='" + userId.Text + "'";
+                    string after = "UPDATE admins SET Password=sha1(@newPass) WHERE Admin_ID='" + userId.Text + "'";
                     MySqlCommand cmd2 = new MySqlCommand(after, conn);
+                    cmd2.Parameters.AddWithValue("@newPass", newPass.Text);
                     cmd2.ExecuteNonQuery();
                     MessageBox.Show("修改成功！");
                     this.Close();

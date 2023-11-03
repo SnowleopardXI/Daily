@@ -23,10 +23,18 @@ namespace Warehouse
         {
             try
             {
-                string sql = "CALL Remove_Inventory(" + Program.current + ",'" + productName.Text + "'," + quantity.Text + "," + warehouseId.Text + ")";
+                if (Convert.ToInt32(quantity.Text) <= 0)
+                {
+                    MessageBox.Show("出库数量必须大于0！");
+                    return;
+                }
+                string sql = "CALL Remove_Inventory(" + Program.current + ",";
+                string condition = "@productName" + "," + quantity.Text + "," + warehouseId.Text + ")";
+                sql += condition;
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@productName", productName.Text);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 MessageBox.Show("出库成功");

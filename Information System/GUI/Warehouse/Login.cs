@@ -15,71 +15,84 @@ namespace Warehouse
         {
             try
             {
-                //this.id.Text只能为纯数字
-                if (this.id.Text == "" || !System.Text.RegularExpressions.Regex.IsMatch(this.id.Text, @"^[0-9]*$"))
-                {
-                    MessageBox.Show("ID格式错误");
-                    return;
-                }
                 Program.current = this.id.Text;
                 password = this.pass.Text;
-                //this.password.Text不能包含空格或 --)
-                if (this.pass.Text.Contains(" ") || System.Text.RegularExpressions.Regex.IsMatch(this.pass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.pass.Text, @"[-][-]"))
+                string connectionString = Program.str; // 你的数据库连接字符串
+
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
-                    MessageBox.Show("密码格式错误");
-                    return;
-                }
-                MySqlConnection conn = new MySqlConnection(Program.str);//实例化连接
-                conn.Open();//开启连接
-                string sql = "SELECT count(*) FROM admins WHERE Admin_ID = " + this.id.Text;
-                MySqlCommand cmd = new MySqlCommand(sql, conn);
-                //判断用户是否存在
-                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
-                {
-                    MessageBox.Show("用户不存在");
-                    return;
-                }
-                //判断是否被禁用
-                sql = "SELECT Valid FROM admins WHERE Admin_ID = " + this.id.Text;
-                cmd = new MySqlCommand(sql, conn);
-                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
-                {
-                    MessageBox.Show("用户已被禁用");
-                    sql = "INSERT into admin_actions(Admin_ID,Action_Type,Action_Description,Action_Time) VALUES('" + Program.current + "','登录','ID: " + Program.current + " 已禁用，无法登录系统','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "')";
+                    conn.Open(); // 开启连接
+
+                    string sql = "SELECT count(*) FROM admins WHERE Admin_ID = @id";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+
+                    // 判断用户是否存在
+                    if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
+                    {
+                        MessageBox.Show("用户不存在");
+                        return;
+                    }
+                    cmd.Dispose();
+                    // 判断用户是否被禁用
+                    sql = "SELECT Valid FROM admins WHERE Admin_ID = @id";
                     cmd = new MySqlCommand(sql, conn);
-                    cmd.ExecuteNonQuery();
-                    return;
-                }
-                sql = "SELECT COUNT(*) FROM admins WHERE Admin_ID = " + this.id.Text + " AND Password = sha1('" + password + "')";
-                cmd = new MySqlCommand(sql, conn);
-                //判断密码是否正确
-                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
-                {
-                    MessageBox.Show("密码错误");
-                    sql = "INSERT into admin_actions(Admin_ID,Action_Type,Action_Description,Action_Time) VALUES('" + Program.current + "','登录','ID: " + Program.current + " 密码错误','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "')";
+                    cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                    cmd.Dispose();
+                    if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
+                    {
+                        MessageBox.Show("用户已被禁用");
+                        sql = "INSERT into admin_actions(Admin_ID, Action_Type, Action_Description, Action_Time) VALUES(@id, '登录', 'ID : " + Program.current + " 用户已被禁用，无法登录系统', @actionTime)";
+                        cmd = new MySqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                        cmd.Parameters.AddWithValue("@actionTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.ExecuteNonQuery();
+                        cmd.Dispose();
+                        return;
+                    }
+                    sql = "SELECT COUNT(*) FROM admins WHERE Admin_ID = @id AND Password = sha1(@password)";
                     cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                    cmd.Parameters.AddWithValue("@password", password);
+
+                    // 判断密码是否正确
+                    if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
+                    {
+                        MessageBox.Show("密码错误");
+                        cmd.Dispose();
+                        sql = "INSERT into admin_actions(Admin_ID, Action_Type, Action_Description, Action_Time) VALUES(@id, '登录', 'ID : " + Program.current + " 密码错误，无法登录系统', @actionTime)";
+                        cmd = new MySqlCommand(sql, conn);
+                        cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                        cmd.Parameters.AddWithValue("@actionTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.ExecuteNonQuery();
+                        cmd.Dispose();
+                        return;
+                    }
+                    // 判断是否为管理员
+                    sql = "SELECT Admin_Type FROM admins WHERE Admin_ID = @id";
+                    cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                    cmd.Dispose();
+                    if (Convert.ToInt32(cmd.ExecuteScalar()) == 2)
+                    {
+                        SuperAdmin superadmin = new SuperAdmin(); // 实例化超级管理员窗体
+                        superadmin.Show(); // 显示超级管理员窗体
+                        this.Hide(); // 隐藏登录窗体
+                    }
+                    else if (Convert.ToInt32(cmd.ExecuteScalar()) == 1)
+                    {
+                        Admin admin = new Admin(); // 实例化管理员窗体
+                        admin.Show(); // 显示管理员窗体
+                        this.Hide(); // 隐藏登录窗体
+                    }
+                    // 记录登录动作
+                    sql = "INSERT into admin_actions(Admin_ID, Action_Type, Action_Description, Action_Time) VALUES(@id, '登录', 'ID : " + Program.current + " 登录系统', @actionTime)";
+                    cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
+                    cmd.Parameters.AddWithValue("@actionTime", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     cmd.ExecuteNonQuery();
-                    return;
+                    cmd.Dispose();
                 }
-                //判断是否为管理员
-                sql = "SELECT Admin_Type FROM admins WHERE Admin_ID = " + this.id.Text;
-                cmd = new MySqlCommand(sql, conn);
-                if (Convert.ToInt32(cmd.ExecuteScalar()) == 2)
-                {
-                    SuperAdmin superadmin = new SuperAdmin();//实例化超级管理员窗体
-                    superadmin.Show();//显示超级管理员窗体
-                    this.Hide();//隐藏登录窗体
-                }
-                if (Convert.ToInt32(cmd.ExecuteScalar()) == 1)
-                {
-                    Admin admin = new Admin();//实例化管理员窗体
-                    admin.Show();//显示管理员窗体
-                    this.Hide();//隐藏登录窗体
-                }
-                sql = "INSERT into admin_actions(Admin_ID,Action_Type,Action_Description,Action_Time) VALUES('" + Program.current + "','登录','ID: " + Program.current + " 登录系统','" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "')";
-                cmd = new MySqlCommand(sql, conn);
-                cmd.ExecuteNonQuery();
-                conn.Close();//关闭连接
             }
             catch (Exception ex)
             {
