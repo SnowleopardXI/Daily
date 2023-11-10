@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Warehouse
@@ -10,7 +11,10 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-
+        bool IsContinuousZeros(string password)
+        {
+            return password.All(c => c == '0');
+        }
         private void Modify_Click(object sender, EventArgs e)
         {
             try
@@ -44,12 +48,12 @@ namespace Warehouse
                     MessageBox.Show("ID格式错误");
                     return;
                 }
-                if (this.oldPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[-][-]"))
+                if (this.oldPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.oldPass.Text, @"[-][-]") || IsContinuousZeros(oldPass.Text))
                 {
                     MessageBox.Show("原密码格式错误");
                     return;
                 }
-                if (this.newPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[-][-]"))
+                if (this.newPass.Text == "" || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[']") || System.Text.RegularExpressions.Regex.IsMatch(this.newPass.Text, @"[-][-]") || IsContinuousZeros(newPass.Text))
                 {
                     MessageBox.Show("新密码格式错误");
                     return;

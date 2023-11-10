@@ -1,14 +1,13 @@
-def decode(code):
-    for i in range(len(code)-2, -1, -1):
-        code[i] += code[i+1]
-    return [int(x) for x in code]
+import numpy as np
+from math import *
+import matplotlib.pyplot as plt
+x = np.linspace(0.01, 0.99, 1000)
+y = []
 
-def encode(code):
-    for i in range(len(code)-2, -1, -1):
-        code[i] -= code[i+1]
-    return [int(x) for x in code]
+for p in x:
+    y_1 = -1 * p * log(p, 2) - (1 - p) * log(1 - p, 2)
+    y.append(y_1)
 
-if __name__ == '__main__':
-    code = [1, 0, 1, 1, 0, 1, 0, 0, 1, 1]
-    print(decode(code.copy()))  # Using copy() to prevent modification of original code list
-    print(encode(code.copy()))
+plt.plot(x, y, label='H(p)')
+plt.legend()
+plt.show()

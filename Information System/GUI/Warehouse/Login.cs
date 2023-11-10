@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Linq;
 using System.Windows.Forms;
 namespace Warehouse
 {
@@ -10,7 +11,10 @@ namespace Warehouse
         {
             InitializeComponent();
         }
-
+        bool IsContinuousZeros(string password)
+        {
+            return password.All(c => c == '0');
+        }
         private void Login_Button_Click(object sender, EventArgs e)
         {
             try
@@ -54,7 +58,11 @@ namespace Warehouse
                     cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
                     cmd.Parameters.AddWithValue("@password", password);
-
+                    if(IsContinuousZeros(password))
+                    {
+                        MessageBox.Show("密码不能为连续的0");
+                        return;
+                    }
                     // 判断密码是否正确
                     if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
                     {
@@ -77,14 +85,13 @@ namespace Warehouse
                     {
                         SuperAdmin superadmin = new SuperAdmin(); // 实例化超级管理员窗体
                         superadmin.Show(); // 显示超级管理员窗体
-                        this.Hide(); // 隐藏登录窗体
                     }
                     else if (Convert.ToInt32(cmd.ExecuteScalar()) == 1)
                     {
                         Admin admin = new Admin(); // 实例化管理员窗体
                         admin.Show(); // 显示管理员窗体
-                        this.Hide(); // 隐藏登录窗体
                     }
+                    this.Hide(); // 隐藏登录窗体
                     // 记录登录动作
                     sql = "INSERT into admin_actions(Admin_ID, Action_Type, Action_Description, Action_Time) VALUES(@id, '登录', 'ID : " + Program.current + " 登录系统', @actionTime)";
                     cmd = new MySqlCommand(sql, conn);
