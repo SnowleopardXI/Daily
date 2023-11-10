@@ -176,7 +176,7 @@ void viewMemoryMap()
 }
 int main()
 {
-    int totalMemory = 256;
+    int totalMemory = 128;
     initializeMemory(totalMemory);
     viewMemoryMap();
     short int choice;
