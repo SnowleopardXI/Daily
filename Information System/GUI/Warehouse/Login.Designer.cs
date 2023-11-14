@@ -103,6 +103,13 @@
 
         }
 
+        private void id_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
+            {
+                e.Handled = true;
+            }
+        }
         #endregion
 
         private System.Windows.Forms.Button Login_Button;

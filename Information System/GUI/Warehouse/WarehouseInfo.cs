@@ -21,7 +21,7 @@ namespace Warehouse
             dataGridView1.DataSource = null;
             dataGridView1.Rows.Clear();
             dataGridView1.Columns.Clear();
-            string sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
+            string sql = "select * from warehouse_view";
             MySqlConnection conn = new MySqlConnection(Program.str);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(sql, conn);
@@ -119,9 +119,9 @@ namespace Warehouse
         {
             try
             {
-                string sql = "select Warehouse_ID AS '仓库编号', Warehouse_Location AS '仓库地址', Warehouse_Name AS '仓库名称', Warehouse_Contact AS '仓库联系方式' from warehouses";
+                string sql = "select * from warehouse_view";
                 if (id.Text != "" || name.Text != "" || addr.Text != "" || contact.Text != "")
-                    sql += " where Warehouse_ID = @id or Warehouse_Name = @name or Warehouse_Location = @addr or Warehouse_Contact = @contact";
+                    sql += " where 仓库编号 = @id or 仓库名称 = @name or 仓库地址 = @addr or 仓库联系方式 = @contact";
                 MySqlConnection conn = new MySqlConnection(Program.str);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(sql, conn);

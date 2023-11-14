@@ -80,7 +80,7 @@ namespace Warehouse
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 16);
             this.label1.TabIndex = 3;
-            this.label1.Text = "产品号";
+            this.label1.Text = "产品ID";
             // 
             // label2
             // 
@@ -90,7 +90,7 @@ namespace Warehouse
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(52, 16);
             this.label2.TabIndex = 4;
-            this.label2.Text = "仓库号";
+            this.label2.Text = "仓库ID";
             // 
             // Warehouse_ID
             // 

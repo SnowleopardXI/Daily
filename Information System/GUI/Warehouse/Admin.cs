@@ -88,5 +88,37 @@ namespace Warehouse
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void 仓库信息查询ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                WarehouseView frm = new WarehouseView
+                {
+                    MdiParent = this
+                };
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 供应商信息查询ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SupplierView frm = new SupplierView
+                {
+                    MdiParent = this
+                };
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

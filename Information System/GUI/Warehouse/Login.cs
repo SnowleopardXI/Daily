@@ -58,7 +58,7 @@ namespace Warehouse
                     cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
                     cmd.Parameters.AddWithValue("@password", password);
-                    if(IsContinuousZeros(password))
+                    if (IsContinuousZeros(password))
                     {
                         MessageBox.Show("密码不能为连续的0");
                         return;

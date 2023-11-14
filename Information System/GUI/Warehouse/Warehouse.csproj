@@ -103,6 +103,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupplierView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SupplierView.Designer.cs">
+      <DependentUpon>SupplierView.cs</DependentUpon>
+    </Compile>
     <Compile Include="WarehouseInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +138,12 @@
     </Compile>
     <Compile Include="Supplier.Designer.cs">
       <DependentUpon>Supplier.cs</DependentUpon>
+    </Compile>
+    <Compile Include="WarehouseView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WarehouseView.designer.cs">
+      <DependentUpon>WarehouseView.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>
@@ -167,6 +179,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SupplierView.resx">
+      <DependentUpon>SupplierView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WarehouseInfo.resx">
       <DependentUpon>WarehouseInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -181,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Supplier.resx">
       <DependentUpon>Supplier.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WarehouseView.resx">
+      <DependentUpon>WarehouseView.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
