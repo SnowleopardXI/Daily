@@ -85,6 +85,7 @@
             this.operateType.Name = "operateType";
             this.operateType.Size = new System.Drawing.Size(160, 24);
             this.operateType.TabIndex = 3;
+            this.operateType.SelectedIndex = 0;
             // 
             // contextMenuStrip1
             // 
