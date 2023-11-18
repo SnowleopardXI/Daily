@@ -96,7 +96,6 @@
             // 
             this.deviceStat.FormattingEnabled = true;
             this.deviceStat.Items.AddRange(new object[] {
-            "不限",
             "可用",
             "占用"});
             this.deviceStat.Location = new System.Drawing.Point(660, 44);

@@ -29,17 +29,17 @@ namespace UsageRecord
                 }
                 else if (deviceStat.Text != "")
                 {
-                    
-                    if (deviceStat.Text == "占用")
+                    if (type.Text != "")
                     {
-                        sql += "where 设备状态 = '占用'";
+                        sql += "where 设备类型 = @type and 设备状态 = @deviceStat ";
                     }
-                    else if (deviceStat.Text == "可用")
+                    else
                     {
-                        sql += "where 设备状态 = '可用'";
+                        sql += "where 设备状态 = @deviceStat ";
                     }
-                    else sql += "";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@type", type.Text);
+                    cmd.Parameters.AddWithValue("@deviceStat", deviceStat.Text);
                     MySqlDataAdapter ada = new MySqlDataAdapter(cmd);
                     DataSet ds = new DataSet();
                     dataGridView1.Rows.Clear();
@@ -47,6 +47,36 @@ namespace UsageRecord
                     ada.Fill(ds);
                     dataGridView1.DataSource = ds.Tables[0];
                 }
+                else if (type.Text != "")
+                {
+                    sql += "where 设备类型 = @type ";
+                    if (name.Text != "")
+                    {
+                        sql += "and 设备名称 = @name ";
+                    }
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@type", type.Text);
+                    cmd.Parameters.AddWithValue("@name", name.Text);
+                    MySqlDataAdapter ada = new MySqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Columns.Clear();
+                    ada.Fill(ds);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }
+                else
+                {
+                    sql += "where 设备类型 = @type or 设备名称 = @name ";
+                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@name", name.Text);
+                    cmd.Parameters.AddWithValue("@type", type.Text);
+                    MySqlDataAdapter ada = new MySqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    dataGridView1.Rows.Clear();
+                    dataGridView1.Columns.Clear();
+                    ada.Fill(ds);
+                    dataGridView1.DataSource = ds.Tables[0];
+                }   
             }
         }
     }

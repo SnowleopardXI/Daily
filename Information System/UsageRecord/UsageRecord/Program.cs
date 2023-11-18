@@ -7,7 +7,7 @@ namespace UsageRecord
     {
         public static string server = "10.40.172.1";
         public static string username = "user";
-        public static string password = "123456";//678949
+        public static string password = "123456";
         public static string database = "UsageRecord";
         public static string str = "server=" + server + ";User Id=" + username + ";password=" + password + ";Database=" + database;
         public static string uid = "";
