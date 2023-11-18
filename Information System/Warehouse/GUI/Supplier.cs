@@ -70,9 +70,10 @@ namespace Warehouse
                 string sql = "select Supplier_ID AS '供应商ID', Supplier_Name AS '供应商名称', Contact_Info AS '联系方式', Address AS '地址' from suppliers ";
                 if (SupplierID.Text != "" || supplierName.Text != "" || contact.Text != "" || address.Text != "")
                 {
-                    sql += "where Supplier_ID = " + SupplierID.Text + " or Supplier_Name = @Supplier_Name or Contact_Info = @Contact_Info or Address = @Address";
+                    sql += "where Supplier_ID = @Supplier_ID or Supplier_Name = @Supplier_Name or Contact_Info = @Contact_Info or Address = @Address";
                 }
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@Supplier_ID", SupplierID.Text);
                 cmd.Parameters.AddWithValue("@Supplier_Name", supplierName.Text);
                 cmd.Parameters.AddWithValue("@Contact_Info", contact.Text);
                 cmd.Parameters.AddWithValue("@Address", address.Text);

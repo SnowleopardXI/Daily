@@ -21,12 +21,10 @@ namespace Warehouse
             {
                 Program.current = this.id.Text;
                 password = this.pass.Text;
-                string connectionString = Program.str; // 你的数据库连接字符串
-
+                string connectionString = Program.str; // 数据库连接字符串
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open(); // 开启连接
-
                     string sql = "SELECT count(*) FROM admins WHERE Admin_ID = @id";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
                     cmd.Parameters.AddWithValue("@id", int.Parse(Program.current));
