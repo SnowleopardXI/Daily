@@ -3,10 +3,15 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Nov 12, 2023 at 10:10 PM
+-- Generation Time: Nov 22, 2023 at 12:11 AM
 -- Server version: 10.6.12-MariaDB-0ubuntu0.22.04.1-log
 -- PHP Version: 8.1.2-1ubuntu2.14
+
 SET FOREIGN_KEY_CHECKS=0;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,14 +21,11 @@ SET FOREIGN_KEY_CHECKS=0;
 --
 -- Database: `swing_bank`
 --
-CREATE DATABASE IF NOT EXISTS `swing_bank` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `swing_bank`;
 
 DELIMITER $$
 --
 -- Procedures
 --
-DROP PROCEDURE IF EXISTS `update_pass`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_pass` (IN `user_id` INT, IN `old_password` VARCHAR(255), IN `new_password` VARCHAR(255), OUT `result` INT)   BEGIN
     DECLARE db_password VARCHAR(255);
     
@@ -49,7 +51,6 @@ DELIMITER ;
 -- Table structure for table `admins`
 --
 
-DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -69,7 +70,6 @@ INSERT INTO `admins` (`id`, `name`, `password`) VALUES
 -- Table structure for table `card`
 --
 
-DROP TABLE IF EXISTS `card`;
 CREATE TABLE `card` (
   `id` int(11) NOT NULL,
   `cardname` varchar(255) NOT NULL,
@@ -83,13 +83,14 @@ CREATE TABLE `card` (
 --
 
 INSERT INTO `card` (`id`, `cardname`, `password`, `price`, `valid`) VALUES
-(5, '1223334444', '123456', 970.00, 1),
-(6, '123456789', '7c4a8d09ca3762af61e59520943dc26494f8941b', 130.00, 1),
-(10, '2021', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 10810103.00, 1),
-(11, '2022', '356a192b7913b04c54574d18c28d46e6395428ab', 888.00, 1),
-(12, '2023', '6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2', 234.00, 1),
-(13, '123123', '6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2', 111.00, 1),
-(14, '1919', 'a1496d4ad0a359b6fe93d819e4a2141bd9d9ac35', 10746.00, 0);
+(5, '1223334444', '123456', 70.00, 1),
+(6, '123456789', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 8.00, 1),
+(10, '2021', '7c4a8d09ca3762af61e59520943dc26494f8941b', 10923536.00, 1),
+(11, '2022', '6216f8a75fd5bb3d5f22b6f9958cdede3fc086c2', 888.00, 1),
+(12, '2023', 'fd93ac461456a118d38a8d6b4d18f6741682f3eb', 234.00, 1),
+(13, '123123', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 111.00, 1),
+(14, '1919', '7c4a8d09ca3762af61e59520943dc26494f8941b', 1116499.00, 1),
+(15, '20212554', 'fd93ac461456a118d38a8d6b4d18f6741682f3eb', 0.00, 1);
 
 -- --------------------------------------------------------
 
@@ -97,7 +98,6 @@ INSERT INTO `card` (`id`, `cardname`, `password`, `price`, `valid`) VALUES
 -- Table structure for table `consumption`
 --
 
-DROP TABLE IF EXISTS `consumption`;
 CREATE TABLE `consumption` (
   `id` int(11) NOT NULL,
   `type` varchar(255) NOT NULL,
@@ -156,7 +156,69 @@ INSERT INTO `consumption` (`id`, `type`, `price`, `time`, `c_id`) VALUES
 (80, '取款', 111.00, '2023-11-04 20:39:34', 14),
 (81, '转出:账号信息 123123', 111.00, '2023-11-04 20:44:12', 14),
 (82, '转入:账号信息 1919', 111.00, '2023-11-04 20:44:12', 13),
-(83, '取款', 111.00, '2023-11-04 23:26:46', 14);
+(83, '取款', 111.00, '2023-11-04 23:26:46', 14),
+(84, '转出:账号信息 1919', 1.00, '2023-11-12 22:52:31', 6),
+(85, '转入:账号信息 123456789', 1.00, '2023-11-12 22:52:31', 14),
+(86, '转出:账号信息 1919', 1.00, '2023-11-12 22:53:02', 6),
+(87, '转入:账号信息 123456789', 1.00, '2023-11-12 22:53:02', 14),
+(88, '转出:账号信息 1919', 1.00, '2023-11-12 22:55:05', 6),
+(89, '转入:账号信息 123456789', 1.00, '2023-11-12 22:55:05', 14),
+(90, '转出:账号信息 1919', 1.00, '2023-11-12 22:56:51', 6),
+(91, '转入:账号信息 123456789', 1.00, '2023-11-12 22:56:51', 14),
+(92, '转出:账号信息 1919', 1.00, '2023-11-12 22:58:33', 6),
+(93, '转入:账号信息 123456789', 1.00, '2023-11-12 22:58:33', 14),
+(94, '转出:账号信息 1919', 1.00, '2023-11-12 23:04:24', 6),
+(95, '转入:账号信息 123456789', 1.00, '2023-11-12 23:04:24', 14),
+(96, '转出:账号信息 1919', 1.00, '2023-11-12 23:04:40', 6),
+(97, '转入:账号信息 123456789', 1.00, '2023-11-12 23:04:40', 14),
+(98, '转出:账号信息 1919', 1.00, '2023-11-12 23:06:47', 6),
+(99, '转入:账号信息 123456789', 1.00, '2023-11-12 23:06:47', 14),
+(100, '转出:账号信息 1919', 1.00, '2023-11-12 23:06:58', 6),
+(101, '转入:账号信息 123456789', 1.00, '2023-11-12 23:06:58', 14),
+(102, '转出:账号信息 1919', 1.00, '2023-11-12 23:07:06', 6),
+(103, '转入:账号信息 123456789', 1.00, '2023-11-12 23:07:06', 14),
+(104, '转出:账号信息 1919', 1.00, '2023-11-12 23:12:37', 6),
+(105, '转入:账号信息 123456789', 1.00, '2023-11-12 23:12:37', 14),
+(106, '转出:账号信息 2021', 111.00, '2023-11-12 23:12:50', 6),
+(107, '转入:账号信息 123456789', 111.00, '2023-11-12 23:12:50', 10),
+(108, '存款', 11111.00, '2023-11-13 11:49:18', 14),
+(109, '取款', 111.00, '2023-11-13 12:34:20', 14),
+(110, '开户', 0.00, '2023-11-14 11:58:24', 15),
+(111, '存款', 1.00, '2023-11-21 08:30:15', 14),
+(112, '取款', 11111.00, '2023-11-21 08:32:34', 14),
+(113, '取款', 111.00, '2023-11-21 08:38:46', 14),
+(114, '转出:账号信息 2021', 1211.00, '2023-11-21 08:39:06', 14),
+(115, '转入:账号信息 1919', 1211.00, '2023-11-21 08:39:06', 10),
+(116, '转出:账号信息 2021', 111.00, '2023-11-21 08:40:07', 14),
+(117, '转入:账号信息 1919', 111.00, '2023-11-21 08:40:07', 10),
+(118, '取款', 1000.00, '2023-11-21 08:40:32', 14),
+(119, '存款', 100000.00, '2023-11-21 08:44:12', 14),
+(120, '取款', 58101.00, '2023-11-21 08:49:13', 14),
+(121, '取款', 50000.00, '2023-11-21 10:00:22', 14),
+(122, '存款', 1145.00, '2023-11-21 10:20:11', 14),
+(123, '取款', 900.00, '2023-11-21 10:35:35', 5),
+(124, '存款', 222222.00, '2023-11-21 10:58:23', 14),
+(125, '取款', 111111.00, '2023-11-21 11:06:49', 14),
+(126, '转出:账号信息 2021', 112000.00, '2023-11-21 11:13:56', 14),
+(127, '转入:账号信息 1919', 112000.00, '2023-11-21 11:13:56', 10),
+(128, '存款', 12222.00, '2023-11-21 11:14:20', 14),
+(129, '存款', 22222.00, '2023-11-21 11:21:23', 14),
+(130, '取款', 30000.00, '2023-11-21 11:22:20', 14),
+(131, '存款', 100000.00, '2023-11-21 11:25:36', 14),
+(132, '取款', 100.00, '2023-11-21 11:25:45', 14),
+(133, '取款', 5000.00, '2023-11-21 11:26:16', 14),
+(134, '取款', 50000.00, '2023-11-21 11:26:20', 14),
+(135, '取款', 1111.00, '2023-11-21 23:23:11', 14),
+(136, '取款', 11111.00, '2023-11-21 23:24:18', 14),
+(137, '取款', 11111.00, '2023-11-21 23:30:43', 14),
+(138, '存款', 12312341.00, '2023-11-21 23:31:00', 14),
+(139, '存款', 22222222.00, '2023-11-21 23:31:52', 14),
+(140, '取款', 11111111.00, '2023-11-21 23:31:59', 14),
+(141, '取款', 11111111.00, '2023-11-21 23:33:45', 14),
+(142, '取款', 11111111.00, '2023-11-21 23:47:16', 14),
+(143, '取款', 1111111.00, '2023-11-21 23:47:25', 14),
+(144, '取款', 111111.00, '2023-11-21 23:47:30', 14),
+(145, '存款', 1111111.00, '2023-11-21 23:51:31', 14);
 
 -- --------------------------------------------------------
 
@@ -164,7 +226,6 @@ INSERT INTO `consumption` (`id`, `type`, `price`, `time`, `c_id`) VALUES
 -- Table structure for table `user`
 --
 
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
@@ -184,7 +245,8 @@ INSERT INTO `user` (`id`, `username`, `sex`, `telephone`, `c_id`) VALUES
 (8, 'test', 'n', '911', 11),
 (9, 'awedawdaw', 'eaew', '911', 12),
 (10, 'rrr', 'nb', '911', 13),
-(11, '24', '111', '514', 14);
+(11, '是学生', '1111', '514', 14),
+(12, 'test', 'n', '911', 15);
 
 --
 -- Indexes for dumped tables
@@ -224,19 +286,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `card`
 --
 ALTER TABLE `card`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `consumption`
 --
 ALTER TABLE `consumption`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
@@ -253,10 +315,9 @@ ALTER TABLE `consumption`
 --
 ALTER TABLE `user`
   ADD CONSTRAINT `fk_id` FOREIGN KEY (`c_id`) REFERENCES `card` (`id`);
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-SET FOREIGN_KEY_CHECKS=1;

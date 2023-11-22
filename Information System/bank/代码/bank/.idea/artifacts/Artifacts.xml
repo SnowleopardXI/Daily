@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="Artifacts">
-    <output-path>$PROJECT_DIR$/../../Artifacts</output-path>
-    <root id="archive" name="Artifacts.jar">
-      <element id="module-output" name="demo1016" />
-      <element id="library" level="module" name="mysql-connector-java-8.0.11.jar" module-name="demo1016" />
-    </root>
-  </artifact>
-</component>
