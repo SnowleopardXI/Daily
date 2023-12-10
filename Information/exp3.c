@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
-#define MAX_SYMBOLS 4
-#define MAX_CODE_LEN 4
+#define MAX_SYMBOLS 6
+#define MAX_CODE_LEN 8
 
 typedef struct
 {
     char symbol[MAX_SYMBOLS];
-    float probability;
+    double probability;
     char code[MAX_CODE_LEN];
 } Symbol;
 
 void encode(Symbol symbols[], int start, int end, char *prefix)
 {
+    // 递归出口
     if (start == end)
     {
         strcpy(symbols[start].code, prefix);
@@ -20,13 +21,13 @@ void encode(Symbol symbols[], int start, int end, char *prefix)
     }
 
     // 分割点的查找
-    float total_prob = 0;
+    double total_prob = 0;
     for (int i = start; i <= end; i++)
     {
         total_prob += symbols[i].probability;
     }
 
-    float cum_prob = 0;
+    double cum_prob = 0;
     int split_index = start;
     for (int i = start; i <= end; i++)
     {
@@ -38,27 +39,29 @@ void encode(Symbol symbols[], int start, int end, char *prefix)
         }
     }
 
-    // 为两部分生成新的前缀
-    char newPrefix[MAX_CODE_LEN];
-    strcpy(newPrefix, prefix);
-    strcat(newPrefix, "0");
-    encode(symbols, start, split_index, newPrefix);
-
-    strcpy(newPrefix, prefix);
-    strcat(newPrefix, "1");
-    encode(symbols, split_index + 1, end, newPrefix);
+    // 递归调用
+    char left_prefix[MAX_CODE_LEN], right_prefix[MAX_CODE_LEN];
+    strcpy(left_prefix, prefix);
+    strcat(left_prefix, "0");
+    encode(symbols, start, split_index, left_prefix);
+    strcpy(right_prefix, prefix);
+    strcat(right_prefix, "1");
+    encode(symbols, split_index + 1, end, right_prefix);
 }
 
 int main()
 {
     Symbol symbols[MAX_SYMBOLS] = {
-        {"x1", 0.5, ""},
-        {"x2", 0.25, ""},
-        {"x3", 0.125, ""},
-        {"x4", 0.125, ""}};
+        {"u1", 0.15, ""},
+        {"u2", 0.25, ""},
+        {"u3", 0.2, ""},
+        {"u4", 0.25, ""},
+        {"u5", 0.05, ""},
+        {"u6", 0.1, ""}
+        };
     encode(symbols, 0, MAX_SYMBOLS - 1, "");
     printf("符号\t概率\t香农编码\t累计概率\t码长\n");
-    float entropy = 0, avg_code_len = 0, code_len = 0, cum_prob = 0;
+    double entropy = 0, avg_code_len = 0, code_len = 0, cum_prob = 0;
     for (int i = 0; i < MAX_SYMBOLS; i++)
     {
         code_len = strlen(symbols[i].code);
