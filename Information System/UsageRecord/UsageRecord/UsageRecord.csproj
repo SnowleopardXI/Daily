@@ -55,11 +55,23 @@
     <Compile Include="Admin.Designer.cs">
       <DependentUpon>Admin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Booked.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Booked.Designer.cs">
+      <DependentUpon>Booked.cs</DependentUpon>
+    </Compile>
     <Compile Include="DeviceMgr.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DeviceMgr.Designer.cs">
       <DependentUpon>DeviceMgr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ForceRet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ForceRet.Designer.cs">
+      <DependentUpon>ForceRet.cs</DependentUpon>
     </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
@@ -87,6 +99,12 @@
     <Compile Include="Status.Designer.cs">
       <DependentUpon>Status.cs</DependentUpon>
     </Compile>
+    <Compile Include="Time.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Time.Designer.cs">
+      <DependentUpon>Time.cs</DependentUpon>
+    </Compile>
     <Compile Include="User.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,8 +120,14 @@
     <EmbeddedResource Include="Admin.resx">
       <DependentUpon>Admin.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Booked.resx">
+      <DependentUpon>Booked.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DeviceMgr.resx">
       <DependentUpon>DeviceMgr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ForceRet.resx">
+      <DependentUpon>ForceRet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
@@ -125,6 +149,9 @@
     </Compile>
     <EmbeddedResource Include="Status.resx">
       <DependentUpon>Status.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Time.resx">
+      <DependentUpon>Time.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="User.resx">
       <DependentUpon>User.cs</DependentUpon>

@@ -83,5 +83,37 @@ namespace UsageRecord
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Time frm = new Time
+                {
+                    MdiParent = this
+                };
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 强制ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ForceRet frm = new ForceRet
+                {
+                    MdiParent = this
+                };
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

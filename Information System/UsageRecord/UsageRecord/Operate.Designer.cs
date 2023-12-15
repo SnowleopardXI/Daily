@@ -36,6 +36,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.startDate = new System.Windows.Forms.DateTimePicker();
             this.endDate = new System.Windows.Forms.DateTimePicker();
+            this.renew = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -56,7 +57,7 @@
             // 
             // book
             // 
-            this.book.Location = new System.Drawing.Point(131, 361);
+            this.book.Location = new System.Drawing.Point(53, 361);
             this.book.Name = "book";
             this.book.Size = new System.Drawing.Size(97, 41);
             this.book.TabIndex = 2;
@@ -66,7 +67,7 @@
             // 
             // returnBtn
             // 
-            this.returnBtn.Location = new System.Drawing.Point(288, 361);
+            this.returnBtn.Location = new System.Drawing.Point(207, 361);
             this.returnBtn.Name = "returnBtn";
             this.returnBtn.Size = new System.Drawing.Size(97, 41);
             this.returnBtn.TabIndex = 3;
@@ -110,11 +111,22 @@
             this.endDate.Size = new System.Drawing.Size(200, 26);
             this.endDate.TabIndex = 7;
             // 
+            // renew
+            // 
+            this.renew.Location = new System.Drawing.Point(354, 361);
+            this.renew.Name = "renew";
+            this.renew.Size = new System.Drawing.Size(97, 41);
+            this.renew.TabIndex = 8;
+            this.renew.Text = "续期";
+            this.renew.UseVisualStyleBackColor = true;
+            this.renew.Click += new System.EventHandler(this.renew_Click);
+            // 
             // Operate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(493, 444);
+            this.Controls.Add(this.renew);
             this.Controls.Add(this.endDate);
             this.Controls.Add(this.startDate);
             this.Controls.Add(this.label3);
@@ -140,5 +152,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker startDate;
         private System.Windows.Forms.DateTimePicker endDate;
+        private System.Windows.Forms.Button renew;
     }
 }

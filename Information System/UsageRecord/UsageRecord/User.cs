@@ -60,5 +60,21 @@ namespace UsageRecord
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void 查询当前ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Booked frm = new Booked
+                {
+                    MdiParent = this
+                };
+                frm.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

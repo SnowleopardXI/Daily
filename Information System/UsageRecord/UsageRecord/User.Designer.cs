@@ -36,6 +36,7 @@
             this.查询设备ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.租借归还设备ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出系统ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查询当前ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,6 +65,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.查询设备ToolStripMenuItem,
             this.租借归还设备ToolStripMenuItem,
+            this.查询当前ToolStripMenuItem,
             this.退出系统ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -92,10 +94,18 @@
             this.退出系统ToolStripMenuItem.Text = "退出系统";
             this.退出系统ToolStripMenuItem.Click += new System.EventHandler(this.退出系统ToolStripMenuItem_Click);
             // 
+            // 查询当前ToolStripMenuItem
+            // 
+            this.查询当前ToolStripMenuItem.Name = "查询当前ToolStripMenuItem";
+            this.查询当前ToolStripMenuItem.Size = new System.Drawing.Size(180, 29);
+            this.查询当前ToolStripMenuItem.Text = "查询当前未还设备";
+            this.查询当前ToolStripMenuItem.Click += new System.EventHandler(this.查询当前ToolStripMenuItem_Click);
+            // 
             // User
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1936, 937);
             this.ControlBox = false;
             this.Controls.Add(this.menuStrip1);
@@ -119,5 +129,6 @@
         private System.Windows.Forms.ToolStripMenuItem 查询设备ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 租借归还设备ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出系统ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 查询当前ToolStripMenuItem;
     }
 }

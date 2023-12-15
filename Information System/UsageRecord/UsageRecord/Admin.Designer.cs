@@ -34,6 +34,8 @@
             this.管理设备ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.管理用户ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.修改密码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.强制ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.退出系统ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.menuStrip1.SuspendLayout();
@@ -48,6 +50,8 @@
             this.管理设备ToolStripMenuItem,
             this.管理用户ToolStripMenuItem,
             this.修改密码ToolStripMenuItem,
+            this.toolStripMenuItem1,
+            this.强制ToolStripMenuItem,
             this.退出系统ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -83,6 +87,20 @@
             this.修改密码ToolStripMenuItem.Text = "修改密码";
             this.修改密码ToolStripMenuItem.Click += new System.EventHandler(this.修改密码ToolStripMenuItem_Click);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(142, 29);
+            this.toolStripMenuItem1.Text = "查询租借时间";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // 强制ToolStripMenuItem
+            // 
+            this.强制ToolStripMenuItem.Name = "强制ToolStripMenuItem";
+            this.强制ToolStripMenuItem.Size = new System.Drawing.Size(104, 29);
+            this.强制ToolStripMenuItem.Text = "强制归还";
+            this.强制ToolStripMenuItem.Click += new System.EventHandler(this.强制ToolStripMenuItem_Click);
+            // 
             // 退出系统ToolStripMenuItem
             // 
             this.退出系统ToolStripMenuItem.Name = "退出系统ToolStripMenuItem";
@@ -100,7 +118,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1577, 813);
+            this.ControlBox = false;
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
@@ -122,5 +142,7 @@
         private System.Windows.Forms.ToolStripMenuItem 管理用户ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 修改密码ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出系统ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 强制ToolStripMenuItem;
     }
 }

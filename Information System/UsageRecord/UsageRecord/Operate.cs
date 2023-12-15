@@ -22,7 +22,7 @@ namespace UsageRecord
             {
                 conn.Open();
                 string checkSql = "select count(*) from DeviceStatus where 设备ID = @id";
-                string validSql = "select count(*) from DeviceStatus where 设备ID = @id and 设备状态 = '可用'";
+                string validSql = "select count(*) from DeviceStatus where 设备ID = @id and 设备状态 = '可用' COLLATE utf8mb4_unicode_ci";
                 string bookSql = "insert into UsageRecords(DeviceID,UserID,StartTime,EndTime) values(@id,@uid,@st,@et)";
                 MySqlCommand cmd = new MySqlCommand(checkSql, conn);
                 cmd.Parameters.AddWithValue("@id", id.Text);
@@ -61,12 +61,11 @@ namespace UsageRecord
             {
                 conn.Open();
                 string checkSql = "select count(*) from UsageRecords where DATE(StartTime) = '" + startDate.Value.ToString("yyyy/MM/dd") + "' and DeviceID = " + id.Text + " and UserID = " + Program.uid + " and Status = 0";
-                string returnSql = "update UsageRecords set EndTime = DATE(DATE_FORMAT(NOW(), '%Y/%m/%d %H:%i:%s')), Status =1 where DeviceID = " + id.Text + " and UserID = " + Program.uid + " and DATE(StartTime) = '" + startDate.Value.ToString("yyyy/MM/dd") + "'";
+                string returnSql = "update UsageRecords set EndTime = @et, Status =1 where DeviceID = " + id.Text + " and UserID = " + Program.uid;
                 MySqlCommand cmd = new MySqlCommand(checkSql, conn);
                 String sd = startDate.Value.ToString("yyyy/MM/dd");
                 String ed = endDate.Value.ToString("yyyy/MM/dd");
                 cmd.Parameters.AddWithValue("@sd", "%" + sd + "%");
-                MessageBox.Show(cmd.CommandText);
                 int count = Convert.ToInt32(cmd.ExecuteScalar());
                 if (count == 0)
                 {
@@ -74,8 +73,7 @@ namespace UsageRecord
                     return;
                 }
                 cmd = new MySqlCommand(returnSql, conn);
-                cmd.Parameters.AddWithValue("@sd", "%" + sd + "%");
-                cmd.Parameters.AddWithValue("@et", DateTime.Now);
+                cmd.Parameters.AddWithValue("@et", endDate.Value);
                 int affectedRows = cmd.ExecuteNonQuery();
                 if (affectedRows == 0)
                 {
@@ -83,6 +81,49 @@ namespace UsageRecord
                     return;
                 }
                 MessageBox.Show("归还成功\n设备编号：" + id.Text + "\n租借人：" + Program.uid + "\n开始时间：" + startDate.Value + "\n结束时间：" + endDate.Value);
+            }
+        }
+
+        private void renew_Click(object sender, EventArgs e)
+        {
+            using (MySqlConnection conn = new MySqlConnection(Program.str))
+            {
+                conn.Open();
+                string checkSql = "select count(*) from UsageRecords where DeviceID = " + id.Text + " and UserID = " + Program.uid + " and Status = 0";
+                string renewSql = "update UsageRecords set EndTime = @ed where DeviceID = " + id.Text + " and UserID = " + Program.uid + " and Status = 0";
+                string validSql = "select EndTime from UsageRecords where DeviceID = " + id.Text + " and UserID = " + Program.uid + " and Status = 0";
+                MySqlCommand cmd = new MySqlCommand(checkSql, conn);
+                cmd.ExecuteNonQuery();
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                if (count == 0)
+                {
+                    MessageBox.Show("未找到租借记录");
+                    return;
+                }
+                cmd = new MySqlCommand(validSql, conn);
+                cmd.ExecuteNonQuery();
+                DateTime end = Convert.ToDateTime(cmd.ExecuteScalar());
+                if (end < DateTime.Now)
+                {
+                    MessageBox.Show("租借已过期");
+                    return;
+                }
+                if (end > endDate.Value)
+                {
+                    MessageBox.Show("续借时间不得小于原租借时间");
+                    return;
+                }
+                cmd = new MySqlCommand(renewSql, conn);
+                String end1 = endDate.Value.ToString("yyyy/MM/dd");
+                cmd.Parameters.AddWithValue("@ed", end1);
+                int affectedRows = cmd.ExecuteNonQuery();
+                if (affectedRows == 0)
+                {
+                    MessageBox.Show("续借失败");
+                    return;
+                }
+                MessageBox.Show("续租成功\n设备编号：" + id.Text + "\n租借人：" + Program.uid + "\n开始时间：" + startDate.Value + "\n结束时间：" + endDate.Value);
+                return;
             }
         }
     }
