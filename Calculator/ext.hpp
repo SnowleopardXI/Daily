@@ -1,5 +1,4 @@
-#include <math.h>
-#include <string.h>
+using namespace std;
 // Convert int to char
 void itoc(char number[32])
 {
@@ -11,6 +10,35 @@ void itoc(char number[32])
         number[i] = number[j];
         number[j] = tmp;
     }
+}
+// Ranint
+int ranint(int a, int b) {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+    std::uniform_int_distribution<int> distribution(a, b);
+    
+    return distribution(generator);
+}
+// Is prime number
+bool isPrime(int num) {
+    if (num <= 1) return false;
+    for (int i = 2; i <= sqrt(num); ++i) {
+        if (num % i == 0) return false;
+    }
+    return true;
+}
+// Ranged prime number gen
+int prime_gen(int prime[1000], int low, int high)
+{
+    int i, j;
+    for (i = low; i <= high; ++i) {
+        if (isPrime(i)) {
+            for (j = 0; j < 1000; ++j) {
+                prime [j] = i;
+            }
+        }
+    }
+    return j;
 }
 // Reverse the array
 void reverse_array(char number[32])
@@ -90,15 +118,15 @@ void input_matrix(float matrix[20][20], int r, int c)
 {
     int i, j;
     int choice;
-    printf("1 for fractional, 2 for decimal: ");
-    scanf("%d", &choice);
+    cout << "1 for fractional, 2 for decimal: ";
+    cin >> choice;
     if (choice == 1)
     {
-        printf("Please enter the matrix in the form of a/b: \n");
+        cout << "Enter the elements of the matrix: a/b\n";
+        int a, b;
         for (i = 0; i < r; i++)
             for (j = 0; j < c; j++)
             {
-                int a, b;
                 scanf("%d/%d", &a, &b);
                 matrix[i][j] = (float)a / b;
             }
@@ -107,7 +135,7 @@ void input_matrix(float matrix[20][20], int r, int c)
     {
         for (i = 0; i < r; i++)
             for (j = 0; j < c; j++)
-                scanf("%f", &matrix[i][j]);
+                cin >> matrix[i][j];
     }
 }
 
@@ -239,7 +267,7 @@ float standard_echelon(float matrix[20][20], int r, int c, int x, int y)
     return result;
 }
 // Rank of Matrix
-int rank(float matrix[20][20], int r, int c)
+int matRank(float matrix[20][20], int r, int c)
 {
     float echelon_matrix[20][20];
     int i, j, none_zero = 0, result = 0;
@@ -320,7 +348,7 @@ void inverse_matrix(float matrix[20][20], int i, int j)
     int k, l, m, n;
     float det = det_matrix(matrix, i);
     if (det == 0)
-        printf("The matrix is not invertible.\n");
+        cout << "The matrix is not invertible.\n";
     else
     {
         for (k = 0; k < i; k++)
@@ -362,7 +390,7 @@ void orthogonal_matrix(float matrix[20][20], int i, int j)
     int k, l, m, n;
     float det = det_matrix(matrix, i);
     if (det == 0)
-        printf("The matrix is not orthogonal.\n");
+        cout << "The matrix is not orthogonal.\n";
     else
     {
         for (k = 0; k < i; k++)
@@ -436,7 +464,7 @@ void store_number(char number[100])
 {
     int i = 0;
     char c;
-    printf("Please enter a number: ");
+    cout << "Enter the number: ";
     while ((c = getchar()) != '\n')
     {
         number[i] = c;
@@ -460,7 +488,7 @@ void print_binary(char number[32], int bit)
     {
         if (i % 4 == 0)
             printf(" ");
-        printf("%d", number[i]);
+        cout << number[i];
     }
 }
 // Decimal to Binary
@@ -511,7 +539,7 @@ void negative_complement(char number[32], char result[32], int bit)
     }
 }
 // 奇偶校验码
-void parity_code(char number[64], int type)// type = 0: 奇校验码，type = 1: 偶校验码
+void parity_code(char number[64], int type) // type = 0: 奇校验码，type = 1: 偶校验码
 {
     int i, j, sum = 0;
     for (i = 0; i < 64; i++)
@@ -537,4 +565,37 @@ void parity_code(char number[64], int type)// type = 0: 奇校验码，type = 1:
             }
         }
     }
+}
+// Build generator matrix
+void gx_multipy(int gx[20][20], int N)
+{
+    cout << "gx multiplication table: " << endl;
+    cout << "    ";
+    for (int a = 0; a < N; ++a)
+    {
+        cout << a << " ";
+    }
+    cout << endl;
+    for (int a = 0; a < N; ++a)
+    {
+        cout << a << " | ";
+        for (int b = 0; b < N; ++b)
+        {
+            gx[a][b] = (a * b) % N;
+            cout << gx[a][b] << " ";
+        }
+        cout << endl;
+    }
+}
+// gx multiplication table search
+int gx_pow_n(int table[20][20], int x, int n)
+{
+    int temp = x % n;
+    // cout << "g^1 = " << temp << endl;
+    for (int i = 2; i <= n; i++)
+    {
+        temp = table[temp][x];
+        cout << "g^" << i << " = " << temp << endl;
+    }
+    return temp;
 }

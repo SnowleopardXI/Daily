@@ -43,7 +43,7 @@
       "custom_dep": {
         "name": "default",
         "incList": [
-          "C:/Keil_v5/C51/INC/Atmel"
+          "../../../../../Keil_v5/C51/INC/Atmel"
         ],
         "libList": [],
         "sourceDirList": [],
