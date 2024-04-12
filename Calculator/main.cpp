@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 #include "ext.hpp"
-using namespace std;
 void menu()
 {
     cout << "Welcome to the calculator\n";
@@ -15,7 +14,8 @@ void menu()
     cout << "8. Codes\n";
     cout << "9. Error correction codes\n";
     cout << "10. Secret sharing\n";
-    cout << "11. Exit\n";
+    cout << "11. Hash function\n";
+    cout << "12. Exit\n";
     cout << "Enter a choice:\n";
 }
 void mat_menu()
@@ -28,6 +28,15 @@ void mat_menu()
     cout << "5. Det of Matrix\n";
     cout << "6. Inverse of Matrix\n";
     cout << "7. Judge if the quadratic form is positive definite\n";
+    cout << "Enter a choice:\n";
+}
+void hash_menu()
+{
+    cout << "\n";
+    cout << "1. MD5\n";
+    cout << "2. SHA-1\n";
+    cout << "3. SHA-256\n";
+    cout << "4. SHA-512\n";
     cout << "Enter a choice:\n";
 }
 int main()
@@ -67,7 +76,17 @@ int main()
         int a, b;
         cout << "Enter the two numbers: ";
         cin >> a >> b;
-        cout << "The reverse of mod is: " << mod_reverse(a, b) << endl;
+        int temp = 0;
+        cout << "1 for Detailed calculation, 2 for result only: ";
+        cin >> temp;
+        if (temp == 1)
+        {
+            cout << "The reverse of mod is: " << endl;
+            mod_reverse_detail(a, b);
+            cout << endl;
+        }
+        else
+            cout << "The reverse of mod is: " << mod_reverse(a, b) << endl;
         break;
     }
     case 6:
@@ -229,7 +248,7 @@ int main()
         int parity = 0;
         int error = 0;
         cout << "Please enter 32-bit data: ";
-        // 16进制数据
+        // Hexadecimal input
         for (int i = 0; i < 8; i++)
             cin >> hex >> temp[i];
         for (int i = 0; i < 8; i++)
@@ -240,12 +259,12 @@ int main()
                 temp[i] /= 2;
             }
         }
-        // 输出二进制数据
+        // Output binary data
         cout << "The binary data is: ";
         for (int i = 0; i < 32; i++)
             cout << data[i];
         cout << "\n";
-        // 奇偶校验
+        // Verify the parity bit
         for (int i = 0; i < 32; i++)
         {
             parity += data[i];
@@ -254,12 +273,10 @@ int main()
             data[31] = 0;
         else
             data[31] = 1;
-        // 错误检测
         // Generate random error bit position
         srand((unsigned)time(NULL));
         error = rand() % 32;
         data[error] = !data[error];
-        // 奇偶校验
         parity = 0;
         for (int i = 0; i < 32; i++)
         {
@@ -269,7 +286,7 @@ int main()
             data[31] = 0;
         else
             data[31] = 1;
-        // 错误检测
+        // Output the error bit position
         if (data[31] == 0)
             cout << "No error\n";
         else
@@ -283,25 +300,40 @@ int main()
         int n, low, high, times, pub, priv = 0;
         cout << "Please enter the number of table size: ";
         cin >> n;
-        int table[20][20] = {0};
-        gx_multipy(table, n);
-        cout << "Please enter the number of times: ";
+        int addTable[100][100] = {0}, mulTable[100][100] = {0};
+        Zx_add(addTable, n);
+        table_to_md(addTable, n, "table.md");
+        Zx_multiply(mulTable, n);
+        table_to_md(mulTable, n, "table.md");
+        priv = n;
+        while (gcd(priv, n) != 1)
+        {
+            cout << "Please enter the number of private key (Should be coprime with " << n << "): ";
+            cin >> priv;
+        }
+        cout << "Please enter the number of times : ";
         cin >> times;
-        cout << "Please enter the range of prime number: ";
-        cin >> low >> high;
-        priv = ranint (low, high);
-        while((priv%n)==0)
-            priv = ranint (low, high);
-        pub = gx_pow_n(table, priv, times);
-        cout << "The private key is: " << priv << " and the public key is: " << pub << endl;
+        pub = Zx_pow_n(mulTable, priv, times);
+    }
+    case 11:
+    {
+        hash_menu();
+        int choice;
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+        {
 
+        }
+        }
     }
     default:
         break;
-        // pause
-        cout << "\nPress any key to continue...";
-        getchar();
-        getchar();
-        return 0;
     }
+    // pause
+    cout << "\nPress any key to continue...";
+    getchar();
+    getchar();
+    return 0;
 }

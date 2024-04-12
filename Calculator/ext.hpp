@@ -13,9 +13,9 @@ void itoc(char number[32])
 }
 // Ranint
 int ranint(int a, int b) {
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine generator(seed);
-    std::uniform_int_distribution<int> distribution(a, b);
+    unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+    uniform_int_distribution<int> distribution(a, b);
     
     return distribution(generator);
 }
@@ -39,6 +39,42 @@ int prime_gen(int prime[1000], int low, int high)
         }
     }
     return j;
+}
+// Print table header
+void printHeader(int N) {
+    cout << "     ";
+    for (int a = 0; a < N; ++a) {
+        cout << setw(2) << a << " ";
+    }
+    cout << endl;
+}
+// int table to markdown file
+void table_to_md(int table[100][100], int N, string filename) {
+    ofstream file;
+    file.open(filename);
+    int i;
+    for (i = 0; i <= N; ++i) {
+        file << "|";
+    }
+    file << endl;
+    file << "|";
+    for (i = 0; i < N; i++)
+    {
+       file << "---|";
+    }
+    file << endl;
+    for (i = 0; i < N; ++i) {
+        file << setw(2) << i << "|";
+    }
+    file << endl;
+    for (i = 0; i < N; ++i) {
+        file << "|";
+        for (int j = 0; j < N; ++j) {
+            file << setw(2) << table[i][j] << "|";
+        }
+        file << endl;
+    }
+    file.close();
 }
 // Reverse the array
 void reverse_array(char number[32])
@@ -113,6 +149,35 @@ int mod_reverse(int a, int n)
     else
         return -1;
 }
+// Detail of GCD
+int extendedGCD(int a, int b, int& x, int& y) {
+    if (b == 0) {
+        x = 1;
+        y = 0;
+        return a;
+    }
+    int x1, y1;
+    int gcd = extendedGCD(b, a % b, x1, y1);
+
+    x = y1;
+    y = x1 - (a / b) * y1;
+
+    cout << a << " * " << x << " + " << b << " * " << y << " = " << gcd << endl;
+
+    return gcd;
+}
+// extendedGCD result
+void mod_reverse_detail(int a, int m) {
+    int x, y;
+    int g = extendedGCD(a, m, x, y);
+    if (g != 1)
+        cout << "No reverse element exists because a and m are not coprime" << endl;
+    else {
+        // Ensure the reverse element is positive
+        int res = (x % m + m) % m;
+        cout << "Reverse element: " << res << endl;
+    }
+}
 // Input Matrix
 void input_matrix(float matrix[20][20], int r, int c)
 {
@@ -148,7 +213,7 @@ void output_matrix(float matrix[20][20], int r, int c)
     {
         for (j = 0; j < c; j++)
             printf("%.4f\t", matrix[i][j]);
-        printf("\n");
+        cout << endl;
     }
 }
 // Repair the symbol of the matrix
@@ -164,7 +229,6 @@ void repair_symbol(float matrix[20][20], int i, int j)
 void add_matrix(float matrix1[20][20], float matrix2[20][20], float matrix3[20][20], int r, int c)
 {
     int i, j;
-
     for (i = 0; i < r; i++)
         for (j = 0; j < c; j++)
             matrix3[i][j] = matrix1[i][j] + matrix2[i][j];
@@ -308,7 +372,7 @@ void show_standard_echelon(float matrix[20][20], int r, int c)
                 echelon_matrix[i][j] = fabs(echelon_matrix[i][j]);
             printf("%.3f\t", echelon_matrix[i][j]);
         }
-        printf("\n");
+        cout << endl;
     }
 }
 // det of matrix
@@ -380,7 +444,7 @@ void inverse_matrix(float matrix[20][20], int i, int j)
     {
         for (l = 0; l < j; l++)
             printf("%.3f\t", matrix[k][l]);
-        printf("\n");
+        cout << endl;
     }
 }
 // The orthogonal matrix
@@ -422,7 +486,7 @@ void orthogonal_matrix(float matrix[20][20], int i, int j)
     {
         for (l = 0; l < j; l++)
             printf("%.3f\t", matrix[k][l]);
-        printf("\n");
+        cout << endl;
     }
 }
 // Judge if the quadratic matrix is a positive definite
@@ -487,7 +551,7 @@ void print_binary(char number[32], int bit)
     for (i = 32 - bit; i < 32; i++)
     {
         if (i % 4 == 0)
-            printf(" ");
+            cout << " ";
         cout << number[i];
     }
 }
@@ -566,36 +630,41 @@ void parity_code(char number[64], int type) // type = 0: 奇校验码，type = 1
         }
     }
 }
-// Build generator matrix
-void gx_multipy(int gx[20][20], int N)
-{
-    cout << "gx multiplication table: " << endl;
-    cout << "    ";
-    for (int a = 0; a < N; ++a)
-    {
-        cout << a << " ";
-    }
-    cout << endl;
-    for (int a = 0; a < N; ++a)
-    {
-        cout << a << " | ";
-        for (int b = 0; b < N; ++b)
-        {
-            gx[a][b] = (a * b) % N;
-            cout << gx[a][b] << " ";
+// Build generator matrix (Add)
+void Zx_add(int Zx[100][100], int N) {
+    cout << "Z" << N << " addition table:" << endl;
+    printHeader(N);
+    for (int a = 0; a < N; ++a) {
+        cout << setw(2) << a << " | ";
+        for (int b = 0; b < N; ++b) {
+            Zx[a][b] = (a + b) % N;
+            cout << setw(2) << Zx[a][b] << " ";
         }
         cout << endl;
     }
 }
-// gx multiplication table search
-int gx_pow_n(int table[20][20], int x, int n)
+// Build generator matrix (Multiply)
+void Zx_multiply(int Zx[100][100], int N) {
+    cout << "Z" << N << " multiplication table: " << endl;
+    printHeader(N);
+    for (int a = 0; a < N; ++a) {
+        cout << setw(2) << a << " | ";
+        for (int b = 0; b < N; ++b) {
+            Zx[a][b] = (a * b) % N;
+            cout << setw(2) << Zx[a][b] << " ";
+        }
+        cout << endl;
+    }
+}
+// Zx multiplication table search
+int Zx_pow_n(int table[100][100], int x, int n)
 {
     int temp = x % n;
-    // cout << "g^1 = " << temp << endl;
+    cout << "Z^1 = " << temp << endl;
     for (int i = 2; i <= n; i++)
     {
         temp = table[temp][x];
-        cout << "g^" << i << " = " << temp << endl;
+        cout << "Z^" << i << " = " << temp << endl;
     }
     return temp;
 }
