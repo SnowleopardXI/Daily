@@ -8,15 +8,6 @@ include_once('./crud/retrieve.php');
     <title>PHP留言板</title>
         <link rel="stylesheet" type="text/css" href="css.css"/>
         <script src="./jquery.js"></script>
-<!--        <script>-->
-<!--            $(document).ready(function(){-->
-<!--                $(".signin").hide();-->
-<!--                $("#login").click(function(){-->
-<!--                    $(".signin").fadeToggle();-->
-<!--                });-->
-<!--            });-->
-<!--        </script>-->
-
     <script>
         function delete_msg(msg_id){
             $(document).ready(function(){
@@ -29,12 +20,7 @@ include_once('./crud/retrieve.php');
                     data:"id="+msg_id,
                     success:function(msg){
                         location.reload();
-//                    $(".ds-comment-body"+msg_id).css("display","none");
-//                        $(".search").css("display","none");
-//                        alert(msg_id);
-//                        alert(msg);
                     }
-//                    dataType:"html"
                 });
             }
             });
@@ -55,10 +41,6 @@ include_once('./crud/retrieve.php');
                         data:"lock="+lock_id,
                         success:function(msg){
                             location.reload();
-//                            $("."+msg_id).css("display","none");
-//                            alert("成功通过");
-//                            alert(msg);
-
                         }
                     });
                 }

@@ -4,7 +4,6 @@
    $mysql_password = 'security';//密码
    $mysql_database = 'book_db';//数据库名
 
-   //链接数据库服务器并选择一个数据库
    $mysql = mysql_connect($mysql_server_name,$mysql_username,$mysql_password);
 
    if(!$mysql){
