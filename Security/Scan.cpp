@@ -8,6 +8,7 @@ using namespace std;
 using namespace Tins;
 
 typedef pair<Sniffer *, string> sniffer_data;
+bool response_received = false;
 
 class Scanner
 {
@@ -106,7 +107,6 @@ bool Scanner::callback(PDU &pdu)
                 cout << "Port: " << setw(5) << tcp.sport() << " open , filtered\n";
                 return false;
             }
-            return true;
         }
         if (this->type == 4)
         {
@@ -276,32 +276,86 @@ void scan(const string &ip_address, const vector<string> &ports, int type)
     scanner.run(type);
 }
 
-bool icmp_callback(const PDU& pdu) {
-    const IP& ip = pdu.rfind_pdu<IP>();
-    const ICMP& icmp = pdu.rfind_pdu<ICMP>();
-    if (icmp.type() == ICMP::ECHO_REPLY) {
-        cout << "Received reply from: " << ip.src_addr() << endl;
+IPv4Address next_ip(const IPv4Address &ip)
+{
+    uint32_t ip_int = ip;
+    ip_int = htonl(ntohl(ip_int) + 1); // Network byte order adjustment
+    return IPv4Address(ip_int);
+}
+
+bool icmp_callback(PDU &pdu)
+{
+    const IP &ip = pdu.rfind_pdu<IP>();
+    if (ip.inner_pdu()->pdu_type() == PDU::ICMP)
+    {
+        const ICMP &icmp = pdu.rfind_pdu<ICMP>();
+        if (icmp.type() == ICMP::ECHO_REPLY)
+        {
+            cout << "ICMP Echo Reply from " << ip.src_addr() << endl;
+            response_received = true;
+            return false;
+        }
+        if (icmp.type() == ICMP::DEST_UNREACHABLE)
+        {
+            response_received = false;
+            return false;
+        }
     }
     return true;
 }
 
-void icmp_scan(const string& ip_start, int num_addresses) {
+void icmp_scan(const string &ip_start, int num_addresses)
+{
     NetworkInterface iface = NetworkInterface::default_interface();
     NetworkInterface::Info info = iface.addresses();
     PacketSender sender;
-    
-    for (int i = 1; i <= num_addresses; ++i) {
-        IPv4Address dest(ip_start + "." + to_string(i));
-        IP ip = IP(dest, info.ip_addr) / ICMP(ICMP::ECHO_REQUEST, 0);
-        ip.ttl(64);
-        sender.send(ip, iface);
+
+    IPv4Address ip(ip_start);
+
+    for (int i = 0; i < num_addresses; i++)
+    {
+        response_received = false;
+        for (int attempt = 0; attempt < 3 && !response_received; attempt++)
+        {
+            IP packet = IP(ip, info.ip_addr) / ICMP();
+            sender.send(packet);
+            if (attempt == 0)
+                cout << "Pinging " << ip << ", attempt " << attempt + 1 << " ";
+            else
+                cout << attempt + 1 << " ";
+            Sniffer sniffer(iface.name());
+            sniffer.sniff_loop(icmp_callback);
+            std::atomic<bool> stop_sniffing{false};
+
+            // 启动超时控制线程
+            std::thread timeout_thread([&]()
+                                       {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+                stop_sniffing = true;
+                sniffer.stop_sniff(); });
+
+            sniffer.sniff_loop([&](PDU &pdu)
+                               { return icmp_callback(pdu) && !stop_sniffing.load(); });
+
+            // 确保超时线程已完成
+            if (timeout_thread.joinable())
+            {
+                timeout_thread.join();
+            }
+
+            if (response_received)
+            {
+                break;
+            }
+        }
+
+        if (!response_received)
+        {
+            cout << "No response after 3 attempts for " << ip << endl;
+        }
+
+        ip = next_ip(ip); // 正确增加 IP 地址
     }
-    
-    SnifferConfiguration config;
-    config.set_filter("icmp and icmp[type] == icmp-echoreply");
-    config.set_timeout(10); // Timeout in seconds
-    Sniffer sniffer(iface.name(), config);
-    sniffer.sniff_loop(icmp_callback);
 }
 
 int main()
@@ -325,11 +379,8 @@ mainMenu:
         cin >> ip_start;
         cout << "Enter the ending IP address: ";
         cin >> ip_end;
-        cout << "Enter the prefix: ";
-        cin >> prefix;
-        cout << "Scanning " << ip_start << " to " << ip_end << endl;
         num_addresses = stoi(ip_end.substr(ip_end.find_last_of('.') + 1)) - stoi(ip_start.substr(ip_start.find_last_of('.') + 1)) + 1;
-        icmp_scan(prefix + ip_start, num_addresses);
+        icmp_scan(ip_start, num_addresses);
     }
     else if (choice == 2)
     {
