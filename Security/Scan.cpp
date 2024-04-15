@@ -9,7 +9,10 @@ using namespace Tins;
 
 typedef pair<Sniffer *, string> sniffer_data;
 bool response_received = false;
-
+vector<int> open_ports;
+vector<int> closed_ports;
+vector<int> filtered_ports;
+vector<int> unfiltered_ports;
 class Scanner
 {
 public:
@@ -31,6 +34,7 @@ private:
     void launch_sniffer();
 
     NetworkInterface iface;
+    IPv4Address local_ip;
     IPv4Address host_to_scan;
     set<uint16_t> ports_to_scan;
     Sniffer sniffer;
@@ -58,7 +62,41 @@ void *Scanner::thread_proc(void *param)
 
 void Scanner::launch_sniffer()
 {
-    sniffer.sniff_loop(make_sniffer_handler(this, &Scanner::callback));
+    bool stop_sniffing = false;
+    int timeout = 1000; // timeout in milliseconds
+
+    while (!stop_sniffing)
+    {
+        auto start_time = std::chrono::steady_clock::now();
+        std::cout << "Sniffing..." << std::endl;
+
+        // 使用try和catch捕获可能的异常
+        try
+        {
+            sniffer.sniff_loop([this, &stop_sniffing, start_time, timeout](PDU &pdu)
+                               {
+                    this->callback(pdu);
+                    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count() >= timeout) {
+                        stop_sniffing = true; // 设置标志停止嗅探
+                        return false; // 通知sniff_loop停止
+                    }
+                    return true; });
+        }
+        catch (const std::exception &e)
+        {
+            std::cerr << "Sniffing error: " << e.what() << std::endl;
+            break; // 出错时退出循环
+        }
+
+        // 在循环末尾再次检查超时以确保停止
+        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count() >= timeout)
+        {
+            stop_sniffing = true;
+        }
+    }
+
+    // 外部停止嗅探
+    sniffer.stop_sniff();
 }
 
 bool Scanner::callback(PDU &pdu)
@@ -75,42 +113,44 @@ bool Scanner::callback(PDU &pdu)
         {
             if (tcp.get_flag(TCP::RST))
             {
-                // This indicates we should stop sniffing.
                 if (tcp.get_flag(TCP::SYN))
-                    return false;
-                cout << "Port: " << setw(5) << tcp.sport() << " closed\n";
+                    closed_ports.push_back(tcp.sport());
+                else
+                    filtered_ports.push_back(tcp.sport());
             }
             // Is SYN flag on? Then port is open!
             else if (tcp.flags() == (TCP::SYN | TCP::ACK))
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " open\n";
+                open_ports.push_back(tcp.sport());
             }
+            return false;
         }
         if (this->type == 2)
         {
             if (tcp.get_flag(TCP::RST))
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " unfiltered\n";
-                return false;
+                unfiltered_ports.push_back(tcp.sport());
             }
             else
-                cout << "Port: " << setw(5) << tcp.sport() << " filtered\n";
+            {
+                filtered_ports.push_back(tcp.sport());
+            }
+            false;
         }
         if (this->type == 3)
         {
-            if (tcp.get_flag(TCP::RST))
+            if (tcp.get_flag(TCP::RST) && !tcp.get_flag(TCP::FIN))
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " closed\n";
+                closed_ports.push_back(tcp.sport());
             }
             else
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " open , filtered\n";
-                return false;
+                open_ports.push_back(tcp.sport());
             }
+            return false;
         }
         if (this->type == 4)
         {
-            // UDP scan
             // If we receive an ICMP error, the port is closed.
             if (ip.protocol() == IPPROTO_ICMP)
             {
@@ -120,6 +160,7 @@ bool Scanner::callback(PDU &pdu)
             {
                 cout << "Port: " << setw(5) << tcp.sport() << " open or filtered\n";
             }
+            return false;
         }
     }
     return true;
@@ -156,34 +197,24 @@ void Scanner::run(int type)
 // Send syns to the given ip address, using the destination ports provided.
 void Scanner::send_syns(const NetworkInterface &iface, IPv4Address dest_ip)
 {
-    // Retrieve the addresses.
     NetworkInterface::Info info = iface.addresses();
     PacketSender sender;
-    // Allocate the IP PDU
+    // IP PDU
     IP ip = IP(dest_ip, info.ip_addr) / TCP();
-    // Get the reference to the TCP PDU
     TCP &tcp = ip.rfind_pdu<TCP>();
-    // Set the SYN flag on.
+
     tcp.set_flag(TCP::SYN, 1);
-    // Just some random port.
     tcp.sport(randPort);
     cout << "Sending SYNs..." << endl;
     for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
     {
-        // Set the new port and send the packet!
         tcp.dport(*it);
         sender.send(ip);
     }
-    // Wait 1 second.
     sleep(1);
-    /* Special packet to indicate that we're done. This will be sniffed
-     * by our function, which will in turn return false.
-     */
     tcp.set_flag(TCP::RST, 1);
     tcp.sport(*ports_to_scan.begin());
-    // Pretend we're the scanned host...
     ip.src_addr(dest_ip);
-    // We use an ethernet pdu, otherwise the kernel will drop it.
     EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
     sender.send(eth, iface);
 }
@@ -191,7 +222,6 @@ void Scanner::send_syns(const NetworkInterface &iface, IPv4Address dest_ip)
 // Send acks to the given ip address, using the destination ports provided.
 void Scanner::send_acks(const NetworkInterface &iface, IPv4Address dest_ip)
 {
-    // Timeout of each packet is 10 seconds.
     NetworkInterface::Info info = iface.addresses();
     PacketSender sender;
     // Allocate the IP PDU
@@ -391,6 +421,7 @@ mainMenu:
         cin >> ip_address;
         cout << "Enter port range to scan: ";
         cin >> portLow >> portHigh;
+        unsigned int portNum = portHigh - portLow + 1;
         for (int i = portLow; i <= portHigh; i++)
         {
             ports.push_back(to_string(i));
@@ -412,6 +443,64 @@ mainMenu:
         catch (runtime_error &ex)
         {
             cout << "Error - " << ex.what() << endl;
+        }
+        if (type == 1 || type == 3)
+        {
+            if (open_ports.size() == 0)
+            {
+                cout << "Possible no open ports\n";
+            }
+            else
+            {
+                cout << "Open ports: ";
+                for (int i = 0; i < open_ports.size(); i++)
+                {
+                    cout << open_ports[i] << " ";
+                }
+                cout << endl;
+            }
+            if (closed_ports.size() > 0)
+            {
+                cout << "Closed ports: ";
+                for (int i = 0; i < closed_ports.size(); i++)
+                {
+                    cout << closed_ports[i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        else if (type == 2)
+        {
+            if (filtered_ports.size() == 0 || unfiltered_ports.size() == 0)
+            {
+                if (filtered_ports.size() == 0)
+                {
+                    cout << "All ports are unfiltered\n";
+                }
+                else
+                {
+                    cout << "All ports are filtered\n";
+                }
+            }
+            else
+            {
+                cout << "Filtered ports: ";
+                for (int i = 0; i < filtered_ports.size(); i++)
+                {
+                    cout << filtered_ports[i] << " ";
+                }
+                cout << endl;
+                cout << "Unfiltered ports: ";
+                for (int i = 0; i < unfiltered_ports.size(); i++)
+                {
+                    cout << unfiltered_ports[i] << " ";
+                }
+                cout << endl;
+            }
+        }
+        else if (type == 4)
+        {
+            cout << "UDP scan completed\n";
         }
     }
     else if (choice == 3)
