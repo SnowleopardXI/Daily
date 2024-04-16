@@ -13,6 +13,7 @@ vector<int> open_ports;
 vector<int> closed_ports;
 vector<int> filtered_ports;
 vector<int> unfiltered_ports;
+
 class Scanner
 {
 public:
@@ -25,9 +26,7 @@ public:
 
 private:
     int type;
-    void send_syns(const NetworkInterface &iface, IPv4Address dest_ip);
-    void send_acks(const NetworkInterface &iface, IPv4Address dest_ip);
-    void send_fins(const NetworkInterface &iface, IPv4Address dest_ip);
+    void send_tcp(const NetworkInterface &iface, IPv4Address dest_ip);
     void send_udps(const NetworkInterface &iface, IPv4Address dest_ip);
     bool callback(PDU &pdu);
     static void *thread_proc(void *param);
@@ -62,41 +61,7 @@ void *Scanner::thread_proc(void *param)
 
 void Scanner::launch_sniffer()
 {
-    bool stop_sniffing = false;
-    int timeout = 1000; // timeout in milliseconds
-
-    while (!stop_sniffing)
-    {
-        auto start_time = std::chrono::steady_clock::now();
-        std::cout << "Sniffing..." << std::endl;
-
-        // 使用try和catch捕获可能的异常
-        try
-        {
-            sniffer.sniff_loop([this, &stop_sniffing, start_time, timeout](PDU &pdu)
-                               {
-                    this->callback(pdu);
-                    if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count() >= timeout) {
-                        stop_sniffing = true; // 设置标志停止嗅探
-                        return false; // 通知sniff_loop停止
-                    }
-                    return true; });
-        }
-        catch (const std::exception &e)
-        {
-            std::cerr << "Sniffing error: " << e.what() << std::endl;
-            break; // 出错时退出循环
-        }
-
-        // 在循环末尾再次检查超时以确保停止
-        if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_time).count() >= timeout)
-        {
-            stop_sniffing = true;
-        }
-    }
-
-    // 外部停止嗅探
-    sniffer.stop_sniff();
+    sniffer.sniff_loop(make_sniffer_handler(this, &Scanner::callback));
 }
 
 bool Scanner::callback(PDU &pdu)
@@ -111,35 +76,44 @@ bool Scanner::callback(PDU &pdu)
     {
         if (this->type == 1)
         {
-            if (tcp.get_flag(TCP::RST))
-            {
-                if (tcp.get_flag(TCP::SYN))
-                    closed_ports.push_back(tcp.sport());
-                else
-                    filtered_ports.push_back(tcp.sport());
-            }
-            // Is SYN flag on? Then port is open!
-            else if (tcp.flags() == (TCP::SYN | TCP::ACK))
+            if (tcp.flags() == (TCP::SYN | TCP::ACK))
             {
                 open_ports.push_back(tcp.sport());
             }
-            return false;
+            else if (tcp.flags() == (TCP::SYN | TCP::RST))
+            {
+                return false;
+            }
+            else if (tcp.get_flag(TCP::RST))
+            {
+                closed_ports.push_back(tcp.sport());
+            }
+            else
+            {
+                filtered_ports.push_back(tcp.sport());
+            }
         }
         if (this->type == 2)
         {
+            if (tcp.flags() == (TCP::ACK | TCP::RST))
+            {
+                return false;
+            }
             if (tcp.get_flag(TCP::RST))
             {
                 unfiltered_ports.push_back(tcp.sport());
             }
             else
             {
-                filtered_ports.push_back(tcp.sport());
             }
-            false;
         }
-        if (this->type == 3)
+        if (this->type == 3 || this->type == 5)
         {
-            if (tcp.get_flag(TCP::RST) && !tcp.get_flag(TCP::FIN))
+            if (tcp.flags() == (TCP::FIN | TCP::RST))
+            {
+                return false;
+            }
+            if (tcp.get_flag(TCP::RST))
             {
                 closed_ports.push_back(tcp.sport());
             }
@@ -147,7 +121,6 @@ bool Scanner::callback(PDU &pdu)
             {
                 open_ports.push_back(tcp.sport());
             }
-            return false;
         }
         if (this->type == 4)
         {
@@ -162,8 +135,8 @@ bool Scanner::callback(PDU &pdu)
             }
             return false;
         }
+        return true;
     }
-    return true;
 }
 
 void Scanner::run(int type)
@@ -173,21 +146,13 @@ void Scanner::run(int type)
     // Launch our sniff thread.
     pthread_create(&thread, 0, &Scanner::thread_proc, this);
     // Start sending SYNs to port.
-    if (type == 1)
-    {
-        send_syns(iface, host_to_scan);
-    }
-    else if (type == 2)
-    {
-        send_acks(iface, host_to_scan);
-    }
-    else if (type == 3)
-    {
-        send_fins(iface, host_to_scan);
-    }
-    else if (type == 4)
+    if (type == 4)
     {
         send_udps(iface, host_to_scan);
+    }
+    else
+    {
+        send_tcp(iface, host_to_scan);
     }
     // Wait for our sniffer.
     void *dummy;
@@ -195,80 +160,53 @@ void Scanner::run(int type)
 }
 
 // Send syns to the given ip address, using the destination ports provided.
-void Scanner::send_syns(const NetworkInterface &iface, IPv4Address dest_ip)
+void Scanner::send_tcp(const NetworkInterface &iface, IPv4Address dest_ip)
 {
     NetworkInterface::Info info = iface.addresses();
     PacketSender sender;
     // IP PDU
     IP ip = IP(dest_ip, info.ip_addr) / TCP();
     TCP &tcp = ip.rfind_pdu<TCP>();
-
-    tcp.set_flag(TCP::SYN, 1);
+    switch (this->type)
+    {
+    case 1:
+    {
+        tcp.set_flag(TCP::SYN, 1);
+        cout << "Sending SYNs..." << endl;
+        break;
+    }
+    case 2:
+    {
+        tcp.set_flag(TCP::ACK, 1);
+        cout << "Sending ACKs..." << endl;
+        break;
+    }
+    case 3:
+    {
+        tcp.set_flag(TCP::FIN, 1);
+        cout << "Sending FINs..." << endl;
+        break;
+    }
+    case 5:
+    {
+        tcp.set_flag(TCP::FIN, 1);
+        tcp.set_flag(TCP::URG, 1);
+        tcp.set_flag(TCP::PSH, 1);
+        cout << "Sending XMAS packets..." << endl;
+        break;
+    }
+    }
     tcp.sport(randPort);
-    cout << "Sending SYNs..." << endl;
     for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
     {
         tcp.dport(*it);
         sender.send(ip);
     }
-    sleep(1);
+    cout << "Waiting 2 seconds..." << endl;
+    sleep(2);
     tcp.set_flag(TCP::RST, 1);
     tcp.sport(*ports_to_scan.begin());
     ip.src_addr(dest_ip);
-    EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
-    sender.send(eth, iface);
-}
-
-// Send acks to the given ip address, using the destination ports provided.
-void Scanner::send_acks(const NetworkInterface &iface, IPv4Address dest_ip)
-{
-    NetworkInterface::Info info = iface.addresses();
-    PacketSender sender;
-    // Allocate the IP PDU
-    IP ip = IP(dest_ip, info.ip_addr) / TCP();
-    TCP &tcp = ip.rfind_pdu<TCP>();
-    tcp.set_flag(TCP::ACK, 1);
-    tcp.sport(randPort);
-    cout << "Sending ACKs..." << endl;
-    for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
-    {
-        tcp.dport(*it);
-        sender.send(ip);
-    }
-    // Wait 1 second.
-    sleep(1);
-    tcp.set_flag(TCP::RST, 1);
-    tcp.sport(*ports_to_scan.begin());
-    // Pretend we're the scanned host...
-    ip.src_addr(dest_ip);
-    // We use an ethernet pdu, otherwise the kernel will drop it.
-    EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
-    sender.send(eth, iface);
-}
-
-// Send fins to the given ip address, using the destination ports provided.
-void Scanner::send_fins(const NetworkInterface &iface, IPv4Address dest_ip)
-{
-    NetworkInterface::Info info = iface.addresses();
-    PacketSender sender;
-    // Allocate the IP PDU
-    IP ip = IP(dest_ip, info.ip_addr) / TCP();
-    TCP &tcp = ip.rfind_pdu<TCP>();
-    tcp.set_flag(TCP::FIN, 1);
-    tcp.sport(randPort);
-    cout << "Sending FINs..." << endl;
-    for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
-    {
-        tcp.dport(*it);
-        sender.send(ip);
-    }
-    // Wait 1 second.
-    sleep(1);
-    tcp.set_flag(TCP::RST, 1);
-    tcp.sport(*ports_to_scan.begin());
-    // Pretend we're the scanned host...
-    ip.src_addr(dest_ip);
-    // We use an ethernet pdu, otherwise the kernel will drop it.
     EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
     sender.send(eth, iface);
 }
@@ -280,14 +218,21 @@ void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
     PacketSender sender;
     // Allocate the IP PDU
     IP ip = IP(dest_ip, info.ip_addr) / UDP();
+    // Set UDP packet
     UDP &udp = ip.rfind_pdu<UDP>();
     udp.sport(randPort);
+
     cout << "Sending UDPs..." << endl;
     for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
     {
         udp.dport(*it);
-        sender.send(ip);
+        // Create a RawPDU to hold the payload
+        RawPDU rawPdu("Hello World!");
+        // Rebuild IP PDU with new UDP layer and payload for each port
+        IP new_ip = IP(dest_ip, info.ip_addr) / UDP(udp.sport(), *it) / rawPdu;
+        sender.send(new_ip, iface);
     }
+
     // Wait 1 second.
     sleep(1);
     // Pretend we're the scanned host...
@@ -430,6 +375,7 @@ mainMenu:
         cout << "2. ACK Scan\n";
         cout << "3. FIN Scan\n";
         cout << "4. UDP Scan\n";
+        cout << "5. XMAS Scan\n";
         cin >> type;
         if (type < 1 || type > 4)
         {
@@ -444,13 +390,11 @@ mainMenu:
         {
             cout << "Error - " << ex.what() << endl;
         }
-        if (type == 1 || type == 3)
+        switch (type)
         {
-            if (open_ports.size() == 0)
-            {
-                cout << "Possible no open ports\n";
-            }
-            else
+        case 1:
+        {
+            if (open_ports.size() != 0)
             {
                 cout << "Open ports: ";
                 for (int i = 0; i < open_ports.size(); i++)
@@ -459,28 +403,53 @@ mainMenu:
                 }
                 cout << endl;
             }
-            if (closed_ports.size() > 0)
+            else
             {
-                cout << "Closed ports: ";
-                for (int i = 0; i < closed_ports.size(); i++)
+                cout << "No open ports\n";
+                if (closed_ports.size() == 0)
                 {
-                    cout << closed_ports[i] << " ";
-                }
-                cout << endl;
-            }
-        }
-        else if (type == 2)
-        {
-            if (filtered_ports.size() == 0 || unfiltered_ports.size() == 0)
-            {
-                if (filtered_ports.size() == 0)
-                {
-                    cout << "All ports are unfiltered\n";
+                    cout << "All ports are filtered\n";
+                    break;
                 }
                 else
                 {
-                    cout << "All ports are filtered\n";
+                    cout << "Filtered ports: ";
+                    for (int i = 0; i < filtered_ports.size(); i++)
+                    {
+                        cout << filtered_ports[i] << " ";
+                    }
+                    cout << endl;
                 }
+                if (closed_ports.size() != 0 && closed_ports.size() == portNum - open_ports.size() - filtered_ports.size())
+                {
+                    cout << "All ports are closed\n";
+                }
+                else
+                {
+                    cout << "Other ports are closed\n";
+                }
+            }
+            break;
+        }
+        case 2:
+        {
+            for (int port = portLow; port <= portHigh; ++port)
+            {
+                if (std::find(unfiltered_ports.begin(), unfiltered_ports.end(), port) == unfiltered_ports.end())
+                {
+                    // 如果端口不在 unfiltered 中，添加到 filtered
+                    filtered_ports.push_back(port);
+                }
+            }
+            if (unfiltered_ports.size() == portNum)
+            {
+                cout << "All ports are unfiltered\n";
+                break;
+            }
+            if (filtered_ports.size() == portNum)
+            {
+                cout << "All ports are filtered\n";
+                break;
             }
             else
             {
@@ -497,10 +466,12 @@ mainMenu:
                 }
                 cout << endl;
             }
+            break;
         }
-        else if (type == 4)
+        case 3:
         {
-            cout << "UDP scan completed\n";
+            cout << "working\n";
+        }
         }
     }
     else if (choice == 3)
