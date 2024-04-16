@@ -109,12 +109,10 @@ bool Scanner::callback(PDU &pdu)
         }
         if (this->type == 3 || this->type == 5)
         {
-            if (tcp.flags() == (TCP::FIN | TCP::RST))
-            {
-                return false;
-            }
             if (tcp.get_flag(TCP::RST))
             {
+                if (tcp.get_flag(TCP::FIN))
+                    return false;
                 closed_ports.push_back(tcp.sport());
             }
             else
@@ -377,7 +375,7 @@ mainMenu:
         cout << "4. UDP Scan\n";
         cout << "5. XMAS Scan\n";
         cin >> type;
-        if (type < 1 || type > 4)
+        if (type < 1 || type > 5)
         {
             cout << "Invalid type\n";
             goto type;
@@ -469,8 +467,49 @@ mainMenu:
             break;
         }
         case 3:
+        case 5:
         {
-            cout << "working\n";
+            if (closed_ports.size() == 0)
+            {
+                cout << "All ports are open/filtered\n";
+                break;
+            }
+            else if (closed_ports.size() == portNum)
+            {
+                cout << "All ports are closed\n";
+                break;
+            }
+            else
+            {
+                cout << "Closed ports: ";
+                for (int i = 0; i < closed_ports.size(); i++)
+                {
+                    cout << closed_ports[i] << " ";
+                }
+                cout << endl;
+            }
+            if (open_ports.size() == 0)
+            {
+                for (int port = portLow; port <= portHigh; ++port)
+                {
+                    if (std::find(closed_ports.begin(), closed_ports.end(), port) == closed_ports.end())
+                    {
+                        // 如果端口不在 closed 中，添加到 open
+                        open_ports.push_back(port);
+                    }
+                }
+                cout << "Open ports: ";
+                for (int i = 0; i < open_ports.size(); i++)
+                {
+                    cout << open_ports[i] << " ";
+                }
+            }
+            break;
+        }
+        case 4:
+        {
+            cout << "UDP scan completed\n";
+            break;
         }
         }
     }
@@ -483,6 +522,5 @@ mainMenu:
         cout << "Invalid choice\n";
         goto mainMenu;
     }
-
     return 0;
 }
