@@ -1,19 +1,161 @@
 #include <bits/stdc++.h>
-#include <pthread.h>
-#include <unistd.h>
 #include <tins/tins.h>
-
 #define randPort 1541
 using namespace std;
 using namespace Tins;
 
 typedef pair<Sniffer *, string> sniffer_data;
 bool response_received = false;
+bool timeout = false;
+bool loopSniff = true;
 vector<int> open_ports;
 vector<int> closed_ports;
 vector<int> filtered_ports;
 vector<int> unfiltered_ports;
+vector<IPv4Address> hosts;
+vector<IPv4Address> alive_hosts;
+IPv4Address next_ip(const IPv4Address &ip)
+{
+    uint32_t ip_int = ip;
+    ip_int = htonl(ntohl(ip_int) + 1); // Network byte order adjustment
+    return IPv4Address(ip_int);
+}
+unsigned long ipToLong(const string &ip)
+{
+    unsigned long val = 0;
+    size_t start = 0;
+    size_t end = ip.find('.');
+    while (end != string::npos)
+    {
+        val = (val << 8) + stoi(ip.substr(start, end - start));
+        start = end + 1;
+        end = ip.find('.', start);
+    }
+    val = (val << 8) + stoi(ip.substr(start));
+    return val;
+}
+class ICMPSanner
+{
+public:
+    ICMPSanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts);
 
+    void run();
+
+private:
+    bool callback(PDU &pdu);
+    void send_echo_requests(IPv4Address host);
+    void launch_sniffer();
+    void check_timeouts();
+
+    NetworkInterface iface;
+    vector<IPv4Address> hosts_to_scan;
+    map<IPv4Address, int> attempts;
+    Sniffer sniffer;
+    PacketSender sender;
+};
+
+ICMPSanner::ICMPSanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts)
+    : iface(interface), hosts_to_scan(hosts), sniffer(interface.name())
+{
+    sniffer.set_filter("icmp and icmp[icmptype] = icmp-echoreply");
+    for (auto &host : hosts_to_scan)
+    {
+        attempts[host] = 0;
+    }
+}
+
+bool ICMPSanner::callback(PDU &pdu)
+{
+    const IP &ip = pdu.rfind_pdu<IP>();
+    const ICMP &icmp = pdu.rfind_pdu<ICMP>();
+
+    if (icmp.type() == ICMP::ECHO_REPLY)
+    {
+        auto it = attempts.find(ip.src_addr());
+        if (it != attempts.end() && it->second <= 3)
+        {
+            cout << "Host " << ip.src_addr() << " is alive" << endl;
+            alive_hosts.push_back(ip.src_addr());
+            attempts.erase(it); // Stop further attempts for this host
+        }
+    }
+
+    return true;
+}
+
+void ICMPSanner::launch_sniffer()
+{
+    try
+    {
+        sniffer.sniff_loop(bind(&ICMPSanner::callback, this, placeholders::_1));
+    }
+    catch (const std::exception &e)
+    {
+        cout << "Sniffer stopped: " << e.what() << endl;
+    }
+}
+
+void ICMPSanner::send_echo_requests(IPv4Address host)
+{
+    if (timeout)
+        return; // Stop sending if global timeout is set
+    if (attempts[host] < 3)
+    {
+        IP ip(host, iface.addresses().ip_addr);
+        ICMP icmp;
+        icmp.type(ICMP::ECHO_REQUEST);
+        auto request = ip / icmp;
+        sender.send(request);
+        attempts[host]++;
+        // cout << "Sent ICMP Echo Request to " << host << " (Attempt " << attempts[host] << ")" << endl;
+    }
+}
+
+void ICMPSanner::check_timeouts()
+{
+    while (!timeout && !attempts.empty())
+    {
+        this_thread::sleep_for(chrono::seconds(1));
+        for (auto it = attempts.begin(); it != attempts.end();)
+        {
+            if (it->second >= 3)
+            {
+                it = attempts.erase(it); // Max attempts reached, remove from tracking
+            }
+            else
+            {
+                send_echo_requests(it->first);
+                ++it;
+            }
+        }
+        if (attempts.empty())
+        {
+            timeout = true; // Set global timeout if all hosts have reached max attempts
+            // cout << "All hosts timed out 3 times. Stopping all tasks." << endl;
+        }
+    }
+}
+
+void ICMPSanner::run()
+{
+    thread sniffer_thread(&ICMPSanner::launch_sniffer, this);
+    for (auto &host : hosts_to_scan)
+    {
+        send_echo_requests(host);
+    }
+    check_timeouts(); // This will handle retransmissions and timeout checks
+    if (timeout)
+        sniffer.stop_sniff(); // Stop sniffing if global timeout is triggered
+    sniffer_thread.join();
+}
+
+void scan(const vector<IPv4Address> &hosts)
+{
+    NetworkInterface iface(hosts[0]);
+    cout << "Sniffing on interface: " << iface.name() << endl;
+    ICMPSanner scanner(iface, hosts);
+    scanner.run();
+}
 class Scanner
 {
 public:
@@ -29,6 +171,7 @@ private:
     void send_tcp(const NetworkInterface &iface, IPv4Address dest_ip);
     void send_udps(const NetworkInterface &iface, IPv4Address dest_ip);
     bool callback(PDU &pdu);
+    bool udpCallback(PDU &pdu);
     static void *thread_proc(void *param);
     void launch_sniffer();
 
@@ -38,6 +181,7 @@ private:
     set<uint16_t> ports_to_scan;
     Sniffer sniffer;
 };
+
 Scanner::Scanner(int type,
                  const NetworkInterface &interface,
                  const IPv4Address &address,
@@ -45,8 +189,10 @@ Scanner::Scanner(int type,
     : iface(interface), host_to_scan(address), sniffer(interface.name())
 {
     this->type = type;
-    sniffer.set_filter(
-        "tcp and ip src " + address.to_string() + " and tcp[tcpflags] & (tcp-rst|tcp-syn) != 0");
+    if (type == 4)
+        sniffer.set_filter("udp and ip src " + address.to_string());
+    else
+        sniffer.set_filter("tcp and ip src " + address.to_string() + " and tcp[tcpflags] & (tcp-rst|tcp-syn) != 0");
     for (size_t i = 0; i < ports.size(); ++i)
     {
         ports_to_scan.insert(atoi(ports[i].c_str()));
@@ -61,7 +207,14 @@ void *Scanner::thread_proc(void *param)
 
 void Scanner::launch_sniffer()
 {
-    sniffer.sniff_loop(make_sniffer_handler(this, &Scanner::callback));
+    if (this->type == 4)
+    {
+        sniffer.sniff_loop(make_sniffer_handler(this, &Scanner::udpCallback));
+    }
+    else
+    {
+        sniffer.sniff_loop(make_sniffer_handler(this, &Scanner::callback));
+    }
 }
 
 bool Scanner::callback(PDU &pdu)
@@ -120,30 +273,49 @@ bool Scanner::callback(PDU &pdu)
                 open_ports.push_back(tcp.sport());
             }
         }
-        if (this->type == 4)
+        return true;
+    }
+}
+
+bbool Scanner::udpCallback(PDU &pdu)
+{
+    const IP &ip = pdu.rfind_pdu<IP>();    // Assume IP PDU is always present
+    const UDP &udp = pdu.rfind_pdu<UDP>(); // Assume UDP PDU is always present
+
+    if (udp.sport() == 1131 && udp.dport() == 31337)
+    {
+        return false;
+    }
+
+    if (ip.src_addr() == host_to_scan && ports_to_scan.count(udp.sport()) == 1)
+    {
+        try
         {
-            // If we receive an ICMP error, the port is closed.
-            if (ip.protocol() == IPPROTO_ICMP)
+            // Assume the ICMP error is nested within another IP PDU which itself contains the original IP header and UDP header
+            const IP &inner_ip = pdu.rfind_pdu<RawPDU>().to<IP>();  // Extract the IP PDU encapsulated in a RawPDU
+            const ICMP &icmp = inner_ip.rfind_pdu<ICMP>(); // Find ICMP inside the encapsulated IP PDU
+            if (icmp.type() == 3 && icmp.code() == 3)
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " closed\n";
+                closed_ports.push_back(udp.sport());
             }
             else
             {
-                cout << "Port: " << setw(5) << tcp.sport() << " open or filtered\n";
+                open_ports.push_back(udp.sport());
             }
-            return false;
         }
-        return true;
+        catch (std::exception &e)
+        { // Handle the exception if ICMP PDU is not found
+            open_ports.push_back(udp.sport());
+        }
     }
+
+    return true;
 }
 
 void Scanner::run(int type)
 {
     pthread_t thread;
-    this->type = type;
-    // Launch our sniff thread.
     pthread_create(&thread, 0, &Scanner::thread_proc, this);
-    // Start sending SYNs to port.
     if (type == 4)
     {
         send_udps(iface, host_to_scan);
@@ -152,11 +324,9 @@ void Scanner::run(int type)
     {
         send_tcp(iface, host_to_scan);
     }
-    // Wait for our sniffer.
     void *dummy;
     pthread_join(thread, &dummy);
 }
-
 // Send syns to the given ip address, using the destination ports provided.
 void Scanner::send_tcp(const NetworkInterface &iface, IPv4Address dest_ip)
 {
@@ -209,35 +379,29 @@ void Scanner::send_tcp(const NetworkInterface &iface, IPv4Address dest_ip)
     sender.send(eth, iface);
 }
 
-// Send udps to the given ip address, using the destination ports provided.
 void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
 {
+    // Retrieve the network interface information.
     NetworkInterface::Info info = iface.addresses();
     PacketSender sender;
-    // Allocate the IP PDU
     IP ip = IP(dest_ip, info.ip_addr) / UDP();
-    // Set UDP packet
+    // Get the reference to the UDP PDU
     UDP &udp = ip.rfind_pdu<UDP>();
-    udp.sport(randPort);
-
-    cout << "Sending UDPs..." << endl;
+    udp.sport(1000);
+    cout << "Sending UDP packets..." << endl;
     for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
     {
+        // Set the destination port and send the packet!
         udp.dport(*it);
-        // Create a RawPDU to hold the payload
-        RawPDU rawPdu("Hello World!");
-        // Rebuild IP PDU with new UDP layer and payload for each port
-        IP new_ip = IP(dest_ip, info.ip_addr) / UDP(udp.sport(), *it) / rawPdu;
-        sender.send(new_ip, iface);
+        sender.send(ip);
     }
-
-    // Wait 1 second.
-    sleep(1);
-    // Pretend we're the scanned host...
+    sleep(2);
+    // Now send a special packet to a special port.
+    udp.sport(1131);
+    udp.dport(31337); // Special destination port, chosen for distinction.
     ip.src_addr(dest_ip);
-    // We use an ethernet pdu, otherwise the kernel will drop it.
     EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
-    sender.send(eth, iface);
+    sender.send(ip);
 }
 
 void scan(const string &ip_address, const vector<string> &ports, int type)
@@ -247,88 +411,6 @@ void scan(const string &ip_address, const vector<string> &ports, int type)
     cout << "Sniffing on interface: " << iface.name() << endl;
     Scanner scanner(type, iface, ip, ports);
     scanner.run(type);
-}
-
-IPv4Address next_ip(const IPv4Address &ip)
-{
-    uint32_t ip_int = ip;
-    ip_int = htonl(ntohl(ip_int) + 1); // Network byte order adjustment
-    return IPv4Address(ip_int);
-}
-
-bool icmp_callback(PDU &pdu)
-{
-    const IP &ip = pdu.rfind_pdu<IP>();
-    if (ip.inner_pdu()->pdu_type() == PDU::ICMP)
-    {
-        const ICMP &icmp = pdu.rfind_pdu<ICMP>();
-        if (icmp.type() == ICMP::ECHO_REPLY)
-        {
-            cout << "ICMP Echo Reply from " << ip.src_addr() << endl;
-            response_received = true;
-            return false;
-        }
-        if (icmp.type() == ICMP::DEST_UNREACHABLE)
-        {
-            response_received = false;
-            return false;
-        }
-    }
-    return true;
-}
-
-void icmp_scan(const string &ip_start, int num_addresses)
-{
-    NetworkInterface iface = NetworkInterface::default_interface();
-    NetworkInterface::Info info = iface.addresses();
-    PacketSender sender;
-
-    IPv4Address ip(ip_start);
-
-    for (int i = 0; i < num_addresses; i++)
-    {
-        response_received = false;
-        for (int attempt = 0; attempt < 3 && !response_received; attempt++)
-        {
-            IP packet = IP(ip, info.ip_addr) / ICMP();
-            sender.send(packet);
-            if (attempt == 0)
-                cout << "Pinging " << ip << ", attempt " << attempt + 1 << " ";
-            else
-                cout << attempt + 1 << " ";
-            Sniffer sniffer(iface.name());
-            sniffer.sniff_loop(icmp_callback);
-            std::atomic<bool> stop_sniffing{false};
-
-            // 启动超时控制线程
-            std::thread timeout_thread([&]()
-                                       {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                stop_sniffing = true;
-                sniffer.stop_sniff(); });
-
-            sniffer.sniff_loop([&](PDU &pdu)
-                               { return icmp_callback(pdu) && !stop_sniffing.load(); });
-
-            // 确保超时线程已完成
-            if (timeout_thread.joinable())
-            {
-                timeout_thread.join();
-            }
-
-            if (response_received)
-            {
-                break;
-            }
-        }
-
-        if (!response_received)
-        {
-            cout << "No response after 3 attempts for " << ip << endl;
-        }
-
-        ip = next_ip(ip); // 正确增加 IP 地址
-    }
 }
 
 int main()
@@ -352,8 +434,19 @@ mainMenu:
         cin >> ip_start;
         cout << "Enter the ending IP address: ";
         cin >> ip_end;
-        num_addresses = stoi(ip_end.substr(ip_end.find_last_of('.') + 1)) - stoi(ip_start.substr(ip_start.find_last_of('.') + 1)) + 1;
-        icmp_scan(ip_start, num_addresses);
+        cout << "Enter the prefix: ";
+        cin >> prefix;
+        long int start = ipToLong(ip_start);
+        long int end = ipToLong(ip_end);
+        num_addresses = end - start + 1;
+        IPv4Address ip(ip_start);
+        for (int i = 0; i < num_addresses; i++)
+        {
+            hosts.push_back(ip);
+            ip = next_ip(ip);
+        }
+        cout << "Scanning " << num_addresses << " IP addresses\n";
+        scan(hosts);
     }
     else if (choice == 2)
     {
@@ -466,6 +559,12 @@ mainMenu:
             }
             break;
         }
+        case 4:
+        {
+            cout << "Open ports number: " << open_ports.size() << endl;
+            cout << "Closed ports number: " << closed_ports.size() << endl;
+            cout << "Filtered ports number: " << filtered_ports.size() << endl;
+        }
         case 3:
         case 5:
         {
@@ -504,11 +603,6 @@ mainMenu:
                     cout << open_ports[i] << " ";
                 }
             }
-            break;
-        }
-        case 4:
-        {
-            cout << "UDP scan completed\n";
             break;
         }
         }
