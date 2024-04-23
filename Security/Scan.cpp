@@ -1,19 +1,19 @@
 #include <bits/stdc++.h>
 #include <tins/tins.h>
+#include <fcntl.h>
 #define randPort 1541
 using namespace std;
 using namespace Tins;
 
-typedef pair<Sniffer *, string> sniffer_data;
-bool response_received = false;
 bool timeout = false;
-bool loopSniff = true;
 vector<int> open_ports;
 vector<int> closed_ports;
 vector<int> filtered_ports;
 vector<int> unfiltered_ports;
+vector<int> ports;
 vector<IPv4Address> hosts;
 vector<IPv4Address> alive_hosts;
+
 IPv4Address next_ip(const IPv4Address &ip)
 {
     uint32_t ip_int = ip;
@@ -128,7 +128,7 @@ void ICMPSanner::check_timeouts()
                 ++it;
             }
         }
-        if (attempts.empty())
+        if (attempts.empty()
         {
             timeout = true; // Set global timeout if all hosts have reached max attempts
             // cout << "All hosts timed out 3 times. Stopping all tasks." << endl;
@@ -162,7 +162,7 @@ public:
     Scanner(int type,
             const NetworkInterface &interface,
             const IPv4Address &address,
-            const vector<string> &ports);
+            const vector<int> &ports);
 
     void run(int type);
 
@@ -185,7 +185,7 @@ private:
 Scanner::Scanner(int type,
                  const NetworkInterface &interface,
                  const IPv4Address &address,
-                 const vector<string> &ports)
+                 const vector<int> &ports)
     : iface(interface), host_to_scan(address), sniffer(interface.name())
 {
     this->type = type;
@@ -195,7 +195,7 @@ Scanner::Scanner(int type,
         sniffer.set_filter("tcp and ip src " + address.to_string() + " and tcp[tcpflags] & (tcp-rst|tcp-syn) != 0");
     for (size_t i = 0; i < ports.size(); ++i)
     {
-        ports_to_scan.insert(atoi(ports[i].c_str()));
+        ports_to_scan.insert(ports[i]);
     }
 }
 void *Scanner::thread_proc(void *param)
@@ -277,7 +277,7 @@ bool Scanner::callback(PDU &pdu)
     }
 }
 
-bbool Scanner::udpCallback(PDU &pdu)
+bool Scanner::udpCallback(PDU &pdu)
 {
     const IP &ip = pdu.rfind_pdu<IP>();    // Assume IP PDU is always present
     const UDP &udp = pdu.rfind_pdu<UDP>(); // Assume UDP PDU is always present
@@ -292,15 +292,23 @@ bbool Scanner::udpCallback(PDU &pdu)
         try
         {
             // Assume the ICMP error is nested within another IP PDU which itself contains the original IP header and UDP header
-            const IP &inner_ip = pdu.rfind_pdu<RawPDU>().to<IP>();  // Extract the IP PDU encapsulated in a RawPDU
-            const ICMP &icmp = inner_ip.rfind_pdu<ICMP>(); // Find ICMP inside the encapsulated IP PDU
+            const IP &inner_ip = pdu.rfind_pdu<RawPDU>().to<IP>(); // Extract the IP PDU encapsulated in a RawPDU
+            const ICMP &icmp = inner_ip.rfind_pdu<ICMP>();         // Find ICMP inside the encapsulated IP PDU
             if (icmp.type() == 3 && icmp.code() == 3)
             {
                 closed_ports.push_back(udp.sport());
+                cout << "Port " << udp.sport() << " is closed" << endl;
+            }
+            // PDU 长度大于 100 说明是 open 端口
+            else if (pdu.size() > 100)
+            {
+                open_ports.push_back(udp.sport());
+                cout << "Port " << udp.sport() << " is open" << endl;
             }
             else
             {
-                open_ports.push_back(udp.sport());
+                filtered_ports.push_back(udp.sport());
+                cout << "Port " << udp.sport() << " is filtered" << endl;
             }
         }
         catch (std::exception &e)
@@ -388,12 +396,28 @@ void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
     // Get the reference to the UDP PDU
     UDP &udp = ip.rfind_pdu<UDP>();
     udp.sport(1000);
+
     cout << "Sending UDP packets..." << endl;
     for (set<uint16_t>::const_iterator it = ports_to_scan.begin(); it != ports_to_scan.end(); ++it)
     {
-        // Set the destination port and send the packet!
-        udp.dport(*it);
-        sender.send(ip);
+        if (*it != 53)
+        { // Create random payload
+            string payload = "Hello, this is a UDP packet!";
+            RawPDU raw(payload);
+            udp.inner_pdu(raw);
+            udp.dport(*it);
+            sender.send(ip);
+        }
+        else
+        {
+            // Send a DNS query to port 53
+            DNS dns;
+            dns.add_query(DNS::query("example.com", DNS::A, DNS::IN));
+            dns.recursion_desired(true);
+            udp.inner_pdu(dns); // Attach the DNS query to UDP
+            udp.dport(*it);
+            sender.send(ip);
+        }
     }
     sleep(2);
     // Now send a special packet to a special port.
@@ -404,7 +428,7 @@ void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
     sender.send(ip);
 }
 
-void scan(const string &ip_address, const vector<string> &ports, int type)
+void scan(const string &ip_address, const vector<int> &ports, int type)
 {
     IPv4Address ip(ip_address);
     NetworkInterface iface(ip);
@@ -412,11 +436,9 @@ void scan(const string &ip_address, const vector<string> &ports, int type)
     Scanner scanner(type, iface, ip, ports);
     scanner.run(type);
 }
-
 int main()
 {
     string ip_address;
-    vector<string> ports;
     string input;
     unsigned short choice;
 mainMenu:
@@ -428,14 +450,12 @@ mainMenu:
     cin >> choice;
     if (choice == 1)
     {
-        string ip_start, ip_end, prefix;
+        string ip_start, ip_end;
         int num_addresses;
         cout << "Enter the starting IP address: ";
         cin >> ip_start;
         cout << "Enter the ending IP address: ";
         cin >> ip_end;
-        cout << "Enter the prefix: ";
-        cin >> prefix;
         long int start = ipToLong(ip_start);
         long int end = ipToLong(ip_end);
         num_addresses = end - start + 1;
@@ -447,6 +467,11 @@ mainMenu:
         }
         cout << "Scanning " << num_addresses << " IP addresses\n";
         scan(hosts);
+        cout << "Alive hosts: ";
+        for (int i = 0; i < alive_hosts.size(); i++)
+        {
+            cout << alive_hosts[i] << " ";
+        }
     }
     else if (choice == 2)
     {
@@ -460,7 +485,7 @@ mainMenu:
         unsigned int portNum = portHigh - portLow + 1;
         for (int i = portLow; i <= portHigh; i++)
         {
-            ports.push_back(to_string(i));
+            ports.push_back(i);
         }
         cout << "1. SYN Scan\n";
         cout << "2. ACK Scan\n";
@@ -561,9 +586,45 @@ mainMenu:
         }
         case 4:
         {
-            cout << "Open ports number: " << open_ports.size() << endl;
-            cout << "Closed ports number: " << closed_ports.size() << endl;
-            cout << "Filtered ports number: " << filtered_ports.size() << endl;
+            std::unordered_set<int> open_ports_set(open_ports.begin(), open_ports.end());
+            std::unordered_set<int> closed_ports_set(closed_ports.begin(), closed_ports.end());
+
+            for (int port : ports)
+            {
+                if (open_ports_set.find(port) == open_ports_set.end() &&
+                    closed_ports_set.find(port) == closed_ports_set.end())
+                {
+                    filtered_ports.push_back(port);
+                }
+            }
+            if (open_ports.size() != 0)
+            {
+                cout << "Open ports: ";
+                for (int i = 0; i < open_ports.size(); i++)
+                {
+                    cout << open_ports[i] << " ";
+                }
+                cout << endl;
+            }
+            else if(closed_ports.size() == portNum)
+            {
+                cout << "All ports are closed\n";
+                break;
+            }
+            else if (filtered_ports.size() == portNum - open_ports.size())
+            {
+                cout << "Other ports are filtered\n";
+                break;
+            }
+            else
+            {
+                cout << "Filtered ports: ";
+                for (int i = 0; i < filtered_ports.size(); i++)
+                {
+                    cout << filtered_ports[i] << " ";
+                }
+                cout << endl;
+            }
         }
         case 3:
         case 5:
