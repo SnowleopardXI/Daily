@@ -13,7 +13,7 @@ vector<int> unfiltered_ports;
 vector<int> ports;
 vector<IPv4Address> hosts;
 vector<IPv4Address> alive_hosts;
-
+vector<IPv4Address> dead_hosts;
 IPv4Address next_ip(const IPv4Address &ip)
 {
     uint32_t ip_int = ip;
@@ -34,16 +34,17 @@ unsigned long ipToLong(const string &ip)
     val = (val << 8) + stoi(ip.substr(start));
     return val;
 }
-class ICMPSanner
+class NetworkScanner
 {
 public:
-    ICMPSanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts);
-
+    NetworkScanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts, int type);
+    ~NetworkScanner() { sniffer.stop_sniff(); }
     void run();
 
 private:
     bool callback(PDU &pdu);
     void send_echo_requests(IPv4Address host);
+    void send_arp_request(IPv4Address host);
     void launch_sniffer();
     void check_timeouts();
 
@@ -52,54 +53,59 @@ private:
     map<IPv4Address, int> attempts;
     Sniffer sniffer;
     PacketSender sender;
+    int scan_type;
 };
-
-ICMPSanner::ICMPSanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts)
-    : iface(interface), hosts_to_scan(hosts), sniffer(interface.name())
+NetworkScanner::NetworkScanner(const NetworkInterface &interface, const vector<IPv4Address> &hosts, int type)
+    : iface(interface), hosts_to_scan(hosts), sniffer(interface.name()), sender(interface)
 {
-    sniffer.set_filter("icmp and icmp[icmptype] = icmp-echoreply");
+    scan_type = type;
+    if (type == 1)
+    {
+        sniffer.set_filter("icmp and icmp[icmptype] = icmp-echoreply");
+    }
+    else
+    {
+        sniffer.set_filter("arp and arp[op] = 2"); // ARP reply
+    }
+
     for (auto &host : hosts_to_scan)
     {
         attempts[host] = 0;
     }
 }
 
-bool ICMPSanner::callback(PDU &pdu)
+bool NetworkScanner::callback(PDU &pdu)
 {
-    const IP &ip = pdu.rfind_pdu<IP>();
-    const ICMP &icmp = pdu.rfind_pdu<ICMP>();
-
-    if (icmp.type() == ICMP::ECHO_REPLY)
+    if (scan_type == 1)
     {
-        auto it = attempts.find(ip.src_addr());
-        if (it != attempts.end() && it->second <= 3)
+        const IP &ip = pdu.rfind_pdu<IP>();
+        const ICMP &icmp = pdu.rfind_pdu<ICMP>();
+        if (icmp.type() == ICMP::ECHO_REPLY)
         {
-            cout << "Host " << ip.src_addr() << " is alive" << endl;
-            alive_hosts.push_back(ip.src_addr());
-            attempts.erase(it); // Stop further attempts for this host
+            auto it = attempts.find(ip.src_addr());
+            if (it != attempts.end() && it->second <= 3)
+            {
+                alive_hosts.push_back(ip.src_addr());
+                attempts.erase(it); // Stop further attempts for this host
+            }
         }
     }
-
+    else if (scan_type == 2)
+    {
+        const ARP &arp = pdu.rfind_pdu<ARP>();
+        if (arp.opcode() == ARP::REPLY)
+        {
+            IPv4Address src_ip = arp.sender_ip_addr();
+            alive_hosts.push_back(src_ip);
+            attempts.erase(src_ip); // Assume only 1 ARP request was needed
+        }
+    }
     return true;
 }
 
-void ICMPSanner::launch_sniffer()
+void NetworkScanner::send_echo_requests(IPv4Address host)
 {
-    try
-    {
-        sniffer.sniff_loop(bind(&ICMPSanner::callback, this, placeholders::_1));
-    }
-    catch (const std::exception &e)
-    {
-        cout << "Sniffer stopped: " << e.what() << endl;
-    }
-}
-
-void ICMPSanner::send_echo_requests(IPv4Address host)
-{
-    if (timeout)
-        return; // Stop sending if global timeout is set
-    if (attempts[host] < 3)
+    if (scan_type == 1 && attempts[host] < 3)
     {
         IP ip(host, iface.addresses().ip_addr);
         ICMP icmp;
@@ -107,13 +113,41 @@ void ICMPSanner::send_echo_requests(IPv4Address host)
         auto request = ip / icmp;
         sender.send(request);
         attempts[host]++;
-        // cout << "Sent ICMP Echo Request to " << host << " (Attempt " << attempts[host] << ")" << endl;
+    }
+    else if (scan_type == 2)
+    {
+        send_arp_request(host);
     }
 }
 
-void ICMPSanner::check_timeouts()
+void NetworkScanner::send_arp_request(IPv4Address host)
 {
-    while (!timeout && !attempts.empty())
+    EthernetII eth = EthernetII(HWAddress<6>("ff:ff:ff:ff:ff:ff"), iface.hw_address()) /
+                     ARP(iface.addresses().ip_addr, host, iface.hw_address(), HWAddress<6>("00:00:00:00:00:00"));
+    eth.rfind_pdu<ARP>().opcode(ARP::REQUEST);
+    sender.send(eth);
+    attempts[host]++;
+}
+
+void NetworkScanner::launch_sniffer()
+{
+    try
+    {
+        sniffer.sniff_loop(bind(&NetworkScanner::callback, this, placeholders::_1));
+    }
+    catch (const Tins::invalid_interface &e)
+    {
+        cout << "Sniffer stopped: Invalid interface - " << e.what() << endl;
+    }
+    catch (const std::exception &e)
+    {
+        cout << "Sniffer stopped: " << e.what() << endl;
+    }
+}
+
+void NetworkScanner::check_timeouts()
+{
+    while (!attempts.empty())
     {
         this_thread::sleep_for(chrono::seconds(1));
         for (auto it = attempts.begin(); it != attempts.end();)
@@ -128,7 +162,7 @@ void ICMPSanner::check_timeouts()
                 ++it;
             }
         }
-        if (attempts.empty()
+        if (attempts.empty())
         {
             timeout = true; // Set global timeout if all hosts have reached max attempts
             // cout << "All hosts timed out 3 times. Stopping all tasks." << endl;
@@ -136,12 +170,22 @@ void ICMPSanner::check_timeouts()
     }
 }
 
-void ICMPSanner::run()
+void NetworkScanner::run()
 {
-    thread sniffer_thread(&ICMPSanner::launch_sniffer, this);
-    for (auto &host : hosts_to_scan)
+    thread sniffer_thread(&NetworkScanner::launch_sniffer, this);
+    if (this->scan_type == 1)
     {
-        send_echo_requests(host);
+        for (auto &host : hosts_to_scan)
+        {
+            send_echo_requests(host);
+        }
+    }
+    else if (this->scan_type == 2)
+    {
+        for (auto &host : hosts_to_scan)
+        {
+            send_arp_request(host);
+        }
     }
     check_timeouts(); // This will handle retransmissions and timeout checks
     if (timeout)
@@ -149,11 +193,12 @@ void ICMPSanner::run()
     sniffer_thread.join();
 }
 
-void scan(const vector<IPv4Address> &hosts)
+void scan(const IPv4Address &ip, const vector<IPv4Address> &hosts, int type)
 {
-    NetworkInterface iface(hosts[0]);
-    cout << "Sniffing on interface: " << iface.name() << endl;
-    ICMPSanner scanner(iface, hosts);
+    NetworkInterface iface(ip);
+    IPv4Address local_ip = iface.addresses().ip_addr;
+    alive_hosts.push_back(local_ip);
+    NetworkScanner scanner(iface, hosts, type);
     scanner.run();
 }
 class Scanner
@@ -163,7 +208,7 @@ public:
             const NetworkInterface &interface,
             const IPv4Address &address,
             const vector<int> &ports);
-
+    ~Scanner() { sniffer.stop_sniff(); }
     void run(int type);
 
 private:
@@ -273,8 +318,8 @@ bool Scanner::callback(PDU &pdu)
                 open_ports.push_back(tcp.sport());
             }
         }
-        return true;
     }
+    return true;
 }
 
 bool Scanner::udpCallback(PDU &pdu)
@@ -385,6 +430,8 @@ void Scanner::send_tcp(const NetworkInterface &iface, IPv4Address dest_ip)
     ip.src_addr(dest_ip);
     EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
     sender.send(eth, iface);
+    sleep(1);
+    sniffer.stop_sniff();
 }
 
 void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
@@ -426,6 +473,8 @@ void Scanner::send_udps(const NetworkInterface &iface, IPv4Address dest_ip)
     ip.src_addr(dest_ip);
     EthernetII eth = EthernetII(info.hw_addr, info.hw_addr) / ip;
     sender.send(ip);
+    sleep(1);
+    sniffer.stop_sniff();
 }
 
 void scan(const string &ip_address, const vector<int> &ports, int type)
@@ -435,6 +484,68 @@ void scan(const string &ip_address, const vector<int> &ports, int type)
     cout << "Sniffing on interface: " << iface.name() << endl;
     Scanner scanner(type, iface, ip, ports);
     scanner.run(type);
+}
+
+int result()
+{
+    size_t total_ports = ports.size();
+    size_t open_count = open_ports.size();
+    size_t closed_count = closed_ports.size();
+    size_t filtered_count = filtered_ports.size();
+    size_t unfiltered_count = unfiltered_ports.size();
+
+    // Create a vector to hold the counts and descriptions
+    std::vector<std::pair<size_t, std::string>> counts = {
+        {open_count, "open"},
+        {closed_count, "closed"},
+        {filtered_count, "filtered"},
+        {unfiltered_count, "unfiltered"}};
+
+    // Sort by count, largest to smallest
+    std::sort(counts.begin(), counts.end(), [](const std::pair<size_t, std::string> &a, const std::pair<size_t, std::string> &b)
+              {
+                  return a.first > b.first; // Sorting in descending order
+              });
+
+    // Printing the largest status count
+    // If all ports are in one status
+    if (counts.front().first == total_ports)
+    {
+        std::cout << "All ports are " << counts.front().second << std::endl;
+    }
+    else if (counts.front().first > 0)
+    {
+        std::cout << "Most ports are " << counts.front().second << " with " << counts.front().first << " ports." << std::endl;
+    }
+
+    // Find the smallest non-zero count
+    std::pair<size_t, std::string> smallest_non_zero = {0, ""};
+    for (auto &count : counts)
+    {
+        if (count.first > 0)
+        {
+            smallest_non_zero = count;
+        }
+    }
+    // Printing all ports for the smallest non-zero status
+    if (smallest_non_zero.first > 0)
+    {
+        std::cout << "Few " << smallest_non_zero.second << " ports: ";
+        const std::vector<int> *port_vector;
+        if (smallest_non_zero.second == "open")
+            port_vector = &open_ports;
+        else if (smallest_non_zero.second == "closed")
+            port_vector = &closed_ports;
+        else if (smallest_non_zero.second == "filtered")
+            port_vector = &filtered_ports;
+        else
+            port_vector = &unfiltered_ports;
+
+        for (int port : *port_vector)
+            std::cout << port << " ";
+        std::cout << std::endl;
+    }
+    return 0;
 }
 int main()
 {
@@ -465,27 +576,63 @@ mainMenu:
             hosts.push_back(ip);
             ip = next_ip(ip);
         }
-        cout << "Scanning " << num_addresses << " IP addresses\n";
-        scan(hosts);
-        cout << "Alive hosts: ";
-        for (int i = 0; i < alive_hosts.size(); i++)
+        cout << "ICMP Echo Request Scan\n";
+        scan(ip, hosts, 1);
+        cout << "ICMP Echo Request Scan Results\n";
+
+        for (auto &host : alive_hosts)
         {
-            cout << alive_hosts[i] << " ";
+            cout << host.to_string() << endl;
+        }
+        for (const auto &host : hosts)
+        {
+            // Check if the host is not in alive_hosts
+            if (find(alive_hosts.begin(), alive_hosts.end(), host) == alive_hosts.end())
+            {
+                // Add to dead_hosts if not found in alive_hosts
+                dead_hosts.push_back(host);
+            }
+        }
+        alive_hosts.clear();
+        scan(ip, dead_hosts, 2);
+        if (alive_hosts.size() > 0)
+        {
+            cout << "ARP Scan Results, they might have firewall\n";
+            for (auto &host : alive_hosts)
+            {
+                cout << host.to_string() << endl;
+            }
         }
     }
     else if (choice == 2)
     {
         unsigned short type = 0;
-    type:
         unsigned short portLow = 0, portHigh = 65535;
+        unsigned short option;
         cout << "Enter IP address to scan: ";
         cin >> ip_address;
-        cout << "Enter port range to scan: ";
-        cin >> portLow >> portHigh;
-        unsigned int portNum = portHigh - portLow + 1;
-        for (int i = portLow; i <= portHigh; i++)
+    type:
+        cout << "1. Manual Entry\n2. Common Ports\n";
+        cin >> option;
+        if (option == 1)
         {
-            ports.push_back(i);
+            cout << "Enter the port range to scan\n";
+            cin >> portLow >> portHigh;
+            unsigned int portNum = portHigh - portLow + 1;
+            for (int i = portLow; i <= portHigh; i++)
+            {
+                ports.push_back(i);
+            }
+        }
+        else if (option == 2)
+        {
+            ports = {20, 21, 22, 23, 25, 53, 80, 110, 111, 135, 139, 143, 443, 445, 587, 993, 995, 1026, 1433, 1521, 1723, 3306, 3389, 5432, 5900, 8080};
+            portLow = 26, portHigh = 8080;
+        }
+        else
+        {
+            cout << "Invalid option\n";
+            goto type;
         }
         cout << "1. SYN Scan\n";
         cout << "2. ACK Scan\n";
@@ -510,41 +657,7 @@ mainMenu:
         {
         case 1:
         {
-            if (open_ports.size() != 0)
-            {
-                cout << "Open ports: ";
-                for (int i = 0; i < open_ports.size(); i++)
-                {
-                    cout << open_ports[i] << " ";
-                }
-                cout << endl;
-            }
-            else
-            {
-                cout << "No open ports\n";
-                if (closed_ports.size() == 0)
-                {
-                    cout << "All ports are filtered\n";
-                    break;
-                }
-                else
-                {
-                    cout << "Filtered ports: ";
-                    for (int i = 0; i < filtered_ports.size(); i++)
-                    {
-                        cout << filtered_ports[i] << " ";
-                    }
-                    cout << endl;
-                }
-                if (closed_ports.size() != 0 && closed_ports.size() == portNum - open_ports.size() - filtered_ports.size())
-                {
-                    cout << "All ports are closed\n";
-                }
-                else
-                {
-                    cout << "Other ports are closed\n";
-                }
-            }
+            result();
             break;
         }
         case 2:
@@ -557,31 +670,7 @@ mainMenu:
                     filtered_ports.push_back(port);
                 }
             }
-            if (unfiltered_ports.size() == portNum)
-            {
-                cout << "All ports are unfiltered\n";
-                break;
-            }
-            if (filtered_ports.size() == portNum)
-            {
-                cout << "All ports are filtered\n";
-                break;
-            }
-            else
-            {
-                cout << "Filtered ports: ";
-                for (int i = 0; i < filtered_ports.size(); i++)
-                {
-                    cout << filtered_ports[i] << " ";
-                }
-                cout << endl;
-                cout << "Unfiltered ports: ";
-                for (int i = 0; i < unfiltered_ports.size(); i++)
-                {
-                    cout << unfiltered_ports[i] << " ";
-                }
-                cout << endl;
-            }
+            result();
             break;
         }
         case 4:
@@ -594,76 +683,16 @@ mainMenu:
                 if (open_ports_set.find(port) == open_ports_set.end() &&
                     closed_ports_set.find(port) == closed_ports_set.end())
                 {
-                    filtered_ports.push_back(port);
+                    closed_ports.push_back(port);
                 }
             }
-            if (open_ports.size() != 0)
-            {
-                cout << "Open ports: ";
-                for (int i = 0; i < open_ports.size(); i++)
-                {
-                    cout << open_ports[i] << " ";
-                }
-                cout << endl;
-            }
-            else if(closed_ports.size() == portNum)
-            {
-                cout << "All ports are closed\n";
-                break;
-            }
-            else if (filtered_ports.size() == portNum - open_ports.size())
-            {
-                cout << "Other ports are filtered\n";
-                break;
-            }
-            else
-            {
-                cout << "Filtered ports: ";
-                for (int i = 0; i < filtered_ports.size(); i++)
-                {
-                    cout << filtered_ports[i] << " ";
-                }
-                cout << endl;
-            }
+            result();
+            break;
         }
         case 3:
         case 5:
         {
-            if (closed_ports.size() == 0)
-            {
-                cout << "All ports are open/filtered\n";
-                break;
-            }
-            else if (closed_ports.size() == portNum)
-            {
-                cout << "All ports are closed\n";
-                break;
-            }
-            else
-            {
-                cout << "Closed ports: ";
-                for (int i = 0; i < closed_ports.size(); i++)
-                {
-                    cout << closed_ports[i] << " ";
-                }
-                cout << endl;
-            }
-            if (open_ports.size() == 0)
-            {
-                for (int port = portLow; port <= portHigh; ++port)
-                {
-                    if (std::find(closed_ports.begin(), closed_ports.end(), port) == closed_ports.end())
-                    {
-                        // 如果端口不在 closed 中，添加到 open
-                        open_ports.push_back(port);
-                    }
-                }
-                cout << "Open ports: ";
-                for (int i = 0; i < open_ports.size(); i++)
-                {
-                    cout << open_ports[i] << " ";
-                }
-            }
+            result();
             break;
         }
         }
