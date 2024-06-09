@@ -22,9 +22,113 @@ typedef struct
 
 void initSystem(SystemState *state);
 int requestResources(SystemState *state, int pid, int request[M]);
-bool isSafe(SystemState *state);
+bool isSafe(SystemState *state, int safeSequence[N]);
 void printSystemState(SystemState *state);
 void releaseResources(SystemState *state, int pid);
+int safeSequence[5];
+int main()
+{
+    SystemState state;
+    initSystem(&state);
+    printSystemState(&state);
+    while (1)
+    {
+        printf("1. 请求资源\n2. 释放资源\n3. 打印安全序列\n-1. 退出\n选择操作: ");
+        int choice, pid, request[M];
+        scanf("%d", &choice);
+
+        if (choice == -1)
+            break;
+
+        switch (choice)
+        {
+        case 1:
+            printf("输入请求的进程ID和资源数量 (格式: pid r1 r2 ... r%d): ", M);
+            scanf("%d", &pid);
+            for (int i = 0; i < M; i++)
+            {
+                scanf("%d", &request[i]);
+            }
+            int result = requestResources(&state, pid, request);
+            if (result == 0)
+            {
+                printf("资源分配成功\n");
+            }
+            else if (result == 1)
+            {
+                printf("资源分配失败: 系统状态不安全\n");
+            }
+            else if (result == 2)
+            {
+                printf("资源分配失败: 非法请求\n");
+            }
+            else
+            {
+                printf("是否自动释放资源？(y/n): ");
+                char c;
+                scanf(" %c", &c);
+                if (c == 'y')
+                {
+                    int releasePid = -1;
+                    for (int i = 0; i < N; i++)
+                    {
+                        bool fullySatisfied = true;
+                        for (int j = 0; j < M; j++)
+                        {
+                            if (state.processes[i].allocation[j] != state.processes[i].maxClaim[j])
+                            {
+                                fullySatisfied = false;
+                                break;
+                            }
+                        }
+                        if (fullySatisfied)
+                        {
+                            releasePid = i;
+                            break;
+                        }
+                    }
+                    printf("资源释放成功\n");
+                    releaseResources(&state, releasePid);
+                    requestResources(&state, pid, request);
+                }
+                else
+                    printf("资源分配失败，进程%d被阻塞\n", pid);
+            }
+            break;
+
+        case 2:
+            printf("输入释放资源的进程ID: ");
+            scanf("%d", &pid);
+            releaseResources(&state, pid);
+            printf("资源释放成功\n");
+            break;
+
+        case 3:
+            if (isSafe(&state, safeSequence))
+            {
+                printf("当前系统状态安全\n");
+                printf("安全序列: ");
+                for (int i = 0; i < N; i++)
+                {
+                    printf("P%d ", safeSequence[i]);
+                }
+                printf("\n");
+            }
+            else
+            {
+                printf("当前系统状态不安全\n");
+            }
+            break;
+
+        default:
+            printf("无效选择\n");
+        }
+
+        printSystemState(&state);
+    }
+
+    return 0;
+}
 
 void initSystem(SystemState *state)
 {
@@ -96,11 +200,11 @@ void printSystemState(SystemState *state)
 }
 
 // 检查系统状态是否安全
-bool isSafe(SystemState *state)
+bool isSafe(SystemState *state, int safeSequence[N])
 {
     int work[M];
     bool finish[N];
-    int i, j;
+    int i, j, k = 0;
 
     for (i = 0; i < M; i++)
     {
@@ -133,6 +237,7 @@ bool isSafe(SystemState *state)
                     work[j] += state->processes[i].allocation[j];
                 }
                 finish[i] = true;
+                safeSequence[k++] = state->processes[i].id;
                 i = -1;
             }
         }
@@ -164,6 +269,7 @@ void releaseResources(SystemState *state, int pid)
 int requestResources(SystemState *state, int pid, int request[M])
 {
     int i;
+    int safeSequence[N];
 
     // 检查请求是否合法
     for (i = 0; i < M; i++)
@@ -203,7 +309,7 @@ int requestResources(SystemState *state, int pid, int request[M])
     }
 
     // 检查系统状态是否安全
-    if (!isSafe(state))
+    if (!isSafe(state, safeSequence))
     {
         // 若不安全，回滚分配
         for (i = 0; i < M; i++)
@@ -216,100 +322,4 @@ int requestResources(SystemState *state, int pid, int request[M])
     }
 
     return 0; // 成功分配
-}
-int main()
-{
-    SystemState state;
-    initSystem(&state);
-    printSystemState(&state);
-    while (1)
-    {
-        printf("1. 请求资源\n2. 释放资源\n3. 打印安全序列\n-1. 退出\n选择操作: ");
-        int choice, pid, request[M];
-        scanf("%d", &choice);
-
-        if (choice == -1)
-            break;
-
-        switch (choice)
-        {
-        case 1:
-            printf("输入请求的进程ID和资源数量 (格式: pid r1 r2 ... r%d): ", M);
-            scanf("%d", &pid);
-            for (int i = 0; i < M; i++)
-            {
-                scanf("%d", &request[i]);
-            }
-            int result = requestResources(&state, pid, request);
-            if (result == 0)
-            {
-                printf("资源分配成功\n");
-            }
-            else if (result == 1)
-            {
-                printf("资源分配失败: 系统状态不安全\n");
-            }
-            else if (result == 2)
-            {
-                printf("资源分配失败: 非法请求\n");
-            }
-            else
-            {
-                printf("是否自动释放资源？(y/n): ");
-                char c;
-                scanf(" %c", &c);
-                if (c == 'y')
-                {
-                    int releasePid = -1;
-                    for (int i = 0; i < N; i++)
-                    {
-                        bool fullySatisfied = true;
-                        for (int j = 0; j < M; j++)
-                        {
-                            if (state.processes[i].allocation[j] != state.processes[i].maxClaim[j])
-                            {
-                                fullySatisfied = false;
-                                break;
-                            }
-                        }
-                        if (fullySatisfied)
-                        {
-                            releasePid = i;
-                            break;
-                        }
-                    }
-                    printf("资源释放成功\n");
-                    releaseResources(&state, releasePid);
-                    requestResources(&state, pid, request);
-                }
-                printf("资源分配失败，进程%d被阻塞\n", pid);
-            }
-            break;
-
-        case 2:
-            printf("输入释放资源的进程ID: ");
-            scanf("%d", &pid);
-            releaseResources(&state, pid);
-            printf("资源释放成功\n");
-            break;
-
-        case 3:
-            if (isSafe(&state))
-            {
-                printf("当前系统状态安全\n");
-            }
-            else
-            {
-                printf("当前系统状态不安全\n");
-            }
-            break;
-
-        default:
-            printf("无效选择\n");
-        }
-
-        printSystemState(&state);
-    }
-
-    return 0;
 }
