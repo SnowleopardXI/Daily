@@ -4,7 +4,6 @@
 #include <climits>
 using namespace std;
 
-static int lastAllocatedPos = 0;
 struct Lnode
 {
     int id;
@@ -15,104 +14,6 @@ struct Lnode
 
 deque<Lnode> freeMemory;
 deque<Lnode> allocatedMemory;
-
-void initializeMemory(int totalMemory);
-void splitBlock(deque<Lnode>::iterator it, int size);
-void allocateMemory(int processId, int size, const string &method);
-void mergeFreeBlocks();
-void deallocateMemory(int processId);
-void viewMemoryMap();
-
-int main()
-{
-    int totalMemory = 640;
-    initializeMemory(totalMemory);
-
-    allocateMemory(0, 2, "FirstFit");
-    allocateMemory(1, 4, "FirstFit");
-    allocateMemory(2, 3, "FirstFit");
-    allocateMemory(3, 2, "FirstFit");
-    allocateMemory(4, 3, "FirstFit");
-    allocateMemory(5, 2, "FirstFit");
-    allocateMemory(6, 3, "FirstFit");
-    allocateMemory(7, 2, "FirstFit");
-    allocateMemory(8, 3, "FirstFit");
-    allocateMemory(9, 2, "FirstFit");
-    viewMemoryMap();
-    short int choice;
-    while (1)
-    {
-        int type = 1;
-        cout << "1. 分配内存" << endl
-             << "2. 释放内存" << endl
-             << "3. 首次适应算法" << endl
-             << "4. 最佳适应算法" << endl
-             << "5. 最坏适应算法" << endl
-             << "6. 循环首次适应算法" << endl
-             << "其他. 退出" << endl
-             << "当前算法：" << (type == 1 ? "首次适应算法" : type == 2 ? "最佳适应算法"
-                                                          : type == 3   ? "最坏适应算法"
-                                                                        : "循环首次适应算法")
-             << endl;
-        cin >> choice;
-        if (choice == 1)
-        {
-            cout << "输入要分配的进程 ID 和内存大小，-1 退出" << endl;
-            int processId, size;
-            cin >> processId;
-            if (processId == -1)
-                break;
-            cin >> size;
-
-            switch (type)
-            {
-            case 1:
-                allocateMemory(processId, size, "FirstFit");
-                break;
-            case 2:
-                allocateMemory(processId, size, "BestFit");
-                break;
-            case 3:
-                allocateMemory(processId, size, "WorstFit");
-                break;
-            case 4:
-                allocateMemory(processId, size, "LoopFirstFit");
-                break;
-            default:
-                cout << "非法输入" << endl;
-            }
-        }
-        else if (choice == 2)
-        {
-            cout << "输入要释放的进程ID" << endl;
-            int processId;
-            cin >> processId;
-            deallocateMemory(processId);
-        }
-        else if (choice == 3)
-        {
-            type = 1;
-        }
-        else if (choice == 4)
-        {
-            type = 2;
-        }
-        else if (choice == 5)
-        {
-            type = 3;
-        }
-        else if (choice == 6)
-        {
-            type = 4;
-        }
-        else
-        {
-            break;
-        }
-        viewMemoryMap();
-    }
-    return 0;
-}
 
 void initializeMemory(int totalMemory)
 {
@@ -129,13 +30,11 @@ void splitBlock(deque<Lnode>::iterator it, int size)
 
 void allocateMemory(int processId, int size, const string &method)
 {
-    if (method == "NextFit")
+    for (auto it = freeMemory.begin(); it != freeMemory.end(); ++it)
     {
-        bool wrappedAround = false;
-        auto it = freeMemory.begin();
-        while (it != freeMemory.end())
+        if (it->length >= size)
         {
-            if (it->start >= lastAllocatedPos && it->length >= size)
+            if (method == "FirstFit" || (method == "BestFit" && it->length == size))
             {
                 it->id = processId;
                 if (it->length > size)
@@ -147,104 +46,71 @@ void allocateMemory(int processId, int size, const string &method)
                     it->flag = 1;
                 }
                 allocatedMemory.push_back(*it);
-                lastAllocatedPos = it->start + size;
                 freeMemory.erase(it);
                 return;
             }
-
-            if (it == freeMemory.end() - 1 && !wrappedAround)
-            {
-                it = freeMemory.begin() - 1;
-                wrappedAround = true;
-                lastAllocatedPos = 0;
-            }
-            ++it;
         }
     }
-    else
+
+    if (method == "BestFit")
     {
+        auto bestIt = freeMemory.end();
+        int minSize = INT_MAX;
         for (auto it = freeMemory.begin(); it != freeMemory.end(); ++it)
         {
-            if (it->length >= size)
+            if (it->length >= size && it->length < minSize)
             {
-                if (method == "FirstFit" || (method == "BestFit" && it->length == size))
-                {
-                    it->id = processId;
-                    if (it->length > size)
-                    {
-                        splitBlock(it, size);
-                    }
-                    else
-                    {
-                        it->flag = 1;
-                    }
-                    allocatedMemory.push_back(*it);
-                    freeMemory.erase(it);
-                    return;
-                }
+                minSize = it->length;
+                bestIt = it;
             }
         }
-
-        if (method == "BestFit")
+        if (bestIt != freeMemory.end())
         {
-            auto bestIt = freeMemory.end();
-            int minSize = INT_MAX;
-            for (auto it = freeMemory.begin(); it != freeMemory.end(); ++it)
+            bestIt->id = processId;
+            if (bestIt->length > size)
             {
-                if (it->length >= size && it->length < minSize)
-                {
-                    minSize = it->length;
-                    bestIt = it;
-                }
+                splitBlock(bestIt, size);
             }
-            if (bestIt != freeMemory.end())
+            else
             {
-                bestIt->id = processId;
-                if (bestIt->length > size)
-                {
-                    splitBlock(bestIt, size);
-                }
-                else
-                {
-                    bestIt->flag = 1;
-                }
-                allocatedMemory.push_back(*bestIt);
-                freeMemory.erase(bestIt);
-                return;
+                bestIt->flag = 1;
             }
-        }
-
-        if (method == "WorstFit")
-        {
-            auto worstIt = freeMemory.end();
-            int maxSize = 0;
-            for (auto it = freeMemory.begin(); it != freeMemory.end(); ++it)
-            {
-                if (it->length > maxSize)
-                {
-                    maxSize = it->length;
-                    worstIt = it;
-                }
-            }
-            if (worstIt != freeMemory.end() && worstIt->length >= size)
-            {
-                worstIt->id = processId;
-                if (worstIt->length > size)
-                {
-                    splitBlock(worstIt, size);
-                }
-                else
-                {
-                    worstIt->flag = 1;
-                }
-                allocatedMemory.push_back(*worstIt);
-                freeMemory.erase(worstIt);
-                return;
-            }
+            allocatedMemory.push_back(*bestIt);
+            freeMemory.erase(bestIt);
+            return;
         }
     }
 
-    cout << "没有找到适合进程 " << processId << " 的内存块" << endl;
+    if (method == "WorstFit")
+    {
+        auto worstIt = freeMemory.end();
+        int maxSize = 0;
+        for (auto it = freeMemory.begin(); it != freeMemory.end(); ++it)
+        {
+            if (it->length > maxSize)
+            {
+                maxSize = it->length;
+                worstIt = it;
+            }
+        }
+        if (worstIt != freeMemory.end() && worstIt->length >= size)
+        {
+            worstIt->id = processId;
+            if (worstIt->length > size)
+            {
+                splitBlock(worstIt, size);
+            }
+            else
+            {
+                worstIt->flag = 1;
+            }
+            allocatedMemory.push_back(*worstIt);
+            freeMemory.erase(worstIt);
+            return;
+        }
+    }
+
+    cout << "没有找到适合进程  " << processId << " 的内存块" << endl;
 }
 
 void mergeFreeBlocks()
@@ -307,4 +173,57 @@ void viewMemoryMap()
             cout << "已分配给进程 " << it->id << " 从 " << it->start << " 到 " << it->start + it->length << endl;
         }
     }
+}
+int main()
+{
+    int totalMemory = 128;
+    initializeMemory(totalMemory);
+    viewMemoryMap();
+    short int choice;
+    while (1)
+    {
+        cout << "1. 分配内存" << endl
+             << "2. 释放内存" << endl
+             << "Other. Exit" << endl;
+        cin >> choice;
+        if (choice == 1)
+        {
+            cout << "输入要分配的进程 ID 和内存大小，-1 退出" << endl;
+            int processId, size;
+            cin >> processId;
+            if (processId == -1)
+                break;
+            cin >> size;
+            cout << "请选择分配方式 \n 1. First Fit \n 2. Best Fit \n 3. Worst Fit" << endl;
+            int method;
+            cin >> method;
+            switch (method)
+            {
+            case 1:
+                allocateMemory(processId, size, "FirstFit");
+                break;
+            case 2:
+                allocateMemory(processId, size, "BestFit");
+                break;
+            case 3:
+                allocateMemory(processId, size, "WorstFit");
+                break;
+            default:
+                cout << "非法输入" << endl;
+            }
+        }
+        else if (choice == 2)
+        {
+            cout << "输入要释放的进程ID" << endl;
+            int processId;
+            cin >> processId;
+            deallocateMemory(processId);
+        }
+        else
+        {
+            break;
+        }
+        viewMemoryMap();
+    }
+    return 0;
 }
