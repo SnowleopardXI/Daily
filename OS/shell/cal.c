@@ -14,24 +14,44 @@ int main(int argc, char *argv[]) {
     int month = local->tm_mon + 1;
 
     if (argc == 1) {
-        // 无参数显示当前月份
+        // No parameters, show current month
         print_month(year, month);
     } else if (argc == 2 && strcmp(argv[1], "-y") == 0) {
-        // 参数为-y显示当前年份
+        // Parameter is -y, show current year
         print_year(year);
     } else if (argc == 3 && strcmp(argv[1], "-m") == 0) {
-        // 参数为-m后跟月份显示该月份
+        // Parameter is -m followed by month, show that month
         month = atoi(argv[2]);
         if (month < 1 || month > 12) {
             printf("Invalid month\n");
             return 1;
         }
         print_month(year, month);
+    } else if (argc == 3 && strcmp(argv[1], "-y") == 0) {
+        // Parameter is -y followed by year, show that year
+        year = atoi(argv[2]);
+        if (year < 1) {
+            printf("Invalid year\n");
+            return 1;
+        }
+        print_year(year);
+    } else if (argc == 4 && strcmp(argv[1], "-y") == 0 && strcmp(argv[3], "-m") == 0) {
+        // Parameters are -y followed by year and -m followed by month
+        year = atoi(argv[2]);
+        month = atoi(argv[4]);
+        if (year < 1) {
+            printf("Invalid year\n");
+            return 1;
+        }
+        if (month < 1 || month > 12) {
+            printf("Invalid month\n");
+            return 1;
+        }
+        print_month(year, month);
     } else {
-        printf("Usage: %s [-y] [-m month]\n", argv[0]);
+        printf("Usage: %s [-y year] [-m month]\n", argv[0]);
         return 1;
     }
-    
     return 0;
 }
 
