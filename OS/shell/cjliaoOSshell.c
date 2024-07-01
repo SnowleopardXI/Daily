@@ -72,6 +72,12 @@ void executeCommand(char **args, int background)
     if (args[0] == NULL)
         return;
 
+    if (strcmp(args[0], "vi") == 0 && args[1] == NULL)
+    {
+        args[1] = "./cjliaoOSshell.c";
+        args[2] = NULL; // 确保参数列表结束
+    }
+
     if (strcmp(args[0], "cd") == 0)
     {
         char *path = args[1] ? args[1] : getenv("HOME");
@@ -124,17 +130,59 @@ void executeCommand(char **args, int background)
 
 void show_history()
 {
-    flag = 1;
     int start = history_count > 10 ? history_count - 10 : 0;
     for (int i = start; i < history_count; i++)
     {
-        printf("%d %s", i + 1, history[i]);
+        dprintf(STDOUT_FILENO, "%d %s", i + 1, history[i]); // 使用 dprintf 直接向 STDOUT 写入
     }
 }
 
 int handle_special_commands(char *input, char **args, int *background)
 {
     char *tmp = strdup(input);
+    // 如果需要管道，将前方命令执行结果转为标准输入传递到后续命令
+    if (strchr(input, '|') != NULL)
+    {
+        int fd[2], fd_in = 0;
+        char *command = strtok(input, "|");
+
+        while (command != NULL)
+        {
+            pipe(fd);
+            pid_t pid = fork();
+            if (pid == 0)
+            {
+                dup2(fd_in, 0);
+                if (strtok(NULL, "|") != NULL)
+                {
+                    dup2(fd[1], 1);
+                }
+                close(fd[0]);
+
+                char *local_args[MAX_ARGS];
+                int local_background = 0;
+                parseInput(command, local_args, &local_background);
+                execvp(local_args[0], local_args);
+                exit(EXIT_FAILURE);
+            }
+            else if (pid < 0)
+            {
+                perror("Failed to fork");
+                return 1; // 处理错误
+            }
+
+            wait(NULL);    // 等待子进程结束
+            close(fd[1]);  // 关闭写端
+            fd_in = fd[0]; // 将读端保存，以供下一个命令使用
+
+            command = strtok(NULL, "|");
+        }
+        if (fd_in != 0)
+            close(fd_in);
+
+        free(tmp);
+        return 1; // 表示已处理
+    }
     if (strcmp(input, "clear\n") == 0 || strcmp(input, "\f") == 0)
     {
         printf("\033[H\033[J");
@@ -182,47 +230,7 @@ int handle_special_commands(char *input, char **args, int *background)
         free(tmp);
         return 1; // 表示已处理
     }
-    // 如果需要管道，将前方命令执行结果转为标准输入传递到后续命令
-    if (strchr(input, '|') != NULL)
-    {
-        int fd[2];
-        pipe(fd);
-        pid_t pid = fork();
-        if (pid == 0)
-        {
-            char *cmd1 = strsep(&tmp, "|");
-            char *cmd2 = strsep(&tmp, "|");
-            char *args1[MAX_ARGS];
-            char *args2[MAX_ARGS];
-            parseInput(cmd1, args1, background);
-            parseInput(cmd2, args2, background);
-            int fd1 = open("tmp", O_WRONLY | O_CREAT | O_TRUNC, 0666);
-            dup2(fd1, STDOUT_FILENO);
-            executeCommand(args1, *background);
-            close(fd1);
-            exit(0);
-        }
-        wait(NULL);
-        pid = fork();
-        if (pid == 0)
-        {
-            char *cmd1 = strsep(&tmp, "|");
-            char *cmd2 = strsep(&tmp, "|");
-            char *args1[MAX_ARGS];
-            char *args2[MAX_ARGS];
-            parseInput(cmd1, args1, background);
-            parseInput(cmd2, args2, background);
-            int fd1 = open("tmp", O_RDONLY);
-            dup2(fd1, STDIN_FILENO);
-            executeCommand(args2, *background);
-            close(fd1);
-            exit(0);
-        }
-        wait(NULL);
-        free(tmp);
-        return 1; // 表示已处理
-    }
-    free(tmp);
+
     return 0; // 表示未处理
 }
 
